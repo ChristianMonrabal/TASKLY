@@ -61,5 +61,5 @@ Se elaborará un diagrama de flujo o mapa de navegación para visualizar la estr
 🚀 **¡Únete a TASKLY y transforma la manera en que gestionas tus tareas!**
 
 
-## LINKS
+## 📌 LINKS
 [Daily Meeting](https://docs.google.com/spreadsheets/d/1uqH0fyG02X_hFzP7C2pxEhWMQX1FLHpdNPQovUX-M3c/edit?gid=476810823#gid=476810823)
