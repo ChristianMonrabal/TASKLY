@@ -59,3 +59,7 @@ Se elaborará un diagrama de flujo o mapa de navegación para visualizar la estr
 💡 *TASKLY busca revolucionar la forma en que se contratan servicios rápidos, brindando seguridad, eficiencia y confiabilidad para clientes y trabajadores.*  
 
 🚀 **¡Únete a TASKLY y transforma la manera en que gestionas tus tareas!**
+
+
+## LINKS
+[Daily Meeting](https://docs.google.com/spreadsheets/d/1uqH0fyG02X_hFzP7C2pxEhWMQX1FLHpdNPQovUX-M3c/edit?gid=476810823#gid=476810823)
