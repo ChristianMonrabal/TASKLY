@@ -1,0 +1,166 @@
+:root {
+    --primary: #EC6A6A;
+    --bg: #ffffff;
+    --text: #333;
+    --card-bg: white;
+    --shadow: rgba(0, 0, 0, 0.1);
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    border: 10px solid var(--primary);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .page-container {
+    padding: 30px;
+    /* max-width: 1200px; */
+    margin: 10px;
+  }
+  
+  h1 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 20px;
+  }
+  
+  .filtros {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .filtro-btn {
+    background-color: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .filtro-btn.active,
+  .filtro-btn:hover {
+    background-color: var(--primary);
+    color: white;
+  }
+  
+  .seccion-titulo {
+    font-size: 1.4em;
+    margin: 20px 10px 10px;
+    color: var(--text);
+  }
+  
+  .scroll-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  
+  .scroll-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 280px;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px;
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px var(--shadow);
+    padding: 20px;
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .card h2 {
+    color: var(--primary);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  
+  .precio {
+    font-weight: bold;
+    color: #2E8B57;
+  }
+  
+  .categoria {
+    background-color: var(--primary);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9em;
+  }
+  
+  .scroll-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .scroll-btn:hover {
+    background-color: #c45656;
+  }
+  
+  /* ✅ MÓVIL RESPONSIVE */
+  @media (max-width: 768px) {
+    .scroll-container {
+      grid-auto-columns: 100%;
+      padding: 10px;
+    }
+  
+    .card img {
+      display: none;
+    }
+  
+    .card p {
+      font-size: 0.9em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  
