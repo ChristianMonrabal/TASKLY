@@ -1,3 +1,4 @@
+
 :root {
     --primary: #EC6A6A;
     --bg: #ffffff;
@@ -8,6 +9,7 @@
     --radius-lg: 25px;
     --transition: 0.3s ease;
     --font-main: 'Segoe UI', sans-serif;
+    --img-height: 150px; /* Altura fija para la imagen */
   }
   
   *,
@@ -59,6 +61,7 @@
     font-weight: bold;
     cursor: pointer;
     transition: background var(--transition), color var(--transition);
+    text-align: center;
   }
   
   .filtro-btn.active,
@@ -71,31 +74,10 @@
     font-size: 1.4em;
     margin: 20px 10px 10px;
     color: var(--text);
+    text-align: center;
   }
   
-  /* Scroll layout */
-  .scroll-wrapper {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 40px;
-  }
-  
-  .scroll-container {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 280px;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px;
-  }
-  
-  .scroll-container::-webkit-scrollbar {
-    display: none;
-  }
-  
+  /* Tarjeta */
   .card {
     background-color: var(--card-bg);
     border-radius: var(--radius);
@@ -103,7 +85,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     transition: transform var(--transition), box-shadow var(--transition);
   }
   
@@ -112,10 +94,23 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   }
   
-  .card img {
-    width: 100%;
+  /* Contenedor de imagen con altura fija */
+  .card-img {
+    height: var(--img-height);
+    overflow: hidden;
     border-radius: var(--radius);
     margin-bottom: 10px;
+  }
+  
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  
+  .card-content {
+    text-align: center;
   }
   
   .card h2 {
@@ -141,11 +136,33 @@
     padding: 5px 10px;
     border-radius: var(--radius);
     font-size: 0.9em;
-    margin-top: auto;
-    align-self: flex-start;
+    margin-top: 10px;
+    display: inline-block;
   }
   
-  /* Botones de scroll */
+  /* Layout de scroll */
+  .scroll-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  
+  .scroll-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 280px;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px;
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  
   .scroll-btn {
     background-color: var(--primary);
     color: white;
@@ -160,56 +177,6 @@
   
   .scroll-btn:hover {
     background-color: #c45656;
-  }
-  
-  /* ✅ Responsive Móvil */
-  @media (max-width: 768px) {
-    .scroll-container {
-      grid-auto-columns: 80%; /* antes 100% o 280px → ahora más grandes */
-      padding: 10px;
-    }
-  
-    .scroll-container .card img {
-      display: none;
-    }
-  
-    .card p {
-      font-size: 0.9em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-  
-  
-  /* Utilidades globales */
-  .rounded {
-    border-radius: var(--radius);
-  }
-  
-  .rounded-lg {
-    border-radius: var(--radius-lg);
-  }
-  
-  .shadow {
-    box-shadow: 0 4px 12px var(--shadow);
-  }
-  
-  .shadow-lg {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  .text-center {
-    text-align: center;
-  }
-  
-  .bg-primary {
-    background-color: var(--primary);
-    color: white;
-  }
-  
-  .text-primary {
-    color: var(--primary);
   }
   
   /* Grid para todos los trabajos */
@@ -229,6 +196,19 @@
   @media (max-width: 768px) {
     .grid-trabajos {
       grid-template-columns: repeat(2, 1fr);
+    }
+    .scroll-container {
+      grid-auto-columns: 90%;
+    }
+    /* En móvil se oculta el contenedor de imagen si se prefiere */
+    .scroll-container .card-img {
+      display: none;
+    }
+    .card p {
+      font-size: 0.9em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   
@@ -258,4 +238,3 @@
   .buscador input:focus {
     border-color: #c45656;
   }
-  
