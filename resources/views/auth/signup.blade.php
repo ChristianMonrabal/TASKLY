@@ -36,9 +36,6 @@
                 ¿Ya tienes cuenta?
                 <a href="{{ route('signin.auth') }}" class="signup-link">Iniciar sesión</a>
             </p>
-        </div>
-    </div>
-
     <script src="{{ asset('js/toogle_password.js') }}"></script>
     <script src="{{ asset('js/login.js') }}"></script>
 </body>
