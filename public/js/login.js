@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showError(input, message) {
         input.style.borderColor = 'red';
-        errorMessageElement = document.getElementById(input.id + '-error');
+        const errorMessageElement = document.getElementById(input.id + '-error');
         if (errorMessageElement) {
             errorMessageElement.textContent = message;
             errorMessageElement.style.color = 'red';
@@ -23,20 +23,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createErrorElements(form) {
         form.querySelectorAll('input').forEach(input => {
-            errorId = input.id + '-error';
+            const errorId = input.id + '-error';
             if (!document.getElementById(errorId)) {
-                errorElement = document.createElement('p');
+                const errorElement = document.createElement('p');
                 errorElement.id = errorId;
                 errorElement.className = 'error-message';
-                input.insertAdjacentElement('afterend', errorElement);
+
+                const wrapper = input.closest('.password-container') || input;
+                wrapper.insertAdjacentElement('afterend', errorElement);
             }
         });
     }
 
     function handleSigninBlur(event) {
-        input = event.target;
-        form = input.closest('form');
-        errorMessageElement = document.getElementById(input.id + '-error');
+        const input = event.target;
+        const form = input.closest('form');
+        const errorMessageElement = document.getElementById(input.id + '-error');
 
         if (errorMessageElement) {
             errorMessageElement.textContent = '';
@@ -55,14 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (input.value === '') {
                 showError(input, 'El campo de contraseña es obligatorio.');
             }
-            // NO validamos longitud mínima en el signin
         }
     }
 
     function handleSignupBlur(event) {
-        input = event.target;
-        form = input.closest('form');
-        errorMessageElement = document.getElementById(input.id + '-error');
+        const input = event.target;
+        const form = input.closest('form');
+        const errorMessageElement = document.getElementById(input.id + '-error');
 
         if (errorMessageElement) {
             errorMessageElement.textContent = '';
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (input.name === 'password_confirmation') {
-            passwordInput = form.querySelector('input[name="password"]');
+            const passwordInput = form.querySelector('input[name="password"]');
             if (input.value === '') {
                 showError(input, 'Este campo es obligatorio.');
             } else if (!validatePasswordConfirmation(passwordInput.value, input.value)) {
@@ -95,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    signinForm = document.getElementById('signin-form');
-    signupForm = document.getElementById('signup-form');
+    const signinForm = document.getElementById('signin-form');
+    const signupForm = document.getElementById('signup-form');
 
     if (signinForm) {
         createErrorElements(signinForm);

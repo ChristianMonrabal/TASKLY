@@ -97,3 +97,23 @@ p {
 .password-toggle:hover {
     color: #555;
 }
+
+.password-container {
+    position: relative;
+    margin: 8px 0;
+}
+
+.password-container .input-field {
+    padding-right: 40px;
+    margin: 0;
+}
+
+.password-container .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    pointer-events: auto;
+}
