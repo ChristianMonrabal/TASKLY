@@ -16,8 +16,6 @@ Route::get('/trabajos/nuevos', [TrabajoController::class, 'nuevos'])->name('trab
 Route::get('/trabajos/categoria-json/{categoria_id}', [TrabajoController::class, 'categoriaJson'])->name('trabajos.categoria.json');
 Route::get('/trabajos/buscar-json', [TrabajoController::class, 'buscarJson'])->name('trabajos.buscar.json');
 Route::get('/trabajos/filtrar', [TrabajoController::class, 'filtrar'])->name('trabajos.filtrar');
-Route::get('/trabajos/detalle-json/{id}', [TrabajoController::class, 'detalleJson'])->name('trabajos.detalle.json');
-Route::get('/trabajos/detalle-ajax/{id}', [TrabajoController::class, 'detalleAjax'])->name('trabajos.detalle.ajax');
 Route::get('/trabajos/categoria/{categoria_id}', [TrabajoController::class, 'filtrarPorCategoria'])->name('trabajos.categoria');
 Route::get('/trabajos/buscar', [TrabajoController::class, 'buscar'])->name('trabajos.buscar');
 

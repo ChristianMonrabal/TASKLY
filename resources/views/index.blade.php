@@ -4,7 +4,6 @@
 
 @section('styles')
   <link rel="stylesheet" href="{{ asset('css/trabajos.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('css/trabajo-modal.css') }}"/>
 @endsection
 
 @section('content')
@@ -169,5 +168,42 @@
 @endsection
 
 @section('scripts')
-  <script src="{{ asset('js/index.js') }}"></script>
+  <!-- Cargar primero el módulo principal que inicializa las variables globales -->
+  <script src="{{ asset('js/index-load/main.js') }}"></script>
+  <script src="{{ asset('js/index-load/utilidades.js') }}"></script>
+  
+  <!-- Cargar el nuevo módulo de botones de scroll -->
+  <script src="{{ asset('js/index-load/scroll-buttons.js') }}"></script>
+  
+  <!-- Cargar el resto de módulos funcionales -->
+  <script src="{{ asset('js/index-load/nuevos-trabajos.js') }}"></script>
+  <script src="{{ asset('js/index-load/todos-trabajos.js') }}"></script>
+  <script src="{{ asset('js/index-load/busqueda-categoria.js') }}"></script>
+  <script src="{{ asset('js/index-load/filtros.js') }}"></script>
+  
+  <!-- Script para iniciar las funciones de carga -->
+  <script>
+    // Ejecutar cuando todo esté cargado
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM completamente cargado, iniciando funciones...');
+      
+      // Iniciar la carga de nuevos trabajos
+      if (typeof cargarNuevosTrabajos === 'function') {
+        cargarNuevosTrabajos();
+      }
+      
+      // Iniciar la carga de todos los trabajos
+      if (typeof cargarTodosTrabajos === 'function') {
+        cargarTodosTrabajos();
+      }
+      
+      // Inicializar los botones de scroll
+      if (typeof inicializarBotonesScroll === 'function') {
+        // Dar un pequeño retraso para asegurar que los elementos estén cargados
+        setTimeout(function() {
+          inicializarBotonesScroll();
+        }, 500);
+      }
+    });
+  </script>
 @endsection

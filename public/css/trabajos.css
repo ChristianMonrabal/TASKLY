@@ -173,33 +173,6 @@
   width: 100%;
 }
 
-.aplicar-todos-filtros, .limpiar-filtros {
-  background-color: var(--primario);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 15px;
-  cursor: pointer;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: all 0.2s ease;
-}
-
-.aplicar-todos-filtros:hover {
-  background-color: var(--primario-oscuro);
-}
-
-.limpiar-filtros {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.limpiar-filtros:hover {
-  background-color: #e0e0e0;
-}
-
 /* Botones de Aplicar/Limpiar filtros */
 .aplicar-todos-filtros, 
 .limpiar-filtros {

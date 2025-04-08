@@ -1,25 +1,76 @@
-// Función para cambiar la imagen principal
+/**
+ * Script para la página de detalles de trabajo
+ * Maneja la galería de imágenes y la interacción con el usuario
+ */
+
+// Función para cambiar la imagen principal al hacer clic en una miniatura
 function cambiarImagen(src) {
-  document.getElementById('imagenPrincipal').src = src;
+  const imagenPrincipal = document.getElementById('imagenPrincipal');
+  if (imagenPrincipal) {
+    // Animación suave de transición
+    imagenPrincipal.style.opacity = '0.5';
+    setTimeout(() => {
+      imagenPrincipal.src = src;
+      imagenPrincipal.style.opacity = '1';
+    }, 200);
+    
+    // Marcar la miniatura activa
+    const miniaturas = document.querySelectorAll('.imagen-miniatura');
+    miniaturas.forEach(miniatura => {
+      if (miniatura.getAttribute('src') === src) {
+        miniatura.classList.add('active');
+      } else {
+        miniatura.classList.remove('active');
+      }
+    });
+  }
 }
 
-// Eventos para los botones
+// Eventos para la página
 document.addEventListener('DOMContentLoaded', function() {
-  // Botón de postulación
-  const btnPostular = document.getElementById('btnPostular');
-  if (btnPostular) {
-    btnPostular.addEventListener('click', function() {
-      const trabajoId = this.getAttribute('data-id');
-      postularTrabajo(trabajoId);
+  // Inicializar galería de imágenes
+  const miniaturas = document.querySelectorAll('.imagen-miniatura');
+  if (miniaturas.length > 0) {
+    // Marcar la primera miniatura como activa
+    miniaturas[0].classList.add('active');
+    
+    // Añadir controles de teclado para navegar por las imágenes
+    document.addEventListener('keydown', function(e) {
+      if (miniaturas.length <= 1) return;
+      
+      const activeIndex = Array.from(miniaturas).findIndex(m => m.classList.contains('active'));
+      if (activeIndex === -1) return;
+      
+      // Flecha derecha: siguiente imagen
+      if (e.key === 'ArrowRight' && activeIndex < miniaturas.length - 1) {
+        cambiarImagen(miniaturas[activeIndex + 1].getAttribute('src'));
+      }
+      // Flecha izquierda: imagen anterior
+      else if (e.key === 'ArrowLeft' && activeIndex > 0) {
+        cambiarImagen(miniaturas[activeIndex - 1].getAttribute('src'));
+      }
     });
   }
   
-  // Botón de chat
-  const btnChat = document.getElementById('btnChat');
-  if (btnChat) {
-    btnChat.addEventListener('click', function() {
-      const trabajoId = this.getAttribute('data-id');
-      abrirChat(trabajoId);
+  // Botón para ver más valoraciones
+  const verMasValoraciones = document.getElementById('verMasValoraciones');
+  if (verMasValoraciones) {
+    verMasValoraciones.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Aquí iría la lógica para cargar más valoraciones
+      alert('Funcionalidad de cargar más valoraciones pendiente de implementación');
+    });
+  }
+  
+  // Postulación para el trabajo
+  const postularForm = document.querySelector('.postular-form');
+  if (postularForm) {
+    postularForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const trabajoId = window.location.pathname.split('/').pop();
+      if (confirm('¿Estás seguro de que quieres postularte para este trabajo?')) {
+        this.submit();
+      }
     });
   }
 });

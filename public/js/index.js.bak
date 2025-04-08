@@ -469,7 +469,7 @@ function renderizarNuevosTrabajos(trabajos) {
     
     // Crear el HTML de la tarjeta
     html += `
-      <div class="card" data-trabajo-id="${trabajo.id}">
+      <div class="card" onclick="window.location.href='/trabajos/${trabajo.id}'">
         <div class="card-img">
           <img src="${imagenUrl}" alt="${trabajo.titulo}">
         </div>
@@ -532,7 +532,7 @@ function renderizarTodosTrabajos(trabajos) {
     
     // Crear el HTML de la tarjeta
     html += `
-      <div class="card" data-trabajo-id="${trabajo.id}">
+      <div class="card" onclick="window.location.href='/trabajos/${trabajo.id}'">
         <div class="card-img">
           <img src="${imagenUrl}" alt="${trabajo.titulo}">
         </div>
@@ -564,6 +564,10 @@ function limitarTexto(texto, longitud) {
   return texto.substring(0, longitud) + '...';
 }
 
+// Las siguientes funciones se han comentado porque el usuario prefiere la redirección directa
+// en lugar de la carga dinámica en modal
+
+/*
 // Función para cargar y mostrar los detalles de un trabajo en modal
 function cargarDetallesTrabajo(trabajoId) {
   console.log('Cargando detalles del trabajo ID:', trabajoId);
@@ -679,8 +683,10 @@ function activarEventosDetallesTrabajo() {
     });
   });
 }
+*/
 
-// Modificar las funciones de renderizado para activar eventos después
+// No necesitamos estos modificadores porque ahora usamos redirección directa
+/*
 const renderizarNuevosTrabajosOriginal = renderizarNuevosTrabajos;
 renderizarNuevosTrabajos = function(trabajos) {
   renderizarNuevosTrabajosOriginal(trabajos);
@@ -692,3 +698,4 @@ renderizarTodosTrabajos = function(trabajos) {
   renderizarTodosTrabajosOriginal(trabajos);
   activarEventosDetallesTrabajo();
 };
+*/

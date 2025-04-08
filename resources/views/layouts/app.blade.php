@@ -211,11 +211,6 @@
     <!-- Scripts comunes -->
     <script src="{{ asset('js/layout.js') }}"></script>
     
-    <!-- Contenedor del modal para detalles de trabajo -->
-    <div class="modal-overlay" id="trabajoModal">
-        <div id="trabajoModalContent"></div>
-    </div>
-    
     <!-- Scripts específicos de la página -->
     @yield('scripts')
 </body>

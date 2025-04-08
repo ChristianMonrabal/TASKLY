@@ -171,24 +171,6 @@ class TrabajoController extends Controller
         return view('trabajo.detalle', compact('trabajo'));
     }
     
-    /**
-     * Devuelve los detalles de un trabajo en formato JSON
-     */
-    public function detalleJson($id)
-    {
-        $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones'])->findOrFail($id);
-        return response()->json($trabajo);
-    }
-    
-    /**
-     * Devuelve una vista parcial HTML con los detalles del trabajo
-     */
-    public function detalleAjax($id)
-    {
-        $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones'])->findOrFail($id);
-        return view('partials.trabajo-detalle', compact('trabajo'))->render();
-    }
-    
     // Método para postularse a un trabajo
     public function postular($id){
         try {
