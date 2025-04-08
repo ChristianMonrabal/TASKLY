@@ -13,6 +13,7 @@
 
     @extends('layouts.app')
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        <br><br>
         <h1 class="text-center mb-4">Mi perfil</h1>
         
         <div class="profile-photo-wrapper">
