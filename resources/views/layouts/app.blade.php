@@ -94,9 +94,9 @@
                                 <span class="icon">▼</span>
                             </button>
                             <div class="dropdown-content">
-                                <a href="#"><i class="fas fa-user"></i> Mi Perfil</a>
+                                <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
                                 <a href="#"><i class="fas fa-cog"></i> Configuración</a>
-                                <form action="#" method="POST" id="logout-form">
+                                <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
