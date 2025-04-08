@@ -171,6 +171,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function handleSigninBlur(event) {
+        input = event.target;
+        form = input.closest('form');
+        errorMessageElement = document.getElementById(input.id + '-error');
+        if (errorMessageElement) {
+            errorMessageElement.textContent = '';
+            input.style.borderColor = '';
+        }
+
+        if (input.name === 'email') {
+            if (input.value === '') {
+                showError(input, 'El campo de correo electrónico es obligatorio.');
+            } else if (!validateEmail(input.value)) {
+                showError(input, 'Por favor ingrese un correo electrónico válido.');
+            }
+        }
+
+        if (input.name === 'password') {
+            if (input.value === '') {
+                showError(input, 'El campo de contraseña es obligatorio.');
+            }
+        }
+    }
+
     signinForm = document.getElementById('signin-form');
     signupForm = document.getElementById('signup-form');
 
