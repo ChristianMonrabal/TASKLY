@@ -110,8 +110,4 @@ document.addEventListener('DOMContentLoaded', function() {
             link.classList.add('active');
         }
     });
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> daniel

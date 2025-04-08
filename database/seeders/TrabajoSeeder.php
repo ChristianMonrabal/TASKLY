@@ -42,14 +42,19 @@ class TrabajoSeeder extends Seeder
 
         ImgTrabajo::create([
             'trabajo_id' => 1,
-            'ruta_imagen' => 'foto1.jpg',
-            'descripcion' => 'asd',
+            'ruta_imagen' => 'electricidad.png',
+            'descripcion' => 'electricidad',
         ]);
 
         ImgTrabajo::create([
-            'trabajo_id' => 1,
-            'ruta_imagen' => 'foto2.jpg',
-            'descripcion' => 'qwe',
+            'trabajo_id' => 2,
+            'ruta_imagen' => 'fontaneria.png',
+            'descripcion' => 'fontaneria',
+        ]);
+        ImgTrabajo::create([
+            'trabajo_id' => 3,
+            'ruta_imagen' => 'carpinteria.png',
+            'descripcion' => 'carpinteria',
         ]);
     }
 }

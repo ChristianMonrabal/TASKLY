@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    {{-- @extends('layouts.app') --}}
+    @extends('layouts.app')
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
         <h1 class="text-center mb-4">Mi perfil</h1>
         
