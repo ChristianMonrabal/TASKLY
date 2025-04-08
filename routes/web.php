@@ -1,10 +1,11 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\pruebas;
+use App\Http\Controllers\Pruebas;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+// Ruta principal que carga la vista "welcome"
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/', [pruebas::class, 'prueba']);
+// Ruta aparte para tu prueba
+Route::get('/prueba', [Pruebas::class, 'prueba']);
