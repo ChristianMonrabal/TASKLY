@@ -26,7 +26,7 @@ Route::get('/trabajos/{id}', [TrabajoController::class, 'mostrarDetalle'])->name
 Route::post('/trabajos/{id}/postular', [TrabajoController::class, 'postular'])->name('trabajos.postular');
 
 
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('signin.auth');
+Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.auth');
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.auth');
 Route::post('/signup', [AuthController::class, 'register'])->name('signup.store');
 Route::post('/login', [AuthController::class, 'login'])->name('login');

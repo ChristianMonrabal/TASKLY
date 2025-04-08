@@ -15,16 +15,63 @@
       overflow: hidden;
     }
     
+    /* Estilos de galería de imágenes */
+    .galeria-imagenes {
+      width: 100%;
+      position: relative;
+    }
+    
     .imagen-principal {
       width: 100%;
       height: 400px;
       overflow: hidden;
+      position: relative;
     }
     
     .imagen-principal img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background-color: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .galeria-miniaturas {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: #f9f9f9;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    
+    .miniatura {
+      width: 80px;
+      height: 60px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .miniatura:hover {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+    
+    .miniatura.active {
+      opacity: 1;
+      border-color: #3498db;
+    }
+    
+    .miniatura img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: transparent;
     }
     
     .info-container {
@@ -151,14 +198,30 @@
 @section('content')
 <div class="container">
   <div class="trabajo-simple">
-    <!-- Imagen principal arriba -->
-    <div class="imagen-principal">
-      @if($trabajo->imagenes && $trabajo->imagenes->count() > 0)
-        <img src="{{ asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) }}" alt="{{ $trabajo->titulo }}">
-      @else
+    <!-- Galería de imágenes arriba -->
+    @if($trabajo->imagenes && $trabajo->imagenes->count() > 0)
+      <div class="galeria-imagenes">
+        <!-- Imagen principal grande -->
+        <div class="imagen-principal">
+          <img src="{{ asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) }}" alt="{{ $trabajo->titulo }}" id="imagen-grande">
+        </div>
+        
+        <!-- Miniaturas de todas las imágenes -->
+        @if($trabajo->imagenes->count() > 1)
+          <div class="galeria-miniaturas">
+            @foreach($trabajo->imagenes as $imagen)
+              <div class="miniatura" onclick="cambiarImagen('{{ asset('img/trabajos/' . $imagen->ruta_imagen) }}')">
+                <img src="{{ asset('img/trabajos/' . $imagen->ruta_imagen) }}" alt="{{ $trabajo->titulo }}">
+              </div>
+            @endforeach
+          </div>
+        @endif
+      </div>
+    @else
+      <div class="imagen-principal">
         <img src="{{ asset('img/trabajos/trabajo-default.jpg') }}" alt="Imagen por defecto">
-      @endif
-    </div>
+      </div>
+    @endif
     
     <!-- Información abajo -->
     <div class="info-container">
@@ -251,6 +314,33 @@
           }
         });
       }
+      
+      // Activar primera miniatura
+      const primeraMinatura = document.querySelector('.miniatura');
+      if (primeraMinatura) {
+        primeraMinatura.classList.add('active');
+      }
     });
+    
+    // Función para cambiar la imagen principal al hacer clic en una miniatura
+    function cambiarImagen(rutaImagen) {
+      const imagenGrande = document.getElementById('imagen-grande');
+      
+      // Cambiar la imagen con animación
+      imagenGrande.style.opacity = '0.5';
+      setTimeout(() => {
+        imagenGrande.src = rutaImagen;
+        imagenGrande.style.opacity = '1';
+      }, 200);
+      
+      // Actualizar clase activa en miniaturas
+      const miniaturas = document.querySelectorAll('.miniatura');
+      miniaturas.forEach(miniatura => {
+        miniatura.classList.remove('active');
+        if (miniatura.querySelector('img').src === rutaImagen) {
+          miniatura.classList.add('active');
+        }
+      });
+    }
   </script>
 @endsection
