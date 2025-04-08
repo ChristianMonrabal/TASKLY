@@ -98,7 +98,7 @@
                                 <a href="#"><i class="fas fa-cog"></i> Configuración</a>
                                 <form action="#" method="POST" id="logout-form">
                                     @csrf
-                                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                                     </a>
                                 </form>
@@ -107,8 +107,8 @@
                         @else
                             <!-- Si el usuario no está autenticado -->
                             <div class="auth-buttons">
-                                <a href="#" class="btn btn-outline">Iniciar Sesión</a>
-                                <a href="#" class="btn btn-primary">Registrarse</a>
+                                <a href="{{ route('signin.auth') }}" class="btn btn-outline">Iniciar Sesión</a>
+                                <a href="{{ route('signup.auth') }}" class="btn btn-primary">Registrarse</a>
                             </div>
                         @endauth
                     </div>

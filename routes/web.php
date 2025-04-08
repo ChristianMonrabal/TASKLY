@@ -10,8 +10,6 @@ use App\Http\Controllers\TrabajoController;
 
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
 
-// Rutas para las vistas
-Route::get('/trabajos', [TrabajoController::class, 'index'])->name('trabajos.index');
 
 // Rutas para fetch directo (sin API) - DEBEN IR ANTES DE LAS RUTAS CON COMODINES
 Route::get('/trabajos/todos', [TrabajoController::class, 'todos'])->name('trabajos.todos');

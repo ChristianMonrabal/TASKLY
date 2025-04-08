@@ -30,7 +30,7 @@ class AuthController extends Controller
             if (Auth::user()->rol_id == 1) {
                 return redirect()->route('admin.usuarios.index');
             } else {
-                return redirect()->route('welcome');
+                return redirect()->route('trabajos.index');
             }
         }
     
