@@ -18,9 +18,17 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nombre',
+        'apellidos',
         'email',
+        'telefono',
+        'codigo_postal',
         'password',
+        'fecha_nacimiento',
+        'foto_perfil',
+        'descripcion',
+        'dni',
+        'rol_id'
     ];
 
     /**
@@ -44,5 +52,40 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo(Role::class, 'rol_id');
+    }
+
+    public function codigosDescuento()
+    {
+        return $this->hasMany(LogroCompleto::class, 'usuario_id');
+    }
+
+    public function logrosCompletos()
+    {
+        return $this->belongsToMany(Logro::class, 'logros_completos', 'usuario_id', 'logro_id');
+    }
+
+    public function datosBancarios()
+    {
+        return $this->hasOne(DatosBancarios::class, 'usuario_id');
+    }
+
+    public function habilidades()
+    {
+        return $this->belongsToMany(Categoria::class, 'habilidades', 'trabajador_id', 'categoria_id');
+    }
+
+    public function trabajosComoCliente()
+    {
+        return $this->hasMany(Trabajo::class, 'cliente_id');
+    }
+
+    public function postulaciones()
+    {
+        return $this->hasMany(Postulacion::class, 'trabajador_id');
     }
 }
