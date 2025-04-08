@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    cameraModal = document.getElementById('cameraModal');
     cameraPreview = document.getElementById('camera-preview');
     captureButton = document.getElementById('capture-button');
     photoCanvas = document.getElementById('photo-canvas');
@@ -8,7 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     stream = null;
 
-    startCamera();
+    cameraModal.addEventListener('shown.bs.modal', () => {
+        startCamera();
+    });
+
+    cameraModal.addEventListener('hidden.bs.modal', () => {
+        stopCamera();
+    });
 
     async function startCamera() {
         try {
@@ -34,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             stream = null;
+            cameraPreview.srcObject = null;
         }
     }
 
@@ -53,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         photoPreview.src = photoDataUrl;
         photoPreviewContainer.style.display = 'block';
+
+        modal = bootstrap.Modal.getInstance(cameraModal);
+        modal.hide();
     });
 
     window.addEventListener('beforeunload', () => {

@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('welcome');
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('signin.auth');
+Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.auth');
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.auth');
 Route::post('/signup', [AuthController::class, 'register'])->name('signup.store');
 Route::post('/login', [AuthController::class, 'login'])->name('login');

@@ -39,9 +39,9 @@
                 <button type="submit" class="login-btn">Iniciar Sesión</button>
             </form>
 
-            <a href="{{ route('login.google') }}" class="btn btn-danger">
+            {{-- <a href="{{ route('login.google') }}" class="btn btn-danger">
                 Login with Google
-            </a>
+            </a> --}}
             <p class="signup-text">
                 ¿Aún no tienes cuenta?
                 <a href="{{ route('signup.auth') }}" class="signup-link">Regístrate</a>
