@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Inicio</title>
 </head>
 <body>
-    <h1>Welcome to the application</h1>
+    @if (Auth::check())
+        <h1>¡Bienvenido!</h1>
+
+        @if (session('success'))
+            <p style="color: green;">{{ session('success') }}</p>
+        @endif
+
+        <p>Has iniciado sesión con el correo: <strong>{{ Auth::user()->email }}</strong></p>
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    @else
+        <h1>Taskly</h1>
+        <p>No has iniciado sesión.</p>
+    @endif
 </body>
 </html>

@@ -1,9 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', [pruebas::class, 'prueba']);
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.auth');
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.auth');
+Route::post('/signup', [AuthController::class, 'register'])->name('signup.store');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/signin');
+})->name('logout');

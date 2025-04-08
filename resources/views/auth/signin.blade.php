@@ -17,12 +17,20 @@
 
             <form action="{{ route('login') }}" method="POST" id="signin-form">
                 @csrf
-                <input type="email" name="email" id="signin-email" placeholder="Correo electrónico" class="input-field">
+                <input type="email" name="email" id="signin-email" placeholder="Correo electrónico" class="input-field" value="{{ old('email') }}">
 
                 <div class="password-container">
                     <input type="password" name="password" id="signin-password" placeholder="Contraseña" class="input-field">
                     <i class="fas fa-eye password-toggle" id="toggle-password"></i>
                 </div>
+
+                @if ($errors->any())
+                    <div class="error-box">
+                        @foreach ($errors->all() as $error)
+                            <p style="color: red;">{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
 
                 <button type="submit" class="login-btn">Iniciar Sesión</button>
             </form>
