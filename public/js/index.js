@@ -1,0 +1,694 @@
+// Variables para almacenar referencias a elementos DOM
+let cardScrollNuevos;
+let gridTrabajos;
+let btnLeftNuevos;
+let btnRightNuevos;
+let inputBusqueda;
+let formularioBusqueda;
+let aplicarFiltrosBtn;
+let limpiarFiltrosBtn;
+let filtroDropdowns;
+
+// Variables para almacenar filtros activos
+let filtrosActivos = {
+  categorias: [], // Ahora es un array para selección múltiple
+  precio: 'todos',
+  ubicacion: 'todos',
+  orden: 'reciente'
+};
+
+// Función que se ejecuta cuando el DOM está completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar variables DOM
+  cardScrollNuevos = document.getElementById('cardScrollNuevos');
+  gridTrabajos = document.getElementById('gridTrabajos');
+  btnLeftNuevos = document.getElementById('btn-left-nuevos');
+  btnRightNuevos = document.getElementById('btn-right-nuevos');
+  inputBusqueda = document.getElementById('inputBusqueda');
+  formularioBusqueda = document.getElementById('formularioBusqueda');
+  aplicarFiltrosBtn = document.getElementById('aplicar-filtros');
+  limpiarFiltrosBtn = document.getElementById('limpiar-filtros');
+  filtroDropdowns = document.querySelectorAll('.filtro-dropdown');
+  
+  // Verificar que los elementos existen
+  console.log('Elementos encontrados:', {
+    cardScrollNuevos: !!cardScrollNuevos,
+    gridTrabajos: !!gridTrabajos,
+    btnLeftNuevos: !!btnLeftNuevos,
+    btnRightNuevos: !!btnRightNuevos,
+    inputBusqueda: !!inputBusqueda,
+    formularioBusqueda: !!formularioBusqueda,
+    aplicarFiltrosBtn: !!aplicarFiltrosBtn,
+    limpiarFiltrosBtn: !!limpiarFiltrosBtn,
+    filtroDropdowns: filtroDropdowns.length
+  });
+  
+  // Cargar datos iniciales
+  console.log('Iniciando carga de datos...');
+  cargarNuevosTrabajos();
+  cargarTodosTrabajos();
+  
+  // Configurar eventos de scroll para nuevos trabajos
+  btnLeftNuevos.addEventListener('click', function() {
+    // Obtener el ancho visible del contenedor
+    const containerWidth = cardScrollNuevos.clientWidth;
+    // En móvil (pantallas pequeñas), desplazarse una distancia menor
+    const scrollDistance = window.innerWidth < 768 ? containerWidth * 0.8 : 600;
+    // Retroceder suavemente
+    cardScrollNuevos.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+    console.log('Scroll izquierda: ' + scrollDistance + 'px, ancho pantalla: ' + window.innerWidth + 'px');
+  });
+  
+  btnRightNuevos.addEventListener('click', function() {
+    // Obtener el ancho visible del contenedor
+    const containerWidth = cardScrollNuevos.clientWidth;
+    // En móvil (pantallas pequeñas), desplazarse una distancia menor
+    const scrollDistance = window.innerWidth < 768 ? containerWidth * 0.8 : 600;
+    // Avanzar suavemente
+    cardScrollNuevos.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+    console.log('Scroll derecha: ' + scrollDistance + 'px, ancho pantalla: ' + window.innerWidth + 'px');
+  });
+  
+  // Mostrar/ocultar botones de scroll según sea necesario
+  function actualizarBotonesScroll() {
+    // Si no hay scroll horizontal disponible, ocultar botones
+    if (cardScrollNuevos.scrollWidth <= cardScrollNuevos.clientWidth) {
+      btnLeftNuevos.style.display = 'none';
+      btnRightNuevos.style.display = 'none';
+    } else {
+      btnLeftNuevos.style.display = 'flex';
+      btnRightNuevos.style.display = 'flex';
+    }
+    
+    // Deshabilitar botón izquierdo si estamos al inicio
+    if (cardScrollNuevos.scrollLeft <= 10) {
+      btnLeftNuevos.classList.add('disabled');
+    } else {
+      btnLeftNuevos.classList.remove('disabled');
+    }
+    
+    // Deshabilitar botón derecho si estamos al final
+    if (cardScrollNuevos.scrollLeft + cardScrollNuevos.clientWidth >= cardScrollNuevos.scrollWidth - 10) {
+      btnRightNuevos.classList.add('disabled');
+    } else {
+      btnRightNuevos.classList.remove('disabled');
+    }
+  }
+  
+  // Actualizar estado de botones al cargar y al hacer scroll
+  cardScrollNuevos.addEventListener('scroll', actualizarBotonesScroll);
+  window.addEventListener('resize', actualizarBotonesScroll);
+  
+  // Configurar evento de búsqueda
+  formularioBusqueda.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const busqueda = inputBusqueda.value.trim();
+    if (busqueda) {
+      buscarTrabajos(busqueda);
+    } else {
+      aplicarFiltros();
+    }
+  });
+  
+  // Configurar evento para los dropdowns de filtros
+  filtroDropdowns.forEach(function(dropdown) {
+    const btn = dropdown.querySelector('.filtro-dropdown-btn');
+    
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      // Cerrar otros dropdowns abiertos
+      filtroDropdowns.forEach(function(otherDropdown) {
+        if (otherDropdown !== dropdown && otherDropdown.classList.contains('active')) {
+          otherDropdown.classList.remove('active');
+        }
+      });
+      
+      // Toggle el estado activo del dropdown actual
+      dropdown.classList.toggle('active');
+    });
+  });
+  
+  // Cerrar dropdowns al hacer clic fuera de ellos
+  document.addEventListener('click', function() {
+    filtroDropdowns.forEach(function(dropdown) {
+      dropdown.classList.remove('active');
+    });
+  });
+  
+  // Evitar que el clic dentro del contenido del dropdown lo cierre
+  document.querySelectorAll('.filtro-dropdown-content').forEach(function(content) {
+    content.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  });
+  
+  // Configurar eventos para las opciones de filtro de categoría (ahora checkboxes)
+  document.querySelectorAll('input[name="categoria"]').forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      // Si se selecciona "Todos", desmarcar las demás categorías
+      if (this.value === 'todos' && this.checked) {
+        document.querySelectorAll('input[name="categoria"]:not(#cat-todos)').forEach(function(otherCheckbox) {
+          otherCheckbox.checked = false;
+        });
+        filtrosActivos.categorias = [];
+      } 
+      // Si se selecciona una categoría específica, desmarcar "Todos"
+      else if (this.value !== 'todos' && this.checked) {
+        document.getElementById('cat-todos').checked = false;
+        
+        // Añadir la categoría al array si no existe ya
+        if (!filtrosActivos.categorias.includes(this.value)) {
+          filtrosActivos.categorias.push(this.value);
+        }
+      } 
+      // Si se desmarca una categoría específica, quitarla del array
+      else if (this.value !== 'todos' && !this.checked) {
+        const index = filtrosActivos.categorias.indexOf(this.value);
+        if (index > -1) {
+          filtrosActivos.categorias.splice(index, 1);
+        }
+        
+        // Si no hay categorías seleccionadas, marcar "Todos"
+        if (filtrosActivos.categorias.length === 0 && !document.getElementById('cat-todos').checked) {
+          document.getElementById('cat-todos').checked = true;
+        }
+      }
+    });
+  });
+  
+  // Configurar eventos para las opciones de filtro de precio
+  document.querySelectorAll('input[name="precio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      filtrosActivos.precio = this.value;
+    });
+  });
+  
+  // Configurar eventos para las opciones de filtro de ubicación
+  document.querySelectorAll('input[name="ubicacion"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      filtrosActivos.ubicacion = this.value;
+    });
+  });
+  
+  // Configurar eventos para las opciones de ordenación
+  document.querySelectorAll('input[name="orden"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      filtrosActivos.orden = this.value;
+    });
+  });
+  
+  // Configurar evento para el botón de precio personalizado
+  document.getElementById('aplicar-precio').addEventListener('click', function() {
+    const min = document.getElementById('precio-min').value;
+    const max = document.getElementById('precio-max').value;
+    
+    if (min || max) {
+      // Deseleccionar otras opciones de precio
+      document.querySelectorAll('input[name="precio"]').forEach(function(radio) {
+        radio.checked = false;
+      });
+      
+      // Establecer filtro de precio personalizado
+      filtrosActivos.precio = `${min || 0}-${max || ''}`;
+    }
+  });
+  
+  // Configurar evento para aplicar todos los filtros
+  aplicarFiltrosBtn.addEventListener('click', function() {
+    aplicarFiltros();
+  });
+  
+  // Configurar evento para limpiar todos los filtros
+  limpiarFiltrosBtn.addEventListener('click', function() {
+    // Restablecer filtros activos
+    filtrosActivos = {
+      categorias: [],
+      precio: 'todos',
+      ubicacion: 'todos',
+      orden: 'reciente'
+    };
+    
+    // Restablecer controles de UI
+    document.getElementById('cat-todos').checked = true;
+    document.querySelectorAll('input[name="categoria"]:not(#cat-todos)').forEach(function(checkbox) {
+      checkbox.checked = false;
+    });
+    
+    document.getElementById('precio-todos').checked = true;
+    document.getElementById('ubicacion-todos').checked = true;
+    document.getElementById('orden-reciente').checked = true;
+    
+    // Limpiar campos de precio personalizado
+    document.getElementById('precio-min').value = '';
+    document.getElementById('precio-max').value = '';
+    
+    // Limpiar campo de búsqueda
+    inputBusqueda.value = '';
+    
+    // Cargar todos los trabajos
+    cargarTodosTrabajos();
+  });
+});
+
+// Función para aplicar todos los filtros seleccionados
+function aplicarFiltros() {
+  gridTrabajos.innerHTML = '<div class="loading">Aplicando filtros...</div>';
+  
+  // Construir la URL con los parámetros de filtro
+  let url = '/trabajos/filtrar?';
+  let params = [];
+  
+  // Añadir parámetro de búsqueda si existe
+  const busqueda = inputBusqueda.value.trim();
+  if (busqueda) {
+    params.push(`busqueda=${encodeURIComponent(busqueda)}`);
+  }
+  
+  // Añadir parámetros de categoría (múltiples)
+  if (filtrosActivos.categorias.length > 0) {
+    // Para cada categoría seleccionada, añadir un parámetro categoria[]
+    filtrosActivos.categorias.forEach(function(categoriaId) {
+      params.push(`categorias[]=${categoriaId}`);
+    });
+  }
+  
+  // Añadir parámetro de precio
+  if (filtrosActivos.precio !== 'todos') {
+    params.push(`precio=${filtrosActivos.precio}`);
+  }
+  
+  // Añadir parámetro de ubicación
+  if (filtrosActivos.ubicacion !== 'todos') {
+    params.push(`ubicacion=${filtrosActivos.ubicacion}`);
+  }
+  
+  // Añadir parámetro de orden
+  if (filtrosActivos.orden !== 'reciente') {
+    params.push(`orden=${filtrosActivos.orden}`);
+  }
+  
+  // Combinar parámetros y hacer la solicitud
+  url += params.join('&');
+  
+  // Si no hay filtros activos, cargar todos los trabajos
+  if (params.length === 0) {
+    cargarTodosTrabajos();
+    return;
+  }
+  
+  console.log('Aplicando filtros con URL:', url);
+  console.log('Filtros activos:', filtrosActivos);
+  
+  fetch(url)
+    .then(function(response) {
+      console.log('Respuesta del servidor:', response.status);
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      console.log('Datos filtrados recibidos:', data ? (data.length + ' trabajos') : 'No hay datos');
+      // Si hay datos, mostrar el primero para depuración
+      if (data && data.length > 0) {
+        console.log('Ejemplo de trabajo recibido:', {
+          id: data[0].id,
+          titulo: data[0].titulo,
+          categorias: data[0].categoriastipotrabajo,
+          imagenes: data[0].imagenes
+        });
+      }
+      renderizarTodosTrabajos(data);
+    })
+    .catch(function(error) {
+      console.error('Error al aplicar filtros:', error);
+      gridTrabajos.innerHTML = '<div class="no-trabajos">Error al aplicar filtros. Intenta de nuevo.</div>';
+    });
+}
+
+// Función para cargar nuevos trabajos
+function cargarNuevosTrabajos() {
+  console.log('Intentando cargar nuevos trabajos...');
+  
+  if (!cardScrollNuevos) {
+    console.error('Error: El elemento cardScrollNuevos no existe en el DOM');
+    return;
+  }
+  
+  cardScrollNuevos.innerHTML = '<div class="loading">Cargando nuevos trabajos...</div>';
+  
+  console.log('Haciendo fetch a /trabajos/nuevos');
+  fetch('/trabajos/nuevos')
+    .then(function(response) {
+      console.log('Respuesta recibida:', response.status, response.statusText);
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      console.log('Datos recibidos:', data ? (data.length + ' nuevos trabajos') : 'No hay datos');
+      renderizarNuevosTrabajos(data);
+    })
+    .catch(function(error) {
+      console.error('Error al cargar nuevos trabajos:', error);
+      cardScrollNuevos.innerHTML = '<div class="no-trabajos">Error al cargar trabajos. Intenta de nuevo.</div>';
+    });
+}
+
+// Función para cargar todos los trabajos
+function cargarTodosTrabajos() {
+  console.log('Intentando cargar todos los trabajos...');
+  
+  if (!gridTrabajos) {
+    console.error('Error: El elemento gridTrabajos no existe en el DOM');
+    return;
+  }
+  
+  gridTrabajos.innerHTML = '<div class="loading">Cargando trabajos...</div>';
+  
+  console.log('Haciendo fetch a /trabajos/todos');
+  fetch('/trabajos/todos')
+    .then(function(response) {
+      console.log('Respuesta recibida:', response.status, response.statusText);
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      console.log('Datos recibidos:', data ? (data.length + ' trabajos') : 'No hay datos');
+      renderizarTodosTrabajos(data);
+    })
+    .catch(function(error) {
+      console.error('Error al cargar todos los trabajos:', error);
+      gridTrabajos.innerHTML = '<div class="no-trabajos">Error al cargar trabajos. Intenta de nuevo.</div>';
+    });
+}
+
+// Función para cargar trabajos por categoría
+function cargarTrabajosPorCategoria(categoriaId) {
+  gridTrabajos.innerHTML = '<div class="loading">Cargando trabajos de esta categoría...</div>';
+  
+  fetch('/trabajos/categoria-json/' + categoriaId)
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      renderizarTodosTrabajos(data);
+    })
+    .catch(function(error) {
+      console.error('Error al cargar trabajos por categoría:', error);
+      gridTrabajos.innerHTML = '<div class="no-trabajos">Error al cargar trabajos. Intenta de nuevo.</div>';
+    });
+}
+
+// Función para buscar trabajos
+function buscarTrabajos(busqueda) {
+  gridTrabajos.innerHTML = '<div class="loading">Buscando trabajos...</div>';
+  
+  fetch('/trabajos/buscar-json?busqueda=' + encodeURIComponent(busqueda))
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      renderizarTodosTrabajos(data);
+    })
+    .catch(function(error) {
+      console.error('Error al buscar trabajos:', error);
+      gridTrabajos.innerHTML = '<div class="no-trabajos">Error al buscar trabajos. Intenta de nuevo.</div>';
+    });
+}
+
+// Función para renderizar nuevos trabajos
+function renderizarNuevosTrabajos(trabajos) {
+  if (trabajos.length === 0) {
+    cardScrollNuevos.innerHTML = '<div class="no-trabajos">No hay trabajos nuevos disponibles.</div>';
+    return;
+  }
+  
+  let html = '';
+  
+  trabajos.forEach(function(trabajo) {
+    // Ruta de imagen predeterminada si no hay imágenes
+    let imagenUrl = trabajo.imagenes && trabajo.imagenes.length > 0 
+      ? '/img/trabajos/' + trabajo.imagenes[0].ruta_imagen 
+      : '/img/trabajos/trabajo-default.jpg';
+    
+    // Calcular la valoración promedio
+    let valoracionPromedio = 0;
+    let numValoraciones = 0;
+    
+    if (trabajo.valoraciones && trabajo.valoraciones.length > 0) {
+      numValoraciones = trabajo.valoraciones.length;
+      valoracionPromedio = trabajo.valoraciones.reduce((sum, val) => sum + val.puntuacion, 0) / numValoraciones;
+      valoracionPromedio = valoracionPromedio.toFixed(1); // Redondear a 1 decimal
+    }
+    
+    // Generar estrellas HTML basadas en la valoración
+    let estrellasHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(valoracionPromedio)) {
+        // Estrella completa
+        estrellasHTML += '<i class="fas fa-star"></i>';
+      } else if (i - 0.5 <= valoracionPromedio) {
+        // Media estrella
+        estrellasHTML += '<i class="fas fa-star-half-alt"></i>';
+      } else {
+        // Estrella vacía
+        estrellasHTML += '<i class="far fa-star"></i>';
+      }
+    }
+    
+    // Crear el HTML de la tarjeta
+    html += `
+      <div class="card" data-trabajo-id="${trabajo.id}">
+        <div class="card-img">
+          <img src="${imagenUrl}" alt="${trabajo.titulo}">
+        </div>
+        <div class="card-content">
+          <h2>${trabajo.titulo}</h2>
+          <p>${limitarTexto(trabajo.descripcion, 100)}</p>
+          <div class="precio">€${trabajo.precio}</div>
+          <div class="valoracion">
+            <div class="estrellas">${estrellasHTML}</div>
+            <span class="num-valoraciones">(${numValoraciones})</span>
+          </div>
+          <span class="categoria">${trabajo.categoriastipotrabajo && trabajo.categoriastipotrabajo.length > 0 ? trabajo.categoriastipotrabajo[0].nombre : 'Sin categoría'}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  cardScrollNuevos.innerHTML = html;
+}
+
+// Función para renderizar todos los trabajos
+function renderizarTodosTrabajos(trabajos) {
+  if (trabajos.length === 0) {
+    gridTrabajos.innerHTML = '<div class="no-trabajos">No se encontraron trabajos que coincidan con tus filtros.</div>';
+    return;
+  }
+  
+  let html = '';
+  
+  trabajos.forEach(function(trabajo) {
+    // Ruta de imagen predeterminada si no hay imágenes
+    let imagenUrl = trabajo.imagenes && trabajo.imagenes.length > 0 
+      ? '/img/trabajos/' + trabajo.imagenes[0].ruta_imagen 
+      : '/img/trabajos/trabajo-default.jpg';
+    
+    // Calcular la valoración promedio
+    let valoracionPromedio = 0;
+    let numValoraciones = 0;
+    
+    if (trabajo.valoraciones && trabajo.valoraciones.length > 0) {
+      numValoraciones = trabajo.valoraciones.length;
+      valoracionPromedio = trabajo.valoraciones.reduce((sum, val) => sum + val.puntuacion, 0) / numValoraciones;
+      valoracionPromedio = valoracionPromedio.toFixed(1); // Redondear a 1 decimal
+    }
+    
+    // Generar estrellas HTML basadas en la valoración
+    let estrellasHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(valoracionPromedio)) {
+        // Estrella completa
+        estrellasHTML += '<i class="fas fa-star"></i>';
+      } else if (i - 0.5 <= valoracionPromedio) {
+        // Media estrella
+        estrellasHTML += '<i class="fas fa-star-half-alt"></i>';
+      } else {
+        // Estrella vacía
+        estrellasHTML += '<i class="far fa-star"></i>';
+      }
+    }
+    
+    // Crear el HTML de la tarjeta
+    html += `
+      <div class="card" data-trabajo-id="${trabajo.id}">
+        <div class="card-img">
+          <img src="${imagenUrl}" alt="${trabajo.titulo}">
+        </div>
+        <div class="card-content">
+          <h2>${trabajo.titulo}</h2>
+          <p>${limitarTexto(trabajo.descripcion, 100)}</p>
+          <div class="precio">€${trabajo.precio}</div>
+          <div class="valoracion">
+            <div class="estrellas">${estrellasHTML}</div>
+            <span class="num-valoraciones">(${numValoraciones})</span>
+          </div>
+          <span class="categoria">${trabajo.categoriastipotrabajo && trabajo.categoriastipotrabajo.length > 0 ? trabajo.categoriastipotrabajo[0].nombre : 'Sin categoría'}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  gridTrabajos.innerHTML = html;
+}
+
+// Función utilitaria para limitar texto
+function limitarTexto(texto, longitud) {
+  if (!texto) return 'Sin descripción';
+  
+  if (texto.length <= longitud) {
+    return texto;
+  }
+  
+  return texto.substring(0, longitud) + '...';
+}
+
+// Función para cargar y mostrar los detalles de un trabajo en modal
+function cargarDetallesTrabajo(trabajoId) {
+  console.log('Cargando detalles del trabajo ID:', trabajoId);
+  
+  // Obtener referencias a los elementos del modal
+  const modalOverlay = document.getElementById('trabajoModal');
+  const modalContent = document.getElementById('trabajoModalContent');
+  
+  // Mostrar indicador de carga
+  modalContent.innerHTML = '<div class="loading-modal">Cargando detalles del trabajo...</div>';
+  modalOverlay.classList.add('active');
+  
+  // Cargar los detalles del trabajo mediante fetch
+  fetch(`/trabajos/detalle-ajax/${trabajoId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al cargar los detalles del trabajo');
+      }
+      return response.text(); // Obtenemos el HTML generado por la vista parcial
+    })
+    .then(html => {
+      // Insertar el HTML en el contenedor del modal
+      modalContent.innerHTML = html;
+      
+      // Configurar el botón de cierre
+      const closeButton = modalContent.querySelector('.close-modal');
+      if (closeButton) {
+        closeButton.addEventListener('click', cerrarModal);
+      }
+      
+      // Configurar controles del slider si hay imágenes
+      const sliderPrev = modalContent.querySelector('.slider-prev');
+      const sliderNext = modalContent.querySelector('.slider-next');
+      const trabajoImagenes = modalContent.querySelector('.trabajo-imagenes');
+      
+      if (sliderPrev && sliderNext && trabajoImagenes) {
+        let currentSlide = 0;
+        const slides = trabajoImagenes.querySelectorAll('.imagen-trabajo');
+        const totalSlides = slides.length;
+        
+        if (totalSlides > 1) {
+          sliderPrev.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            trabajoImagenes.style.transform = `translateX(-${currentSlide * 100}%)`;
+          });
+          
+          sliderNext.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            trabajoImagenes.style.transform = `translateX(-${currentSlide * 100}%)`;
+          });
+        } else {
+          // Ocultar controles si solo hay una imagen
+          sliderPrev.style.display = 'none';
+          sliderNext.style.display = 'none';
+        }
+      }
+      
+      // Configurar botón de postulación
+      const postularButton = modalContent.querySelector('.btn-postular');
+      if (postularButton) {
+        postularButton.addEventListener('click', function() {
+          const trabajoId = this.getAttribute('data-trabajo-id');
+          postularATrabajo(trabajoId);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      modalContent.innerHTML = `<div class="error-modal">Error al cargar los detalles: ${error.message}</div>`;
+    });
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+  const modalOverlay = document.getElementById('trabajoModal');
+  modalOverlay.classList.remove('active');
+}
+
+// Función para postularse a un trabajo
+function postularATrabajo(trabajoId) {
+  fetch(`/trabajos/${trabajoId}/postular`, {
+    method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Te has postulado exitosamente para este trabajo');
+    } else {
+      alert(data.message || 'Ha ocurrido un error al postularse');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error al enviar la postulación');
+  });
+}
+
+// Función para activar el evento de clic en las tarjetas de trabajo
+function activarEventosDetallesTrabajo() {
+  // Seleccionar todas las tarjetas con el atributo data-trabajo-id
+  const tarjetasTrabajos = document.querySelectorAll('.card[data-trabajo-id]');
+  
+  // Añadir evento de clic a cada tarjeta
+  tarjetasTrabajos.forEach(tarjeta => {
+    tarjeta.addEventListener('click', function() {
+      const trabajoId = this.getAttribute('data-trabajo-id');
+      cargarDetallesTrabajo(trabajoId);
+    });
+  });
+}
+
+// Modificar las funciones de renderizado para activar eventos después
+const renderizarNuevosTrabajosOriginal = renderizarNuevosTrabajos;
+renderizarNuevosTrabajos = function(trabajos) {
+  renderizarNuevosTrabajosOriginal(trabajos);
+  activarEventosDetallesTrabajo();
+};
+
+const renderizarTodosTrabajosOriginal = renderizarTodosTrabajos;
+renderizarTodosTrabajos = function(trabajos) {
+  renderizarTodosTrabajosOriginal(trabajos);
+  activarEventosDetallesTrabajo();
+};

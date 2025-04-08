@@ -1,0 +1,255 @@
+/* detalle-trabajo.css - Estilos específicos para la página de detalles de un trabajo */
+
+.detalle-trabajo {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  padding: 20px;
+}
+
+.detalle-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.detalle-titulo {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: var(--primary);
+  text-align: center;
+}
+
+.detalle-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--text);
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.detalle-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Galería de imágenes */
+.galeria-imagenes {
+  margin-bottom: 30px;
+}
+
+.imagen-principal {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+}
+
+.miniaturas {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  overflow-x: auto;
+}
+
+.imagen-miniatura {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 2px solid transparent;
+}
+
+.imagen-miniatura:hover,
+.imagen-miniatura.active {
+  transform: scale(1.05);
+  border-color: var(--primary);
+}
+
+/* Información del trabajo */
+.info-trabajo {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  padding: 20px;
+}
+
+/* Descripción y detalles */
+.descripcion-trabajo {
+  color: var(--text);
+  background-color: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.descripcion-trabajo h2 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.descripcion-trabajo p {
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Sección de detalles */
+.detalles-seccion {
+  margin-top: 30px;
+}
+
+.detalle-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  color: var(--text);
+}
+
+.detalle-item-icon {
+  margin-right: 10px;
+  color: var(--primary);
+}
+
+/* Acciones de trabajo (sidebar) */
+.acciones-trabajo {
+  background-color: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 2px 10px var(--shadow);
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.precio-detalle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2E8B57;
+  margin-bottom: 20px;
+}
+
+.categoria-detalle {
+  display: inline-block;
+  background-color: var(--primary);
+  color: white;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.btn-postular, 
+.btn-chat {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.btn-postular {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.btn-postular:hover {
+  background-color: #27ae60;
+}
+
+.btn-chat {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-chat:hover {
+  background-color: #2980b9;
+}
+
+.info-empleador {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.info-empleador h3 {
+  color: var(--primary);
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.empleador-datos {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.empleador-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.empleador-info {
+  flex: 1;
+}
+
+.empleador-nombre {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+
+.empleador-meta {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+/* Botón volver */
+.btn-volver {
+  display: inline-block;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.btn-volver:hover {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .info-trabajo {
+    grid-template-columns: 1fr;
+  }
+  
+  .acciones-trabajo {
+    position: static;
+    order: -1;
+    margin-bottom: 25px;
+  }
+  
+  .imagen-principal {
+    height: 300px;
+  }
+}
