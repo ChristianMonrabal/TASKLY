@@ -99,7 +99,7 @@
         @endif
 
         <div class="text-center mt-4">
-            <button type="submit" class="btn red">Guardar cambios</button>
+            <button type="submit" class="btn color">Guardar cambios</button>
         </div>
     </form>
 
