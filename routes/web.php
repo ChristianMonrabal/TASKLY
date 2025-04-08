@@ -1,12 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\pruebas;
 
-// Ruta para mostrar la página de crear trabajo
-Route::get('/crear-trabajo', function () {
-    return view('crear_trabajo');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [pruebas::class, 'prueba']);
