@@ -1,10 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\pruebas;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TrabajoController;
 
-// Ruta principal que ahora lleva a la página de trabajos
+
+
+
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
 
 // Rutas para las vistas
@@ -24,3 +27,15 @@ Route::get('/trabajos/{id}', [TrabajoController::class, 'mostrarDetalle'])->name
 
 // Ruta para postularse a un trabajo (POST)
 Route::post('/trabajos/{id}/postular', [TrabajoController::class, 'postular'])->name('trabajos.postular');
+
+Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.auth');
+Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.auth');
+Route::post('/signup', [AuthController::class, 'register'])->name('signup.store');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/signin');
+})->name('logout');
