@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'telefono',
         'codigo_postal',
+        'google_id',
         'password',
         'fecha_nacimiento',
         'foto_perfil',
