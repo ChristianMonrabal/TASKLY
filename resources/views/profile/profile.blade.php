@@ -69,7 +69,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="dni">DNI:</label>
-                <input type="text" name="dni" value="{{ old('dni', $user->dni) }}">
+                <input type="text" name="dni" value="{{ old('dni', $user->dni) }}" readonly>
             </div>
             <div class="form-group">
                 <label for="descripcion">Descripción:</label>
