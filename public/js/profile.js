@@ -130,3 +130,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const fields = [
+        'input[name="nombre"]',
+        'input[name="apellidos"]',
+        'input[name="email"]',
+        'input[name="telefono"]',
+        'input[name="codigo_postal"]',
+        'input[name="fecha_nacimiento"]',
+        'input[name="dni"]',
+        'textarea[name="descripcion"]'
+    ];
+
+    const anyEmpty = fields.some(selector => {
+        const element = document.querySelector(selector);
+        return !element || !element.value.trim();
+    });
+
+    const hasPhoto = document.querySelector('img.current-photo') !== null;
+
+    if (anyEmpty || !hasPhoto) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Completa tu perfil',
+            text: 'Debes completar todos los campos del perfil y subir una foto para usar Taskly.',
+            confirmButtonColor: '#EC6A6A'
+        });
+    }
+});
