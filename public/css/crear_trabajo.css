@@ -1,0 +1,218 @@
+/* Variables globales */
+:root {
+    --primary: #EC6A6A;
+    --bg: #ffffff;
+    --text: #333;
+    --card-bg: white;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --radius: 15px;
+    --radius-lg: 25px;
+    --transition: 0.3s ease;
+    --font-main: 'Poppins', sans-serif;
+}
+
+/* Reset y estilos globales */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Evitar scroll */
+html, body {
+    height: 100%; /* Asegura que el body ocupe toda la altura de la pantalla */
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-main);
+    background: var(--bg);
+    color: var(--text);
+    overflow: auto; /* Permite el scroll si es necesario */
+}
+
+/* Fondo blanco con borde rojo */
+body {
+    border: 10px solid var(--primary);
+    border-radius: var(--radius);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea el contenido al inicio */
+    min-height: 100vh;
+    padding-top: 0%; /* Opcional: agrega espacio superior */
+}
+
+/* El contenedor sigue siendo centrado */
+.container {
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    /* margin-top: 10px; Agrega espacio superior */
+}
+
+/* El formulario ocupa toda la pantalla menos el borde */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Ajustar los elementos del formulario */
+form .form-group {
+    width: 100%;
+}
+
+form .form-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: var(--text);
+}
+
+form .form-control, form .input-group {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--primary); /* Cambia el borde al color rojo */
+    border-radius: var(--radius);
+    font-size: 1rem;
+}
+
+form .form-control.no-red-border {
+    border: 1px solid #ccc; /* Cambia el borde a gris */
+}
+
+form .btn {
+    max-width: 200px;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+form .btn:hover {
+    background-color: #c45656;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Estilo para las cajas de subida de imágenes */
+.image-upload {
+    width: 100px; /* Ancho de la caja */
+    height: 100px; /* Altura de la caja */
+    border: 2px dashed var(--primary); /* Borde punteado */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden; /* Oculta cualquier contenido desbordado */
+    border-radius: var(--radius); /* Bordes redondeados */
+    background-color: var(--card-bg); /* Fondo claro */
+}
+
+.image-upload label {
+    font-size: 2rem; /* Tamaño del símbolo + */
+    color: var(--primary);
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Asegura que el icono esté en el centro absoluto */
+    top: 30%;
+    left: 0;
+    z-index: 2; /* Asegura que el icono esté encima de otros elementos */
+    pointer-events: none; /* Permite hacer clic en el input debajo */
+    background: transparent; /* Asegura que no haya fondo en el label */
+    text-align: center; /* Asegura que el texto esté centrado */
+    line-height: normal; /* Asegura que el texto no se desplace verticalmente */
+}
+
+.image-upload input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Oculta el input de archivo */
+    cursor: pointer;
+}
+
+.image-upload img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajusta la imagen para cubrir la caja */
+    border-radius: var(--radius);
+    display: none; /* Oculta la imagen por defecto */
+}
+
+.image-upload:has(img[src][style*="display: block"]) label {
+    display: none; /* Oculta el símbolo + */
+}
+
+/* Modal para vista previa de imágenes */
+.modal-content {
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 20px var(--shadow);
+}
+
+.modal-body img {
+    border-radius: var(--radius);
+    max-width: 100%;
+    height: auto;
+}
+
+.btn-warning, .btn-danger {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: var(--primary);
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px; /* Espacio entre el campo y el mensaje */
+    display: block;
+}
+
+#modifyImageButton {
+    color: white;
+    background-color: var(--primary);
+    border-color: var(--primary);
+    display: block; /* Hace que el botón se comporte como un bloque */
+    margin-left: auto; /* Aplica margen automático en el lado izquierdo */
+    margin-right: auto; /* Aplica margen automático en el lado derecho */
+}
+/* Responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .image-upload {
+        width: 80px;
+        height: 80px;
+    }
+
+    form .btn {
+        max-width: 100%;
+    }
+}
+
