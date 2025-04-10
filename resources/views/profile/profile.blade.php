@@ -78,31 +78,28 @@
             </div>
         </div>
 
-
         <div class="form-group">
             <label class="form-label">Habilidades:</label>
-            <div class="habilidades-columns">
-                {{-- Habilidades disponibles --}}
-                <div class="habilidades-col" id="disponibles">
-                    <h5>No seleccionadas</h5>
-                    @foreach ($habilidades->diff($user->habilidades) as $habilidad)
-                    <div class="habilidad-box" data-id="{{ $habilidad->id }}">
-                        {{ $habilidad->nombre }}
-                    </div>
-                    @endforeach
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="habilidades-seleccionadas">Mis habilidades actuales:</label>
+                    <select id="habilidades-seleccionadas" multiple class="form-select custom-multiselect" disabled>
+                        @foreach($user->habilidades as $habilidad)
+                            <option>{{ $habilidad->nombre }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <button type="button" id="resetHabilidades" class="btn btn-warning mt-3">
-                    Resetear habilidades
-                </button>
-                {{-- Habilidades seleccionadas --}}
-                <div class="habilidades-col" id="seleccionadas">
-                    <h5>Seleccionadas</h5>
-                    @foreach ($user->habilidades as $habilidad)
-                    <div class="habilidad-box selected" data-id="{{ $habilidad->id }}">
-                        {{ $habilidad->nombre }}
-                    </div>
-                    <input type="checkbox" name="habilidades[]" value="{{ $habilidad->id }}" checked hidden>
-                    @endforeach
+        
+                <div class="form-group">
+                    <label for="habilidades">Seleccionar habilidades:</label>
+                    <select name="habilidades[]" id="habilidades" multiple class="form-select custom-multiselect">
+                        @foreach($habilidades as $habilidad)
+                            <option value="{{ $habilidad->id }}" 
+                                @if(in_array($habilidad->id, $user->habilidades->pluck('id')->toArray())) selected @endif>
+                                {{ $habilidad->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
@@ -162,60 +159,5 @@
     <script src="{{ asset('js/camera.js') }}"></script>
     <script src="{{ asset('js/profile.js') }}"></script>
 </body>
-
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const disponibles = document.getElementById('disponibles');
-        const seleccionadas = document.getElementById('seleccionadas');
 
-        function toggleHabilidad(el) {
-            const id = el.getAttribute('data-id');
-            const isSelected = el.classList.contains('selected');
-
-            if (isSelected) {
-                el.classList.remove('selected');
-                disponibles.appendChild(el);
-
-                // Remove hidden checkbox
-                const input = document.querySelector('input[name="habilidades[]"][value="' + id + '"]');
-                if (input) input.remove();
-            } else {
-                el.classList.add('selected');
-                seleccionadas.appendChild(el);
-
-                // Add hidden checkbox
-                const input = document.createElement('input');
-                input.type = 'checkbox';
-                input.name = 'habilidades[]';
-                input.value = id;
-                input.checked = true;
-                input.hidden = true;
-                seleccionadas.appendChild(input);
-            }
-        }
-
-        // Event delegation for both containers
-        document.querySelectorAll('.habilidades-columns').forEach(container => {
-            container.addEventListener('click', function(e) {
-                const box = e.target.closest('.habilidad-box');
-                if (box) {
-                    toggleHabilidad(box);
-                }
-            });
-        });
-    });
-    
-    document.getElementById('resetHabilidades').addEventListener('click', function() {
-        // Mover todas las seleccionadas de vuelta a disponibles
-        document.querySelectorAll('#seleccionadas .habilidad-box').forEach(box => {
-            box.classList.remove('selected');
-            disponibles.appendChild(box);
-        });
-
-        // Eliminar todos los checkboxes ocultos
-        document.querySelectorAll('#seleccionadas input[name="habilidades[]"]').forEach(input => {
-            input.remove();
-        });
-    });
-</script>
