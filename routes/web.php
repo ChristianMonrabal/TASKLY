@@ -60,8 +60,9 @@ Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->nam
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::controller(ChatController::class)->group(function () {
-    Route::get('/chat/index', 'Vistachat')->name('vista.chat');
-    // Route::post('/datosincidencias', 'datosincidencias');
+    Route::get('/chat', 'Vistachat')->name('vista.chat');
+    
+    Route::post('/cargamensajes', 'cargamensajes');
     // Route::post('/editarassignar', 'editarassignar');
     // Route::post('/editarprioridad', 'editarprioridad');
 });
