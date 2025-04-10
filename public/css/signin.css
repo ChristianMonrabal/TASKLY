@@ -1,0 +1,119 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #EC6A6A;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px 16px;
+    margin: 8px 0;
+    border: 2px solid #EC6A6A;
+    border-radius: 20px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.input-field:focus {
+    outline: none;
+    border: 2px solid #d85959;}
+
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #EC6A6A;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: #d85959;
+}
+
+
+.login-btn:hover {
+    background-color: #d85959;
+}
+
+.signup-link {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+p {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+.password-toggle:hover {
+    color: #555;
+}
+
+.password-container {
+    position: relative;
+    margin: 8px 0;
+}
+
+.password-container .input-field {
+    padding-right: 40px;
+    margin: 0;
+}
+
+.password-container .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    pointer-events: auto;
+}

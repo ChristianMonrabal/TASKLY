@@ -1,0 +1,247 @@
+/* main.css - Estilos base de la aplicación */
+
+:root {
+  /* Colores principales */
+  --primary: #EC6A6A;
+  --primary-light: #F09393;
+  --primary-dark: #D94C4C;
+  --bg: #ffffff;
+  --bg-alt: #f9f9f9;
+  --text: #333;
+  --text-light: #666;
+  --text-muted: #999;
+  --card-bg: white;
+  --border: #eaeaea;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --success: #2ecc71;
+  --success-dark: #27ae60;
+  --secondary: #3498db;
+  --secondary-dark: #2980b9;
+  
+  /* Footer colores */
+  --footer-bg: #2c3e50;
+  --footer-text: #ecf0f1;
+  --footer-text-light: #bdc3c7;
+  
+  /* Tamaños y espaciados */
+  --radius: 15px;
+  --radius-lg: 25px;
+  --transition: 0.3s ease;
+  --img-height: 150px; /* Altura fija para la imagen */
+  --header-height: 70px;
+  --spacing-lg: 50px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  border: 10px solid var(--primary);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Tipografía */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: normal;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: #c45656;
+}
+
+/* Botones */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #c45656;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #2980b9;
+  color: white;
+}
+
+.btn-success {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Formularios */
+input, select, textarea {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: border-color var(--transition);
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #c45656;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+/* Page container */
+.page-container {
+  padding: 30px;
+  margin: 10px;
+}
+
+/* Utilidades */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 5px; }
+.mt-2 { margin-top: 10px; }
+.mt-3 { margin-top: 20px; }
+.mt-4 { margin-top: 30px; }
+.mt-5 { margin-top: 50px; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 5px; }
+.mb-2 { margin-bottom: 10px; }
+.mb-3 { margin-bottom: 20px; }
+.mb-4 { margin-bottom: 30px; }
+.mb-5 { margin-bottom: 50px; }
+
+.p-0 { padding: 0; }
+.p-1 { padding: 5px; }
+.p-2 { padding: 10px; }
+.p-3 { padding: 20px; }
+.p-4 { padding: 30px; }
+.p-5 { padding: 50px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  .page-container {
+    padding: 20px 10px;
+  }
+}
