@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Categoria;
 
 class ProfileController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
-        return view('profile.profile', compact('user'));
+        $user2 = User::with('habilidades')->find(Auth::id());
+        $habilidades = Categoria::all();
+        return view('profile.profile', compact('user', 'habilidades', 'user2'));
     }
 
     public function update(Request $request)
@@ -98,6 +101,7 @@ class ProfileController extends Controller
         $user->fecha_nacimiento = $data['fecha_nacimiento'] ?? null;
         $user->descripcion = $data['descripcion'] ?? null;
         $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
+        $user->habilidades()->sync($data['habilidades'] ?? []);
 
         if ($user->save()) {
             return redirect()->route('profile')->with('success', 'Perfil actualizado correctamente');

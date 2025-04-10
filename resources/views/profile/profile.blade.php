@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,22 +10,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 </head>
-<body>
 
+<body>
     @extends('layouts.app')
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
         <br><br>
         <h1 class="text-center mb-4">Mi perfil</h1>
-        
+
         <div class="profile-photo-wrapper">
             @if($user->foto_perfil)
-                <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo">
+            <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo">
             @else
-                <div class="no-photo-placeholder">
-                    <i class="fas fa-user" style="font-size: 60px;"></i>
-                </div>
+            <div class="no-photo-placeholder">
+                <i class="fas fa-user" style="font-size: 60px;"></i>
+            </div>
             @endif
-            
+
             <button type="button" class="camera-icon-btn" data-bs-toggle="modal" data-bs-target="#cameraModal">
                 <i class="fas fa-camera"></i>
             </button>
@@ -32,7 +33,7 @@
 
         @csrf
         @method('PUT')
-    
+
         <div class="form-row">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
@@ -43,7 +44,7 @@
                 <input type="text" name="apellidos" value="{{ old('apellidos', $user->apellidos) }}">
             </div>
         </div>
-    
+
         <div class="form-row">
             <div class="form-group">
                 <label for="email">Email:</label>
@@ -54,7 +55,7 @@
                 <input type="text" name="telefono" value="{{ old('telefono', $user->telefono) }}">
             </div>
         </div>
-    
+
         <div class="form-row">
             <div class="form-group">
                 <label for="codigo_postal">Código Postal:</label>
@@ -65,7 +66,7 @@
                 <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento', $user->fecha_nacimiento) }}">
             </div>
         </div>
-    
+
         <div class="form-row">
             <div class="form-group">
                 <label for="dni">DNI:</label>
@@ -76,27 +77,56 @@
                 <textarea name="descripcion">{{ old('descripcion', $user->descripcion) }}</textarea>
             </div>
         </div>
-    
+
+
+        <div class="form-group">
+            <label class="form-label">Habilidades:</label>
+            <div class="habilidades-columns">
+                {{-- Habilidades disponibles --}}
+                <div class="habilidades-col" id="disponibles">
+                    <h5>No seleccionadas</h5>
+                    @foreach ($habilidades->diff($user->habilidades) as $habilidad)
+                    <div class="habilidad-box" data-id="{{ $habilidad->id }}">
+                        {{ $habilidad->nombre }}
+                    </div>
+                    @endforeach
+                </div>
+                <button type="button" id="resetHabilidades" class="btn btn-warning mt-3">
+                    Resetear habilidades
+                </button>
+                {{-- Habilidades seleccionadas --}}
+                <div class="habilidades-col" id="seleccionadas">
+                    <h5>Seleccionadas</h5>
+                    @foreach ($user->habilidades as $habilidad)
+                    <div class="habilidad-box selected" data-id="{{ $habilidad->id }}">
+                        {{ $habilidad->nombre }}
+                    </div>
+                    <input type="checkbox" name="habilidades[]" value="{{ $habilidad->id }}" checked hidden>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
         <div id="photo-preview-container" style="display: none; margin: 20px auto; text-align: center;">
             <p>Vista previa de la nueva foto:</p>
             <img id="photo-preview" src="" alt="Foto capturada" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;">
         </div>
         <input type="hidden" name="foto_perfil_camera" id="foto_perfil_camera">
-    
+
         @if(session('success'))
-            <div class="green">
-                {{ session('success') }}
-            </div>
+        <div class="green">
+            {{ session('success') }}
+        </div>
         @endif
-        
+
         @if($errors->any())
-            <div>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li class="error-message">{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div>
+            <ul>
+                @foreach($errors->all() as $error)
+                <li class="error-message">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <div class="text-center mt-4">
@@ -132,4 +162,60 @@
     <script src="{{ asset('js/camera.js') }}"></script>
     <script src="{{ asset('js/profile.js') }}"></script>
 </body>
+
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const disponibles = document.getElementById('disponibles');
+        const seleccionadas = document.getElementById('seleccionadas');
+
+        function toggleHabilidad(el) {
+            const id = el.getAttribute('data-id');
+            const isSelected = el.classList.contains('selected');
+
+            if (isSelected) {
+                el.classList.remove('selected');
+                disponibles.appendChild(el);
+
+                // Remove hidden checkbox
+                const input = document.querySelector('input[name="habilidades[]"][value="' + id + '"]');
+                if (input) input.remove();
+            } else {
+                el.classList.add('selected');
+                seleccionadas.appendChild(el);
+
+                // Add hidden checkbox
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.name = 'habilidades[]';
+                input.value = id;
+                input.checked = true;
+                input.hidden = true;
+                seleccionadas.appendChild(input);
+            }
+        }
+
+        // Event delegation for both containers
+        document.querySelectorAll('.habilidades-columns').forEach(container => {
+            container.addEventListener('click', function(e) {
+                const box = e.target.closest('.habilidad-box');
+                if (box) {
+                    toggleHabilidad(box);
+                }
+            });
+        });
+    });
+    
+    document.getElementById('resetHabilidades').addEventListener('click', function() {
+        // Mover todas las seleccionadas de vuelta a disponibles
+        document.querySelectorAll('#seleccionadas .habilidad-box').forEach(box => {
+            box.classList.remove('selected');
+            disponibles.appendChild(box);
+        });
+
+        // Eliminar todos los checkboxes ocultos
+        document.querySelectorAll('#seleccionadas input[name="habilidades[]"]').forEach(input => {
+            input.remove();
+        });
+    });
+</script>
