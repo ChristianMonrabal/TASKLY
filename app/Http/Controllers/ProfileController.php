@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Categoria;
 
 class ProfileController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
-        return view('profile.profile', compact('user'));
+        $user2 = User::with('habilidades')->find(Auth::id());
+        $habilidades = Categoria::all();
+        return view('profile.profile', compact('user', 'habilidades', 'user2'));
     }
 
     public function update(Request $request)
@@ -23,8 +26,7 @@ class ProfileController extends Controller
             abort(500);
         }
 
-        if (empty($data['nombre']) || empty($data['apellidos']) || 
-            empty($data['email']) || empty($data['dni'])) {
+        if (empty($data['nombre']) || empty($data['apellidos']) || empty($data['email'])) {
             return back()->withErrors(['general' => 'Todos los campos obligatorios deben estar completos'])->withInput();
         }
 
@@ -34,27 +36,6 @@ class ProfileController extends Controller
 
         if (User::where('email', $data['email'])->where('id', '!=', $user->id)->exists()) {
             return back()->withErrors(['general' => 'El email ya está en uso por otro usuario'])->withInput();
-        }
-
-        if (strlen($data['dni']) != 9) {
-            return back()->withErrors(['general' => 'El DNI debe tener 9 caracteres (8 números + 1 letra)'])->withInput();
-        }
-
-        if (!preg_match('/^\d{8}[A-Za-z]$/', $data['dni'])) {
-            return back()->withErrors(['general' => 'El formato del DNI no es válido'])->withInput();
-        }
-
-        $dniLetters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-        $numbers = substr($data['dni'], 0, 8);
-        $letter = strtoupper(substr($data['dni'], 8, 1));
-        $calculatedLetter = $dniLetters[$numbers % 23];
-        
-        if ($letter !== $calculatedLetter) {
-            return back()->withErrors(['general' => 'La letra del DNI no es válida'])->withInput();
-        }
-
-        if (User::where('dni', strtoupper($data['dni']))->where('id', '!=', $user->id)->exists()) {
-            return back()->withErrors(['general' => 'El DNI ya está en uso por otro usuario'])->withInput();
         }
 
         if (!empty($data['telefono'])) {
@@ -77,7 +58,7 @@ class ProfileController extends Controller
             $birthDate = new \DateTime($data['fecha_nacimiento']);
             $today = new \DateTime();
             $age = $today->diff($birthDate)->y;
-            
+
             if ($age < 18) {
                 return back()->withErrors(['general' => 'Debes tener al menos 18 años'])->withInput();
             }
@@ -94,26 +75,34 @@ class ProfileController extends Controller
                 $extension = $matches[1];
                 $imageData = substr($imageData, strpos($imageData, ',') + 1);
                 $imageData = base64_decode($imageData);
-                
+
                 $fileName = 'profile_' . $user->id . '_' . time() . '.' . $extension;
                 $directory = public_path('img/profile_images');
-                
+
                 if (!file_exists($directory)) {
                     mkdir($directory, 0755, true);
                 }
-                
+
                 file_put_contents($directory . '/' . $fileName, $imageData);
-                
+
                 if ($user->foto_perfil && file_exists($directory . '/' . $user->foto_perfil)) {
                     @unlink($directory . '/' . $user->foto_perfil);
                 }
-                
+
                 $data['foto_perfil'] = $fileName;
             }
         }
 
-        $user->fill($data);
-        
+        $user->nombre = $data['nombre'];
+        $user->apellidos = $data['apellidos'];
+        $user->email = $data['email'];
+        $user->telefono = $data['telefono'] ?? null;
+        $user->codigo_postal = $data['codigo_postal'] ?? null;
+        $user->fecha_nacimiento = $data['fecha_nacimiento'] ?? null;
+        $user->descripcion = $data['descripcion'] ?? null;
+        $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
+        $user->habilidades()->sync($data['habilidades'] ?? []);
+
         if ($user->save()) {
             return redirect()->route('profile')->with('success', 'Perfil actualizado correctamente');
         }

@@ -14,8 +14,8 @@ class TrabajoController extends Controller
     public function index(){
         // Obtener todas las categorías para los filtros
         $categorias = Categoria::all();
-        
-        return view('index', compact('categorias'));
+        $user = Auth::user();
+        return view('index', compact('categorias', 'user'));
     }
 
     public function filtrarPorCategoria($categoria_id){

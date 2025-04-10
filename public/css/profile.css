@@ -188,3 +188,9 @@ input:invalid, textarea:invalid {
     color: green;
     text-align: center;
 }
+
+.readonly-field {
+    background-color: #f5f5f5;
+    color: #777;
+    cursor: not-allowed;
+}
