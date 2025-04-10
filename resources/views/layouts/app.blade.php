@@ -32,7 +32,7 @@
                         <ul>
                             <li><a href="{{ route('trabajos.index') }}" class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}"><i class="fas fa-briefcase"></i> Trabajos</a></li>
                             <li><a href="#" class="nav-link"><i class="fas fa-project-diagram"></i> Mis Proyectos</a></li>
-                            <li><a href="#" class="nav-link"><i class="fas fa-envelope"></i> Mensajes</a></li>
+                            <li><a href="{{ url('mensajes') }}" class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}"><i class="fas fa-envelope"></i> Mensajes</a></li>
                         </ul>
                     </nav>
                     
@@ -103,7 +103,7 @@
                             <div class="dropdown-content">
                                 <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
                                 <a href="#" class="mobile-only"><i class="fas fa-project-diagram"></i> Mis Proyectos</a>
-                                <a href="#" class="mobile-only"><i class="fas fa-envelope"></i> Mensajes</a>
+                                <a href="{{ url('mensajes') }}" class="mobile-only"><i class="fas fa-envelope"></i> Mensajes</a>
                                 <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -193,6 +193,8 @@
     
     <!-- Scripts comunes -->
     <script src="{{ asset('js/layout.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Scripts específicos de la página -->
     @yield('scripts')

@@ -77,7 +77,7 @@
 }
 
 .logo-img {
-  height: 40px;
+  height: calc(40px + 4vw); /* Tamaño base + un porcentaje del ancho de la ventana */
   width: auto;
   display: block;
   transition: all var(--transition);
@@ -633,9 +633,9 @@ html, body {
   }
   
   /* Ajustes del logo para tablet */
-  .logo-img {
+  /* .logo-img {
     height: 36px;
-  }
+  } */
 }
 
 @media (max-width: 576px) {
@@ -653,9 +653,9 @@ html, body {
   }
   
   /* Ajustes del logo para móvil */
-  .logo-img {
+  /* .logo-img {
     height: 32px;
-  }
+  } */
   
   /* Ajustes del avatar de usuario para móvil */
   .user-avatar {
