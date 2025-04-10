@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrabajoController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
 
@@ -57,3 +58,10 @@ Route::post('/logout', function () {
 
 Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
+
+Route::controller(ChatController::class)->group(function () {
+    Route::get('/chat/index', 'Vistachat')->name('vista.chat');
+    // Route::post('/datosincidencias', 'datosincidencias');
+    // Route::post('/editarassignar', 'editarassignar');
+    // Route::post('/editarprioridad', 'editarprioridad');
+});
