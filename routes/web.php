@@ -3,13 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\pruebas;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrabajoController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Admin\UsuarioController;
-use App\Http\Controllers\Admin\TrabajoController;
 use App\Http\Controllers\Admin\ValoracionController;
 use \App\Http\Controllers\Admin\CategoriaController;
 use App\Models\Categoria;
@@ -110,7 +108,7 @@ Route::get('/usuarios', function (Request $request) {
 });
 
 Route::get('api/valoraciones', function (Illuminate\Http\Request $request) {
-    $query = \App\Models\Valoracion::with(['trabajo.cliente', 'trabajador']);
+    $query = Valoracion::with(['trabajo.cliente', 'trabajador']);
     
     // Filtrar por nombre del trabajador
     if ($request->filled('trabajador')) {
