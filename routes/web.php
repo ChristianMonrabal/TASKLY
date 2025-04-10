@@ -108,7 +108,7 @@ Route::get('/usuarios', function (Request $request) {
 });
 
 Route::get('api/valoraciones', function (Illuminate\Http\Request $request) {
-    $query = \App\Models\Valoracion::with(['trabajo.cliente', 'trabajador']);
+    $query = Valoracion::with(['trabajo.cliente', 'trabajador']);
     
     // Filtrar por nombre del trabajador
     if ($request->filled('trabajador')) {
