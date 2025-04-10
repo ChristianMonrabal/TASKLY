@@ -18,7 +18,6 @@ use App\Models\Trabajo;
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
 
 
-// Rutas para fetch directo (sin API) - DEBEN IR ANTES DE LAS RUTAS CON COMODINES
 Route::get('/trabajos/todos', [TrabajoController::class, 'todos'])->name('trabajos.todos');
 Route::get('/trabajos/nuevos', [TrabajoController::class, 'nuevos'])->name('trabajos.nuevos');
 Route::get('/trabajos/categoria-json/{categoria_id}', [TrabajoController::class, 'categoriaJson'])->name('trabajos.categoria.json');
@@ -41,6 +40,11 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+// Ruta para la página de mensajes
+Route::get('/mensajes', function () {
+    return view('mensajes.index');
+})->name('mensajes')->middleware('auth');
 
 
 Route::post('/logout', function () {

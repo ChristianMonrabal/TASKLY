@@ -32,17 +32,17 @@
                         <ul>
                             <li><a href="{{ route('trabajos.index') }}" class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}"><i class="fas fa-briefcase"></i> Trabajos</a></li>
                             <li><a href="#" class="nav-link"><i class="fas fa-project-diagram"></i> Mis Proyectos</a></li>
-                            <li><a href="#" class="nav-link"><i class="fas fa-envelope"></i> Mensajes</a></li>
+                            <li><a href="{{ url('mensajes') }}" class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}"><i class="fas fa-envelope"></i> Mensajes</a></li>
                         </ul>
                     </nav>
                     
                     <div class="user-actions">
                         <!-- Si el usuario está autenticado, mostrar notificaciones -->
                         @auth
-                        <!-- Icono de trabajo -->
+                        <!-- Icono para añadir trabajo -->
                         <div class="trabajo-icon">
-                            <a href="{{ route('trabajos.index') }}" class="trabajo-btn">
-                                <i class="fas fa-briefcase"></i>
+                            <a href="#" class="trabajo-btn" title="Añadir nuevo trabajo">
+                                <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
                         
@@ -95,13 +95,15 @@
                         <div class="user-dropdown">
                             <button class="dropdown-btn">
                                 <div class="user-avatar">
-                                    <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo">                                </div>
+                                    <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}" class="current-photo">
+                                </div>
                                 <span class="user-name">{{ Auth::user()->name }}</span>
                                 <span class="icon">▼</span>
                             </button>
                             <div class="dropdown-content">
                                 <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
-                                <a href="#"><i class="fas fa-cog"></i> Configuración</a>
+                                <a href="#" class="mobile-only"><i class="fas fa-project-diagram"></i> Mis Proyectos</a>
+                                <a href="{{ url('mensajes') }}" class="mobile-only"><i class="fas fa-envelope"></i> Mensajes</a>
                                 <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -191,6 +193,8 @@
     
     <!-- Scripts comunes -->
     <script src="{{ asset('js/layout.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Scripts específicos de la página -->
     @yield('scripts')

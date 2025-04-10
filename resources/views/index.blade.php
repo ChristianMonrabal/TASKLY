@@ -9,6 +9,17 @@
 @section('content')
   <h1 class="text-center mb-4">🎯 Trabajos Disponibles</h1>
   
+  <section class="nuevos-trabajos">
+    <h2 class="seccion-titulo">🆕 Nuevos Trabajos</h2>
+    <div class="scroll-wrapper">
+      <button class="scroll-btn" id="btn-left-nuevos"><i class="fas fa-chevron-left"></i></button>
+      <div class="scroll-container" id="cardScrollNuevos">
+        <div class="loading">Cargando nuevos trabajos...</div>
+      </div>
+      <button class="scroll-btn" id="btn-right-nuevos"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
   <div class="buscador-container">
     <div class="buscador">
       <form id="formularioBusqueda">
@@ -148,16 +159,7 @@
     </div>
   </div>
 
-  <section class="nuevos-trabajos">
-    <h2 class="seccion-titulo">🆕 Nuevos Trabajos</h2>
-    <div class="scroll-wrapper">
-      <button class="scroll-btn" id="btn-left-nuevos"><i class="fas fa-chevron-left"></i></button>
-      <div class="scroll-container" id="cardScrollNuevos">
-        <div class="loading">Cargando nuevos trabajos...</div>
-      </div>
-      <button class="scroll-btn" id="btn-right-nuevos"><i class="fas fa-chevron-right"></i></button>
-    </div>
-  </section>
+  
 
   <section class="todos-trabajos">
     <h2 class="seccion-titulo">📋 Todos los Trabajos</h2>
