@@ -460,6 +460,64 @@
   padding: 0;
 }
 
+/* Menú móvil */
+.mobile-menu {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: height var(--transition);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mobile-menu.active {
+  height: auto;
+  opacity: 1;
+  visibility: visible;
+  padding: 20px 0;
+  max-height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+}
+
+.mobile-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav li {
+  border-bottom: 1px solid var(--border);
+}
+
+.mobile-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: normal;
+  transition: all var(--transition);
+}
+
+.mobile-nav a:hover, 
+.mobile-nav a.active {
+  background-color: var(--gray-light);
+  color: var(--primary);
+}
+
+.mobile-nav i {
+  width: 20px;
+  text-align: center;
+  color: var(--primary);
+}
+
 .mobile-menu-btn span {
   display: block;
   width: 100%;
@@ -585,6 +643,8 @@
 html, body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* Responsivo */
@@ -608,6 +668,7 @@ html, body {
     display: flex;
   }
   
+  /* Ocultamos los botones de autenticación en el header para móvil, ya que se muestran en el menú móvil */
   .user-actions .auth-buttons {
     display: none;
   }
@@ -615,6 +676,11 @@ html, body {
   /* Mostrar opciones de navegación en el menú desplegable en móvil */
   .mobile-only {
     display: flex;
+  }
+  
+  /* Evitar scroll cuando el menú móvil está abierto */
+  body.no-scroll {
+    overflow: hidden;
   }
   
   .footer-links {

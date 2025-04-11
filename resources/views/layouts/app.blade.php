@@ -121,16 +121,39 @@
                         @endauth
                     </div>
                     
-                    {{-- <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
                         <span></span>
                         <span></span>
                         <span></span>
-                    </button> --}}
+                    </button>
                 </div>
             </div>
         </header>
         
-        <!-- Eliminamos el menú móvil duplicado para mantener solo las funciones del dropdown de usuario -->
+        <!-- Menú móvil -->
+        <div class="mobile-menu" id="mobileMenu">
+            <nav class="mobile-nav">
+                <ul>
+                    <li><a href="{{ route('trabajos.index') }}" class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}"><i class="fas fa-briefcase"></i> Trabajos</a></li>
+                    @auth
+                    <li><a href="#" class="nav-link"><i class="fas fa-project-diagram"></i> Mis Proyectos</a></li>
+                    <li><a href="{{ url('mensajes') }}" class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}"><i class="fas fa-envelope"></i> Mensajes</a></li>
+                    <li><a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" id="logout-form-mobile">
+                            @csrf
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </form>
+                    </li>
+                    @else
+                    <li><a href="{{ route('signin.auth') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                    <li><a href="{{ route('signup.auth') }}" class="nav-link"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+                    @endauth
+                </ul>
+            </nav>
+        </div>
         
         <!-- Contenido principal -->
         <main class="main-content">

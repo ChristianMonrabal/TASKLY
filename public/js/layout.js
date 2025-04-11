@@ -1,8 +1,9 @@
 // layout.js - Funcionalidad para el layout principal
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del menú móvil (adaptado para solo usar el dropdown de usuario)
+    // Elementos del menú móvil
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
     
     // Elementos de notificaciones y usuario
     const notificationBtn = document.getElementById('notificationBtn');
@@ -10,17 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const userDropdownBtns = document.querySelectorAll('.user-dropdown .dropdown-btn');
     const userDropdownContents = document.querySelectorAll('.user-dropdown .dropdown-content');
     
-    // Toggle del menú para móvil (ahora maneja el dropdown de usuario)
-    if (mobileMenuBtn) {
+    // Toggle del menú para móvil
+    if (mobileMenuBtn && mobileMenu) {
         mobileMenuBtn.addEventListener('click', function() {
             this.classList.toggle('active');
-            
-            // Mostrar el dropdown de usuario si existe
-            if (userDropdownContents.length > 0) {
-                userDropdownContents.forEach(dropdown => {
-                    dropdown.classList.toggle('show');
-                });
-            }
+            mobileMenu.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
         });
     }
     
