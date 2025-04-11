@@ -32,7 +32,7 @@
       </div>
     @else
       <div class="imagen-principal">
-        <img src="{{ asset('img/trabajos/trabajo-default.jpg') }}" alt="Imagen por defecto">
+        <img src="{{ asset('img/trabajos/trabajo-default.png') }}" alt="Imagen por defecto">
       </div>
     @endif
     
@@ -104,7 +104,7 @@
             <h4 class="card-titulo">Publicado por</h4>
             <div class="usuario-info">
               <div class="usuario-avatar">
-                <img src="{{ asset('img/profile_images/default.jpg') }}" alt="{{ $trabajo->user->name ?? 'Usuario' }}">
+                <img src="{{ asset('img/profile_images/perfil_default.png') }}" alt="{{ $trabajo->user->name ?? 'Usuario' }}">
               </div>
               <div>
                 <div class="usuario-nombre">{{ $trabajo->user->name ?? 'Usuario' }}</div>

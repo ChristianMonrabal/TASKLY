@@ -102,8 +102,9 @@
                             </button>
                             <div class="dropdown-content">
                                 <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
-                                <a href="#" class="mobile-only"><i class="fas fa-project-diagram"></i> Mis Proyectos</a>
-                                <a href="{{ url('mensajes') }}" class="mobile-only"><i class="fas fa-envelope"></i> Mensajes</a>
+                                <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                <a href="#"><i class="fas fa-project-diagram"></i> Mis Proyectos</a>
+                                <a href="{{ url('mensajes') }}"><i class="fas fa-envelope"></i> Mensajes</a>
                                 <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -118,6 +119,18 @@
                                 <a href="{{ route('signin.auth') }}" class="btn btn-outline">Iniciar Sesión</a>
                                 <a href="{{ route('signup.auth') }}" class="btn btn-primary">Registrarse</a>
                             </div>
+                            
+                            <!-- Menú móvil para no autenticados (sólo visible en móvil) -->
+                            <div class="mobile-menu-no-auth">
+                                <button class="mobile-dropdown-btn">
+                                    <span class="icon">▼</span>
+                                </button>
+                                <div class="mobile-dropdown-content">
+                                    <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                    <a href="{{ route('signin.auth') }}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+                                    <a href="{{ route('signup.auth') }}"><i class="fas fa-user-plus"></i> Registrarse</a>
+                                </div>
+                            </div>
                         @endauth
                     </div>
                     
@@ -130,30 +143,7 @@
             </div>
         </header>
         
-        <!-- Menú móvil -->
-        <div class="mobile-menu" id="mobileMenu">
-            <nav class="mobile-nav">
-                <ul>
-                    <li><a href="{{ route('trabajos.index') }}" class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}"><i class="fas fa-briefcase"></i> Trabajos</a></li>
-                    @auth
-                    <li><a href="#" class="nav-link"><i class="fas fa-project-diagram"></i> Mis Proyectos</a></li>
-                    <li><a href="{{ url('mensajes') }}" class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}"><i class="fas fa-envelope"></i> Mensajes</a></li>
-                    <li><a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a></li>
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST" id="logout-form-mobile">
-                            @csrf
-                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                            </a>
-                        </form>
-                    </li>
-                    @else
-                    <li><a href="{{ route('signin.auth') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
-                    <li><a href="{{ route('signup.auth') }}" class="nav-link"><i class="fas fa-user-plus"></i> Registrarse</a></li>
-                    @endauth
-                </ul>
-            </nav>
-        </div>
+        <!-- Eliminamos el menú móvil independiente -->
         
         <!-- Contenido principal -->
         <main class="main-content">
