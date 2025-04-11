@@ -189,6 +189,10 @@
   transform: scale(1.1);
 }
 
+.card {
+  border: 2px solid red; /* Borde de color rojo */
+}
+
 /* Botón y dropdown de notificaciones */
 .notification-bell {
   position: relative;

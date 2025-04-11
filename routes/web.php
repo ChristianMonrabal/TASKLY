@@ -64,3 +64,7 @@ Route::get('/trabajos_publicados', function () {
 })->name('trabajos.publicados');
 Route::get('/trabajos_publicados', [JobController::class, 'trabajosPublicados'])->name('trabajos.publicados');
 Route::get('/trabajo/{id}', [JobController::class, 'show'])->name('trabajos.show');
+Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
+// Ruta para ver los detalles del trabajo
+Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
+Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');

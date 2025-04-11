@@ -1,5 +1,5 @@
 /* Variables globales */
-:root {
+/* :root {
     --primary: #EC6A6A;
     --bg: #ffffff;
     --text: #333;
@@ -9,7 +9,7 @@
     --radius-lg: 25px;
     --transition: 0.3s ease;
     --font-main: 'Poppins', sans-serif;
-}
+} */
 
 /* Reset y estilos globales */
 *,
@@ -20,40 +20,40 @@
 
 /* Evitar scroll */
 html, body {
-    height: 100%; /* Asegura que el body ocupe toda la altura de la pantalla */
+    /* height: 100%;
     margin: 0;
     padding: 0;
     font-family: var(--font-main);
     background: var(--bg);
     color: var(--text);
-    overflow: auto; /* Permite el scroll si es necesario */
+    overflow: auto; */
 }
 
 /* Fondo blanco con borde rojo */
 body {
-    border: 10px solid var(--primary);
+    /* border: 10px solid var(--primary);
     border-radius: var(--radius);
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Alinea el contenido al inicio */
+    align-items: flex-start;
     min-height: 100vh;
-    padding-top: 0%; /* Opcional: agrega espacio superior */
+    padding-top: 0%; */
 }
 
 /* El contenedor sigue siendo centrado */
 .container {
-    max-width: 600px;
+    /* max-width: 600px;
     width: 100%;
-    padding: 30px;
+    padding: 30px; */
     /* margin-top: 10px; Agrega espacio superior */
 }
 
 /* El formulario ocupa toda la pantalla menos el borde */
 form {
-    width: 100%;
+    /* width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.5rem; */
 }
 
 /* Ajustar los elementos del formulario */
@@ -62,10 +62,10 @@ form .form-group {
 }
 
 form .form-group label {
-    font-weight: bold;
+    /* font-weight: bold;
     margin-bottom: 0.5rem;
     display: block;
-    color: var(--text);
+    color: var(--text); */
 }
 
 form .form-control, form .input-group {
@@ -148,14 +148,6 @@ h1 {
 }
 
 .image-upload img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ajusta la imagen para cubrir la caja */
-    border-radius: var(--radius);
-    display: none; /* Oculta la imagen por defecto */
 }
 
 .image-upload:has(img[src][style*="display: block"]) label {
@@ -196,6 +188,14 @@ h1 {
     margin-left: auto; /* Aplica margen automático en el lado izquierdo */
     margin-right: auto; /* Aplica margen automático en el lado derecho */
 }
+
+.d-flex {
+    display: flex;
+    justify-content: center; /* Alinea las cajas al principio */
+    gap: 110px; /* Espacio entre las cajas */
+    flex-wrap: wrap; /* Para que si no cabe todo en una fila, las imágenes se muevan a la siguiente fila */
+}
+
 /* Responsividad */
 @media (max-width: 768px) {
     .container {

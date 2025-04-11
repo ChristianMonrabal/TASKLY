@@ -80,90 +80,118 @@ function handleImageChange(event) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    const fields = ['titulo', 'descripcion', 'precio', 'tags', 'direccion']; // Agregar 'imagenes' a la lista de campos
+    const form = document.getElementById('mi-formulario');
+    const textFields = ['titulo', 'descripcion', 'precio', 'direccion'];
 
-    // Función para validar un campo
-    function validateField(input) {
+    // Función para validar campos de texto
+    function validateTextField(input) {
         const errorSpan = input.closest('.form-group').querySelector('.error-message');
-        
+
         if (!input.value.trim()) {
             errorSpan.textContent = 'Este campo es obligatorio.';
             errorSpan.style.display = 'block';
-        } else {
-            errorSpan.textContent = '';
-            errorSpan.style.display = 'none';
+            return false;
+        } else if (input.id === 'direccion') {
+            if (!/^\d{5}$/.test(input.value.trim())) {
+                errorSpan.textContent = 'El código postal debe tener exactamente 5 números.';
+                errorSpan.style.display = 'block';
+                return false;
+            }
         }
+        
+        errorSpan.textContent = '';
+        errorSpan.style.display = 'none';
+        return true;
     }
 
-    // Validar imágenes
+    // Función para validar selección de categorías
+    function validateCategories() {
+        const categorias = document.getElementById('categorias');
+        const errorSpan = categorias.closest('.form-group').querySelector('.error-message');
+
+        if (categorias.selectedOptions.length === 0) {
+            errorSpan.textContent = 'Debes seleccionar al menos un tag.';
+            errorSpan.style.display = 'block';
+            return false;
+        }
+
+        errorSpan.textContent = '';
+        errorSpan.style.display = 'none';
+        return true;
+    }
+
+    // Función para validar imágenes
     function validateImages() {
         const inputs = document.querySelectorAll('input[type="file"][name="imagenes[]"]');
+        const errorSpan = document.getElementById('image-error');
         let imageSelected = false;
-        
+
         inputs.forEach(input => {
             if (input.files.length > 0) {
                 imageSelected = true;
             }
         });
 
-        const errorSpan = document.getElementById('image-error');
-
         if (!imageSelected) {
+            errorSpan.textContent = 'Debes añadir al menos una imagen.';
             errorSpan.style.display = 'block';
+            return false;
         } else {
+            errorSpan.textContent = '';
             errorSpan.style.display = 'none';
+            return true;
         }
     }
 
-    // Agregar un evento 'blur' para cada campo (excepto las imágenes, porque usan 'change')
-    fields.forEach(function (fieldName) {
+    // Validar en tiempo real (onBlur) para campos de texto
+    textFields.forEach(function (fieldName) {
         const input = document.getElementById(fieldName);
-
         if (input) {
             input.addEventListener('blur', function () {
-                validateField(input); // Validar otros campos cuando pierden el foco
+                validateTextField(input);
             });
         }
+    });
+
+    // Validar en tiempo real (onBlur) para categorías
+    const categoriasSelect = document.getElementById('categorias');
+    if (categoriasSelect) {
+        categoriasSelect.addEventListener('blur', function () {
+            validateCategories();
+        });
+    }
+
+    // Validar imágenes en tiempo real
+    const imageInputs = document.querySelectorAll('input[type="file"][name="imagenes[]"]');
+    imageInputs.forEach(input => {
+        input.addEventListener('blur', validateImages);
+        input.addEventListener('change', validateImages);
     });
 
     // Validar todo al enviar el formulario
     form.addEventListener('submit', function (e) {
         let hasErrors = false;
 
-        fields.forEach(function (fieldName) {
+        // Validar campos de texto
+        textFields.forEach(function (fieldName) {
             const input = document.getElementById(fieldName);
-            const errorSpan = input.closest('.form-group').querySelector('.error-message');
-
-            // Comprobar si el campo tiene errores antes de enviar
-            if (!input.value.trim()) {
-                errorSpan.textContent = 'Este campo es obligatorio.';
-                errorSpan.style.display = 'block';
+            if (!validateTextField(input)) {
                 hasErrors = true;
             }
         });
 
-        // Validar imágenes
-        const inputs = document.querySelectorAll('input[type="file"][name="imagenes[]"]');
-        let imageSelected = false;
-        
-        inputs.forEach(input => {
-            if (input.files.length > 0) {
-                imageSelected = true;
-            }
-        });
-
-        const errorSpan = document.getElementById('image-error');
-
-        if (!imageSelected) {
-            errorSpan.style.display = 'block';
+        // Validar categorías
+        if (!validateCategories()) {
             hasErrors = true;
-        } else {
-            errorSpan.style.display = 'none';
+        }
+
+        // Validar imágenes
+        if (!validateImages()) {
+            hasErrors = true;
         }
 
         if (hasErrors) {
-            e.preventDefault(); // Prevenir el envío si hay errores
+            e.preventDefault(); // No enviar el formulario si hay errores
         }
     });
 });

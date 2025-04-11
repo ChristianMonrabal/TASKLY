@@ -1,18 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Work</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/crear_trabajo.css') }}">
-    <script src="{{ asset('js/crear_trabajo.js') }}"></script>
-</head>
-<body>
+@extends('layouts.app')
+
+@section('title', 'Crear Trabajo') <!-- Título de la página -->
+
+@section('styles')
+  <link rel="stylesheet" href="{{ asset('css/crear_trabajo.css') }}"/>
+@endsection
+
+@section('content')
     <div class="container mt-2">
         <h1 class="text-center">Crear Trabajo</h1>
-        <form action="{{ route('trabajos.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('trabajos.store') }}" id="mi-formulario" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group mb-3">
                 <label for="titulo">Título</label>
@@ -29,21 +26,25 @@
             <div class="form-group mb-3">
                 <label for="precio">Precio</label>
                 <div class="input-group">
-                    <input type="number" name="precio" id="precio" class="form-control no-red-border" placeholder="Precio">
-                    <span class="input-group-text">€</span>
+                    <input type="number" name="precio" id="precio" class="form-control no-red-border" placeholder="Precio (€)">
                 </div>
-                <span class="error-message" style="color: red; font-size: 0.9rem; display: none;"></span>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label for="tags">Tags</label>
-                <input type="text" name="tags" id="tags" class="form-control" placeholder="Ejemplo: diseño, desarrollo, marketing">
                 <span class="error-message" style="color: red; font-size: 0.9rem; display: none;"></span>
             </div>
 
             <div class="form-group mb-3">
-                <label for="direccion">Dirección del trabajo</label>
-                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Ubicación del trabajo">
+                <label for="categorias">Tags:</label>
+                <select name="categorias[]" id="categorias" multiple class="form-select custom-multiselect">
+                    @foreach($categorias as $categoria)
+                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
+                <small class="form-text text-muted">Puedes seleccionar varias categorías manteniendo pulsado Ctrl (Cmd en Mac) mientras haces clic.</small>
+                <span class="error-message" style="color: red; font-size: 0.9rem; display: none;"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="direccion">Codigo postal del trabajo</label>
+                <input type="number" name="direccion" id="direccion" class="form-control" placeholder="Ubicación del trabajo">
                 <span class="error-message" style="color: red; font-size: 0.9rem; display: none;"></span>
             </div>
 
@@ -115,10 +116,16 @@
                         <button type="button" class="btn btn-warning" id="modifyImageButton" style="margin-right: 5px;" onclick="modifyImage()">Modificar</button>
                         <button type="button" class="btn btn-danger" id="deleteImageButton" style="margin-left: 5px;" onclick="deleteImage()">Borrar</button>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </body>
 </html>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/crear_trabajo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+@endsection

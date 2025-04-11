@@ -41,7 +41,7 @@
                         @auth
                         <!-- Icono de trabajo -->
                         <div class="trabajo-icon">
-                            <a href="{{ route('trabajos.index') }}" class="trabajo-btn">
+                            <a href="{{ route('trabajos.crear') }}" class="trabajo-btn">
                                 <i class="fas fa-briefcase"></i>
                             </a>
                         </div>

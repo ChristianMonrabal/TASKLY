@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Trabajos Publicados</title>
+    <link rel="stylesheet" href="{{ asset('css/trabajos_publicados.css') }}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -15,13 +16,24 @@
                 @foreach ($trabajos as $trabajo)
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100 shadow-sm">
+                            <!-- Imagen del trabajo -->
+                            @if($trabajo->imagenes->isNotEmpty())
+                            <img src="{{ asset($trabajo->imagenes->first()->ruta_imagen) }}" class="card-img-top" alt="{{ $trabajo->titulo }}">
+                            @else
+                                <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen">
+                            @endif
+
                             <div class="card-body">
                                 <h5 class="card-title">{{ $trabajo->titulo }}</h5>
                                 <p class="card-text">{{ Str::limit($trabajo->descripcion, 100) }}</p>
                                 <p class="card-text"><strong>Precio:</strong> {{ $trabajo->precio }} €</p>
                             </div>
                             <div class="card-footer bg-transparent border-0">
-                                <a href="{{ route('trabajos.show', $trabajo->id) }}" class="btn btn-primary w-100">Ver detalles</a>
+                                <!-- Contenedor para los botones con clases para alinearlos -->
+                                <div class="d-flex gap-2">
+                                    <a href="/detalles_trabajo/{{ $trabajo->id }}" class="btn btn-primary w-50">Ver detalles</a>
+                                    <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="btn btn-primary w-50">Ver candidatos</a>
+                                </div>
                             </div>
                         </div>
                     </div>
