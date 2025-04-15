@@ -89,11 +89,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Postulacion::class, 'trabajador_id');
     }
+
     public function chats()
     {
         return $this->hasMany(Chat::class, 'trabajador_id');
     }
+
     public function pagos() {
         return $this->hasMany(Pago::class, 'trabajador_id');
+    }
+    
+    // Nueva relación para las valoraciones donde el usuario actúa como trabajador
+    public function valoracionesComoTrabajador()
+    {
+        return $this->hasMany(\App\Models\Valoracion::class, 'trabajador_id');
     }
 }
