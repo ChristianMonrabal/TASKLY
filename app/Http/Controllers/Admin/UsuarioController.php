@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Log; // Añadir esta línea
+use Illuminate\Support\Facades\DB;
+
 
 
 class UsuarioController extends Controller
@@ -74,64 +76,62 @@ class UsuarioController extends Controller
     }
     
     /**
-     * Elimina un usuario.
+     * Elimina un usuario y todas las relaciones dependientes usando una transacción.
      */
     public function destroy(User $usuario)
     {
         try {
-            // --- Eliminar trabajos asociados (si el usuario actúa como cliente) ---
+            DB::beginTransaction();
+
+            // --- Si el usuario actúa como cliente: eliminar trabajos y sus relaciones ---
             foreach ($usuario->trabajosComoCliente as $trabajo) {
-                // Desvincular la relación many-to-many con categorías
+                // Desvincular la relación many-to-many con categorías.
                 if (method_exists($trabajo, 'categoriastipotrabajo')) {
                     $trabajo->categoriastipotrabajo()->detach();
                 }
-                
                 // Eliminar los chats asociados a este trabajo.
                 if (method_exists($trabajo, 'chat') && $trabajo->chat()->exists()) {
                     $trabajo->chat()->delete();
                 }
-                
                 // Eliminar las postulaciones asociadas al trabajo.
                 if (method_exists($trabajo, 'postulaciones') && $trabajo->postulaciones()->exists()) {
                     $trabajo->postulaciones()->delete();
                 }
-                
                 // Eliminar imágenes asociadas.
-                if (method_exists($trabajo, 'imagenes') && $trabajo->imagenes()->exists()){
+                if (method_exists($trabajo, 'imagenes') && $trabajo->imagenes()->exists()) {
                     $trabajo->imagenes()->delete();
                 }
-                
-                // Eliminar pagos asociados al trabajo, si fueran referenciados (en algunos casos, la relación de pagos podría ser diferente)
-                if (method_exists($trabajo, 'pagos') && $trabajo->pagos()->exists()){
+                // Eliminar los pagos asociados al trabajo.
+                if (method_exists($trabajo, 'pagos') && $trabajo->pagos()->exists()) {
                     $trabajo->pagos()->delete();
                 }
-                
-                // Eliminar las valoraciones asociadas.
-                if (method_exists($trabajo, 'valoraciones') && $trabajo->valoraciones()->exists()){
+                // Eliminar las valoraciones asociadas al trabajo.
+                if (method_exists($trabajo, 'valoraciones') && $trabajo->valoraciones()->exists()) {
                     $trabajo->valoraciones()->delete();
                 }
-                
                 // Eliminar el trabajo.
                 $trabajo->delete();
             }
-            
-            // --- Eliminar relaciones directas del usuario ---
-            // Eliminar chats asociados en los que el usuario actúa como trabajador.
+
+            // --- Eliminar relaciones directas del usuario cuando actúa como trabajador ---
             if (method_exists($usuario, 'chats') && $usuario->chats()->exists()){
                 $usuario->chats()->delete();
             }
-            
-            // Eliminar pagos asociados directamente al usuario (referenciados con trabajador_id).
+
             if (method_exists($usuario, 'pagos') && $usuario->pagos()->exists()){
                 $usuario->pagos()->delete();
             }
-            
-            // Eliminar postulaciones adicionales del usuario (si actúa como trabajador).
+
             if (method_exists($usuario, 'postulaciones') && $usuario->postulaciones()->exists()){
                 $usuario->postulaciones()->delete();
             }
-            
-            // Eliminar otros datos, por ejemplo:
+
+            // Ahora eliminamos las valoraciones donde el usuario es trabajador, usando la nueva relación.
+            if (method_exists($usuario, 'valoracionesComoTrabajador') && $usuario->valoracionesComoTrabajador()->exists()){
+                $usuario->valoracionesComoTrabajador()->delete();
+            }
+
+            // Eliminar datos bancarios, logros, habilidades y códigos de descuento.
             if ($usuario->datosBancarios) {
                 $usuario->datosBancarios()->delete();
             }
@@ -144,10 +144,12 @@ class UsuarioController extends Controller
             if (method_exists($usuario, 'codigosDescuento') && $usuario->codigosDescuento()->exists()){
                 $usuario->codigosDescuento()->delete();
             }
-            
+
             // Finalmente, eliminar el usuario.
             $usuario->delete();
-    
+
+            DB::commit();
+
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
@@ -156,6 +158,7 @@ class UsuarioController extends Controller
             }
             return redirect()->route('admin.usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         } catch (\Exception $e) {
+            DB::rollBack();
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
@@ -165,8 +168,4 @@ class UsuarioController extends Controller
             return redirect()->back()->with('error', 'Error al eliminar el usuario: ' . $e->getMessage());
         }
     }
-    
-    
-    
-    
 }
