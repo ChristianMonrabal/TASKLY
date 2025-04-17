@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    const inputs = form.querySelectorAll('input, textarea');
+    form = document.querySelector('form');
+    inputs = form.querySelectorAll('input, textarea');
 
     inputs.forEach(input => {
         input.addEventListener('blur', function () {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function validateEmail(field) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(field.value)) {
             showError(field, 'Ingresa un email válido');
             return false;
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function validatePhone(field) {
-        const phoneRegex = /^\d{9}$/;
+        phoneRegex = /^\d{9}$/;
         if (!phoneRegex.test(field.value)) {
             showError(field, 'El teléfono debe tener 9 dígitos');
             return false;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function validatePostalCode(field) {
-        const postalRegex = /^\d{5}$/;
+        postalRegex = /^\d{5}$/;
         if (!postalRegex.test(field.value)) {
             showError(field, 'El código postal debe tener 5 dígitos');
             return false;
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function validateBirthDate(field) {
-        const birthDate = new Date(field.value);
-        const today = new Date();
-        const minAgeDate = new Date(
+        birthDate = new Date(field.value);
+        today = new Date();
+        minAgeDate = new Date(
             today.getFullYear() - 18,
             today.getMonth(),
             today.getDate()
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function showError(field, message) {
         field.style.borderColor = '#EC6A6A';
 
-        const errorDiv = document.createElement('div');
+        errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.style.color = '#EC6A6A';
         errorDiv.style.fontSize = '0.8rem';
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function clearError(field) {
         field.style.borderColor = '';
 
-        const errorDiv = field.parentNode.querySelector('.error-message');
+        errorDiv = field.parentNode.querySelector('.error-message');
         if (errorDiv) {
             field.parentNode.removeChild(errorDiv);
         }
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    const fields = [
+    fields = [
         'input[name="nombre"]',
         'input[name="apellidos"]',
         'input[name="email"]',
@@ -143,12 +143,12 @@ document.addEventListener('DOMContentLoaded', function () {
         'textarea[name="descripcion"]'
     ];
 
-    const anyEmpty = fields.some(selector => {
-        const element = document.querySelector(selector);
+    anyEmpty = fields.some(selector => {
+        element = document.querySelector(selector);
         return !element || !element.value.trim();
     });
 
-    const hasPhoto = document.querySelector('img.current-photo') !== null;
+    hasPhoto = document.querySelector('img.current-photo') !== null;
 
     if (anyEmpty || !hasPhoto) {
         Swal.fire({
@@ -156,6 +156,26 @@ document.addEventListener('DOMContentLoaded', function () {
             title: 'Completa tu perfil',
             text: 'Debes completar todos los campos del perfil y subir una foto para usar Taskly.',
             confirmButtonColor: '#EC6A6A'
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    select = document.getElementById('habilidades');
+
+    if (select) {
+        Array.from(select.options).forEach(option => {
+            option.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+
+                scrollTop = select.scrollTop;
+
+                option.selected = !option.selected;
+
+                setTimeout(() => {
+                    select.scrollTop = scrollTop;
+                }, 0); 
+            });
         });
     }
 });

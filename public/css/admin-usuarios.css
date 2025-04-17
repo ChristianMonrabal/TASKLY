@@ -1,0 +1,85 @@
+/* public/css/admin-usuarios.css */
+
+/* Fondo rojo de la página */
+body {
+    background-color: #EC6A6A;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor blanco */
+.outer-border {
+    min-height: 94vh;
+    padding: 20px;
+    background-color: #ffffff;
+    margin: 20px auto;
+    max-width: 1500px;
+    overflow-y: auto;
+    border-radius: 4px;
+}
+
+/* Título centrado */
+.outer-border h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Estilos para la tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+}
+
+.table thead {
+    background-color: #f0f0f0;
+}
+
+.table thead th {
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 12px;
+}
+
+.table tbody td {
+    padding: 12px;
+}
+
+.table-bordered {
+    border: 1px solid #ddd;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #ddd !important;
+}
+
+/* Botones de acción */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
+
+.btn-primary.btn-sm i,
+.btn-danger.btn-sm i {
+    color: #fff;
+}
+
+.btn-primary.btn-sm {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-danger.btn-sm {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* Estilos para mensajes de error onblur */
+.error-message {
+    font-size: 0.8rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+}
