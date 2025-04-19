@@ -68,3 +68,4 @@ Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.c
 // Ruta para ver los detalles del trabajo
 Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
 Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
+Route::get('trabajos/crear', [JobController::class, 'create'])->name('trabajos.create');

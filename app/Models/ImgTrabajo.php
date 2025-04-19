@@ -8,7 +8,7 @@ class ImgTrabajo extends Model
 {
     protected $table = 'img_trabajos';
     
-    protected $fillable = ['trabajo_id', 'nombre_img', 'descripcion'];
+    protected $fillable = ['ruta_imagen', 'trabajo_id', 'nombre_img', 'descripcion'];
     
     public function trabajo()
     {

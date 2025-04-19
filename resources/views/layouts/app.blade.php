@@ -189,10 +189,13 @@
         </footer>
     </div>
     
-    <!-- Scripts comunes -->
-    <script src="{{ asset('js/layout.js') }}"></script>
-    
-    <!-- Scripts específicos de la página -->
-    @yield('scripts')
+<!-- Scripts comunes -->
+<script src="{{ asset('js/layout.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Scripts específicos de la página -->
+@yield('scripts')
 </body>
 </html>
