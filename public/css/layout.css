@@ -60,6 +60,7 @@
   align-items: center;
   justify-content: space-between;
   height: var(--header-height);
+  padding: 0 15px;
 }
 
 /* Logo */
@@ -76,7 +77,7 @@
 }
 
 .logo-img {
-  height: 42px;
+  height: calc(40px + 4vw); /* Tamaño base + un porcentaje del ancho de la ventana */
   width: auto;
   display: block;
   transition: all var(--transition);
@@ -130,7 +131,7 @@
 .user-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .auth-buttons {
@@ -170,7 +171,7 @@
 
 /* Icono de trabajo */
 .trabajo-icon {
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 .trabajo-btn {
@@ -180,17 +181,22 @@
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
   transition: all var(--transition);
   display: inline-block;
+  color: white;
 }
 
 .trabajo-btn:hover {
   transform: scale(1.1);
 }
-
 .card {
   border: 2px solid red; /* Borde de color rojo */
+}
+
+.trabajo-btn i {
+  color: white;
+  font-size: 1.3rem;
 }
 
 /* Botón y dropdown de notificaciones */
@@ -205,7 +211,7 @@
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
   transition: all var(--transition);
 }
 
@@ -361,17 +367,23 @@
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.5);
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .user-name {
@@ -412,6 +424,78 @@
   display: block;
 }
 
+/* Menú móvil para usuarios no autenticados */
+.mobile-menu-no-auth {
+  display: none;
+  position: relative;
+}
+
+.mobile-dropdown-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: white;
+}
+
+.mobile-dropdown-btn .icon {
+  font-size: 10px;
+  transition: transform var(--transition);
+}
+
+.mobile-dropdown-btn.active .icon {
+  transform: rotate(180deg);
+}
+
+.mobile-dropdown-content {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 200px;
+  background-color: white;
+  border-radius: var(--radius);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all var(--transition);
+  z-index: 10;
+  overflow: hidden;
+  display: none;
+}
+
+.mobile-dropdown-content.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  display: block;
+}
+
+.mobile-dropdown-content a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  color: var(--text);
+  transition: background-color var(--transition);
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.mobile-dropdown-content a i {
+  color: var(--primary);
+  width: 16px;
+  text-align: center;
+}
+
+.mobile-dropdown-content a:hover {
+  background-color: #f8f9fa;
+}
+
 .dropdown-content a {
   display: flex;
   align-items: center;
@@ -433,17 +517,9 @@
   background-color: #f8f9fa;
 }
 
-/* Botón del menú móvil */
+/* Botón del menú móvil (ya no lo usamos) */
 .mobile-menu-btn {
   display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 20px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
 }
 
 .mobile-menu-btn span {
@@ -571,6 +647,8 @@
 html, body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* Responsivo */
@@ -590,12 +668,19 @@ html, body {
     display: none;
   }
   
-  .mobile-menu-btn {
-    display: flex;
+  /* Mostrar el menú móvil para usuarios no autenticados */
+  .mobile-menu-no-auth {
+    display: block;
   }
   
+  /* Ocultamos los botones de autenticación en el header para móvil, ya que se muestran en el menú móvil */
   .user-actions .auth-buttons {
     display: none;
+  }
+  
+  /* Evitar scroll cuando el menú móvil está abierto */
+  body.no-scroll {
+    overflow: hidden;
   }
   
   .footer-links {
@@ -614,9 +699,9 @@ html, body {
   }
   
   /* Ajustes del logo para tablet */
-  .logo-img {
-    height: 38px;
-  }
+  /* .logo-img {
+    height: 36px;
+  } */
 }
 
 @media (max-width: 576px) {
@@ -634,13 +719,19 @@ html, body {
   }
   
   /* Ajustes del logo para móvil */
-  .logo-img {
-    height: 34px;
+  /* .logo-img {
+    height: 32px;
+  } */
+  
+  /* Ajustes del avatar de usuario para móvil */
+  .user-avatar {
+    width: 30px;
+    height: 30px;
   }
   
   /* Reducimos espacios en el header */
   .header-content {
-    padding: 0 5px;
+    padding: 0 10px;
   }
   
   .logo {

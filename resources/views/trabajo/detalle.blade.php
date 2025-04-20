@@ -5,12 +5,12 @@
 @section('styles')
   <!-- Fontawesome para iconos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-  {{-- <link rel="stylesheet" href="{{ asset('css/trabajos.css') }}"> --}}
+  <link rel="stylesheet" href="{{ asset('css/detalle.css') }}">
 @endsection
 
 @section('content')
-<div class="container">
-  <div class="trabajo-simple">
+<div class="container-fluid">
+  <div class="trabajo-detalle-container">
     <!-- Galería de imágenes arriba -->
     @if($trabajo->imagenes && $trabajo->imagenes->count() > 0)
       <div class="galeria-imagenes">
@@ -32,7 +32,7 @@
       </div>
     @else
       <div class="imagen-principal">
-        <img src="{{ asset('img/trabajos/trabajo-default.jpg') }}" alt="Imagen por defecto">
+        <img src="{{ asset('img/trabajos/trabajo-default.png') }}" alt="Imagen por defecto">
       </div>
     @endif
     
@@ -42,72 +42,135 @@
       
       <h1 class="trabajo-titulo">{{ $trabajo->titulo }}</h1>
       
-      <div class="precio">€{{ $trabajo->precio }}</div>
+      {{-- <div class="precio">€{{ $trabajo->precio }}</div> --}}
       
-      <!-- Información del usuario -->
-      <div class="usuario-info">
-        <i class="fas fa-user-circle fa-2x"></i>
-        <div>
-          <div class="usuario-nombre">{{ $trabajo->user->name ?? 'Usuario' }}</div>
-          @php
-            $totalValoraciones = $trabajo->user ? $trabajo->user->valoraciones()->count() : 0;
-          @endphp
-          <div class="usuario-valoraciones">{{ $totalValoraciones }} reseñas</div>
-        </div>
-      </div>
-      
-      <!-- Meta información -->
-      <div class="meta-info">
-        <div class="meta-item">
-          <i class="fas fa-calendar"></i>
-          <span>Publicado: {{ $trabajo->created_at->format('d/m/Y') }}</span>
-        </div>
-        
-        @if($trabajo->fecha_expiracion)
-          <div class="meta-item">
-            <i class="fas fa-hourglass-end"></i>
-            <span>Expira: {{ date('d/m/Y', strtotime($trabajo->fecha_expiracion)) }}</span>
-          </div>
-        @endif
-        
-        <div class="meta-item">
-          <i class="fas fa-tag"></i>
-          <span>
-            @if($trabajo->categoriastipotrabajo && $trabajo->categoriastipotrabajo->count() > 0)
-              {{ $trabajo->categoriastipotrabajo->pluck('nombre')->implode(', ') }}
-            @else
-              Sin categoría
+      <div class="info-grid">
+        <div class="info-col content-col">
+          <!-- Meta información -->
+          <div class="meta-info">
+            <div class="meta-item">
+              <i class="fas fa-calendar"></i>
+              <span>Publicado: {{ $trabajo->created_at->format('d/m/Y') }}</span>
+            </div>
+            
+            @if($trabajo->fecha_expiracion)
+              <div class="meta-item">
+                <i class="fas fa-hourglass-end"></i>
+                <span>Expira: {{ date('d/m/Y', strtotime($trabajo->fecha_expiracion)) }}</span>
+              </div>
             @endif
-          </span>
-        </div>
-      </div>
-      
-      <!-- Descripción -->
-      <h3 class="descripcion-titulo"><i class="fas fa-align-left"></i> Descripción</h3>
-      <div class="descripcion">
-        {{ $trabajo->descripcion }}
-      </div>
-      
-      <!-- Botones de acción -->
-      <div class="botones-accion">
-        @if(Auth::check() && Auth::id() != $trabajo->user_id)
-          <form class="postular-form" action="{{ route('trabajos.postular', $trabajo->id) }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-postular">
-              <i class="fas fa-paper-plane"></i> Postularme
-            </button>
-          </form>
+            
+            <div class="meta-item">
+              <i class="fas fa-tag"></i>
+              <span>
+                @if($trabajo->categoriastipotrabajo && $trabajo->categoriastipotrabajo->count() > 0)
+                  {{ $trabajo->categoriastipotrabajo->pluck('nombre')->implode(', ') }}
+                @else
+                  Sin categoría
+                @endif
+              </span>
+            </div>
+
+            <div class="meta-item precio-destacado">
+              <i class="fas fa-euro-sign"></i>
+              <span>Precio: {{ $trabajo->precio }}€</span>
+            </div>
+          </div>
           
-          @if($trabajo->user)
-            <a href="{{ route('chat.show', $trabajo->user_id) }}" class="btn btn-chat">
-              <i class="fas fa-comments"></i> Chatear
-            </a>
+          <!-- Descripción -->
+          <div class="seccion-detalle">
+            <h3 class="seccion-titulo"><i class="fas fa-align-left"></i> Descripción del proyecto</h3>
+            <div class="descripcion">
+              {{ $trabajo->descripcion }}
+            </div>
+          </div>
+          
+          @if($trabajo->habilidades && $trabajo->habilidades->count() > 0)
+          <!-- Habilidades requeridas -->
+          <div class="seccion-detalle">
+            <h3 class="seccion-titulo"><i class="fas fa-tools"></i> Habilidades requeridas</h3>
+            <div class="habilidades-lista">
+              @foreach($trabajo->habilidades as $habilidad)
+                <span class="habilidad-tag">{{ $habilidad->nombre }}</span>
+              @endforeach
+            </div>
+          </div>
           @endif
-        @elseif(!Auth::check())
-          <button class="btn btn-postular" disabled>
-            <i class="fas fa-sign-in-alt"></i> Necesitas iniciar sesión para postularte
-          </button>
-        @endif
+        </div>
+        
+        <div class="info-col sidebar-col">
+          <!-- Información del usuario -->
+          <div class="sidebar-card">
+            <h4 class="card-titulo">Publicado por</h4>
+            <div class="usuario-info">
+              <div class="usuario-avatar">
+                <img src="{{ asset('img/profile_images/perfil_default.png') }}" alt="{{ $trabajo->user->name ?? 'Usuario' }}">
+              </div>
+              <div>
+                <div class="usuario-nombre">{{ $trabajo->user->name ?? 'Usuario' }}</div>
+                @php
+                  $totalValoraciones = $trabajo->user ? $trabajo->user->valoraciones()->count() : 0;
+                @endphp
+                <div class="usuario-valoraciones">
+                  <i class="fas fa-star"></i>
+                  {{ $totalValoraciones }} reseñas
+                </div>
+              </div>
+            </div>
+      
+            <!-- Botones de acción -->
+            <div class="botones-accion">
+              @if(Auth::check())
+                @if(Auth::id() != $trabajo->user_id)
+                  <div class="boton-wrapper">
+                    @if(isset($yaPostulado) && $yaPostulado)
+                      <!-- Usuario ya postulado -->
+                      <button type="button" class="btn btn-postulado" disabled>
+                        <i class="fas fa-check"></i> Ya postulado
+                      </button>
+                    @else
+                      <!-- Usuario no postulado aún -->
+                      <form class="postular-form" action="{{ route('trabajos.postular', $trabajo->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-postular">
+                          <i class="fas fa-paper-plane"></i> Postularme
+                        </button>
+                      </form>
+                    @endif
+                  </div>
+                @endif
+                
+                <!-- Botón de chat con icono -->
+                <div class="boton-wrapper">
+                  <a href="{{ route('mensajes') }}" class="btn btn-chat" title="Chatear">
+                    <i class="fas fa-comments fa-lg"></i>
+                  </a>
+                </div>
+              @else
+                <div class="boton-wrapper">
+                  <button class="btn btn-postular" disabled>
+                    <i class="fas fa-sign-in-alt"></i> Necesitas iniciar sesión
+                  </button>
+                </div>
+                
+                <div class="boton-wrapper">
+                  <button class="btn btn-chat" disabled title="Chatear">
+                    <i class="fas fa-comments fa-lg"></i>
+                  </button>
+                </div>
+              @endif
+            </div>
+          </div>
+              
+              @if($trabajo->postulantes_count)
+              <li class="meta-item">
+                <i class="fas fa-users"></i>
+                <span>Postulaciones: {{ $trabajo->postulantes_count }}</span>
+              </li>
+              @endif
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -115,45 +178,5 @@
 @endsection
 
 @section('scripts')
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar form de postulación
-      const postularForm = document.querySelector('.postular-form');
-      if (postularForm) {
-        postularForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          if (confirm('¿Estás seguro de que deseas postularte para este trabajo?')) {
-            this.submit();
-          }
-        });
-      }
-      
-      // Activar primera miniatura
-      const primeraMinatura = document.querySelector('.miniatura');
-      if (primeraMinatura) {
-        primeraMinatura.classList.add('active');
-      }
-    });
-    
-    // Función para cambiar la imagen principal al hacer clic en una miniatura
-    function cambiarImagen(rutaImagen) {
-      const imagenGrande = document.getElementById('imagen-grande');
-      
-      // Cambiar la imagen con animación
-      imagenGrande.style.opacity = '0.5';
-      setTimeout(() => {
-        imagenGrande.src = rutaImagen;
-        imagenGrande.style.opacity = '1';
-      }, 200);
-      
-      // Actualizar clase activa en miniaturas
-      const miniaturas = document.querySelectorAll('.miniatura');
-      miniaturas.forEach(miniatura => {
-        miniatura.classList.remove('active');
-        if (miniatura.querySelector('img').src === rutaImagen) {
-          miniatura.classList.add('active');
-        }
-      });
-    }
-  </script>
+  <script src="{{ asset('js/detalle.js') }}"></script>
 @endsection

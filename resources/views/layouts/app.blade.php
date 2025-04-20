@@ -31,18 +31,18 @@
                     <nav class="main-nav">
                         <ul>
                             <li><a href="{{ route('trabajos.index') }}" class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}"><i class="fas fa-briefcase"></i> Trabajos</a></li>
-                            <li><a href="#" class="nav-link"><i class="fas fa-project-diagram"></i> Mis Proyectos</a></li>
-                            <li><a href="#" class="nav-link"><i class="fas fa-envelope"></i> Mensajes</a></li>
+                            <li><a href="{{ url('trabajos_publicados') }}" class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}"><i class="fas fa-project-diagram"></i> Mis Trabajos</a></li>
+                            <li><a href="{{ url('mensajes') }}" class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}"><i class="fas fa-envelope"></i> Mensajes</a></li>
                         </ul>
                     </nav>
                     
                     <div class="user-actions">
                         <!-- Si el usuario está autenticado, mostrar notificaciones -->
                         @auth
-                        <!-- Icono de trabajo -->
+                        <!-- Icono para añadir trabajo -->
                         <div class="trabajo-icon">
-                            <a href="{{ route('trabajos.crear') }}" class="trabajo-btn">
-                                <i class="fas fa-briefcase"></i>
+                            <a href="/crear_trabajo" class="trabajo-btn" title="Añadir nuevo trabajo">
+                                <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
                         
@@ -95,13 +95,16 @@
                         <div class="user-dropdown">
                             <button class="dropdown-btn">
                                 <div class="user-avatar">
-                                    <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo">                                </div>
+                                    <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}" class="current-photo">
+                                </div>
                                 <span class="user-name">{{ Auth::user()->name }}</span>
                                 <span class="icon">▼</span>
                             </button>
                             <div class="dropdown-content">
                                 <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
-                                <a href="#"><i class="fas fa-cog"></i> Configuración</a>
+                                <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                <a href="{{ url('/trabajos_publicados') }}"><i class="fas fa-project-diagram"></i> Mis Trabajos</a>
+                                <a href="{{ url('mensajes') }}"><i class="fas fa-envelope"></i> Mensajes</a>
                                 <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -116,19 +119,31 @@
                                 <a href="{{ route('signin.auth') }}" class="btn btn-outline">Iniciar Sesión</a>
                                 <a href="{{ route('signup.auth') }}" class="btn btn-primary">Registrarse</a>
                             </div>
+                            
+                            <!-- Menú móvil para no autenticados (sólo visible en móvil) -->
+                            <div class="mobile-menu-no-auth">
+                                <button class="mobile-dropdown-btn">
+                                    <span class="icon">▼</span>
+                                </button>
+                                <div class="mobile-dropdown-content">
+                                    <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                    <a href="{{ route('signin.auth') }}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+                                    <a href="{{ route('signup.auth') }}"><i class="fas fa-user-plus"></i> Registrarse</a>
+                                </div>
+                            </div>
                         @endauth
                     </div>
                     
-                    {{-- <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
                         <span></span>
                         <span></span>
                         <span></span>
-                    </button> --}}
+                    </button>
                 </div>
             </div>
         </header>
         
-        <!-- Eliminamos el menú móvil duplicado para mantener solo las funciones del dropdown de usuario -->
+        <!-- Eliminamos el menú móvil independiente -->
         
         <!-- Contenido principal -->
         <main class="main-content">
@@ -189,13 +204,14 @@
         </footer>
     </div>
     
-<!-- Scripts comunes -->
-<script src="{{ asset('js/layout.js') }}"></script>
+    <!-- Scripts comunes -->
+    <script src="{{ asset('js/layout.js') }}"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Scripts específicos de la página -->
-@yield('scripts')
+    <!-- Scripts específicos de la página -->
+    @yield('scripts')
 </body>
 </html>

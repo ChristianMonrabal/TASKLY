@@ -63,14 +63,17 @@ class JobController extends Controller
         if ($request->hasFile('imagenes')) {
             $imagenes = $request->file('imagenes');
             foreach ($imagenes as $imagen) {
-                // Guardar la imagen y obtener la ruta
-                $path = $imagen->store('trabajos', 'public');
-                // Crear el registro en la tabla de imágenes del trabajo
-                ImgTrabajo::create([
-                    'ruta_imagen' => $path,
-                    'trabajo_id' => $trabajo->id,
-                    'descripcion' => '',
-                ]);
+                if ($imagen) {
+                    $filename = time() . '_' . $imagen->getClientOriginalName();
+                    $imagen->move(public_path('img/trabajos'), $filename);
+                    $path = 'img/trabajos/' . $filename;
+        
+                    ImgTrabajo::create([
+                        'ruta_imagen' => $path,
+                        'trabajo_id' => $trabajo->id,
+                        'descripcion' => '',
+                    ]);
+                }
             }
         }
         return redirect()->route('trabajos.publicados')->with('success', 'Trabajo creado exitosamente.');
@@ -85,4 +88,10 @@ class JobController extends Controller
         return view('trabajos_publicados', compact('trabajos'));
     }
 
+    public function show($id)
+    {
+        $trabajo = Trabajo::with('imagenes', 'categorias')->findOrFail($id);
+
+        return view('detalles_trabajo', compact('trabajo'));
+    }
 }

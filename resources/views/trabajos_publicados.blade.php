@@ -9,8 +9,11 @@
 </head>
 <body>
     <div class="container py-5">
-        <h1 class="mb-4">Mis Trabajos Publicados</h1>
-
+        <div class="position-relative mb-4">
+            <a href="{{ url('/') }}" class="btn btn-secondary position-absolute start-0 top-50 translate-middle-y">← Volver</a>
+            <h1 class="text-center">Mis Trabajos Publicados</h1>
+        </div>
+        
         @if ($trabajos->count() > 0)
             <div class="row">
                 @foreach ($trabajos as $trabajo)

@@ -21,16 +21,25 @@
                     <img src="{{ asset('images/no-image.png') }}" class="img-fluid" alt="No hay imagen">
                 @endif
             </div>
-
+        
             <div class="col-md-6">
                 <h4>Descripción</h4>
                 <p>{{ $trabajo->descripcion }}</p>
-
+            
                 <p><strong>Precio:</strong> {{ $trabajo->precio }} €</p>
-
+            
+                @if($trabajo->categorias->isNotEmpty())
+                    <p><strong>Categorías:</strong>
+                        @foreach($trabajo->categorias as $categoria)
+                            <span class="badge bg-primary">{{ $categoria->nombre }}</span>
+                        @endforeach
+                    </p>
+                @endif
+            
                 <!-- Botón para volver atrás -->
                 <a href="/trabajos_publicados" class="btn btn-secondary">Volver</a>
             </div>
+
         </div>
     </div>
 </body>

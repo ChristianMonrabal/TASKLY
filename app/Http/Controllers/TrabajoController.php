@@ -168,7 +168,16 @@ class TrabajoController extends Controller
     // Método para mostrar la vista de detalles de un trabajo
     public function mostrarDetalle($id){
         $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones'])->findOrFail($id);
-        return view('trabajo.detalle', compact('trabajo'));
+        
+        // Verificar si el usuario está autenticado y si ya se ha postulado
+        $yaPostulado = false;
+        if (Auth::check()) {
+            $yaPostulado = Postulacion::where('trabajo_id', $id)
+                ->where('trabajador_id', Auth::id())
+                ->exists();
+        }
+        
+        return view('trabajo.detalle', compact('trabajo', 'yaPostulado'));
     }
     
     // Método para postularse a un trabajo
@@ -180,7 +189,7 @@ class TrabajoController extends Controller
             
             // Verificar si ya hay una postulación
             $postulacionExistente = Postulacion::where('trabajo_id', $id)
-                ->where('user_id', $usuario_id)
+                ->where('trabajador_id', $usuario_id)
                 ->first();
                 
             if ($postulacionExistente) {
@@ -193,7 +202,7 @@ class TrabajoController extends Controller
             // Crear nueva postulación
             $postulacion = new Postulacion();
             $postulacion->trabajo_id = $id;
-            $postulacion->user_id = $usuario_id;
+            $postulacion->trabajador_id = $usuario_id;
             $postulacion->estado_id = 1; // Estado inicial (pendiente)
             $postulacion->save();
             

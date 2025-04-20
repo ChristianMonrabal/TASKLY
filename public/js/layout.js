@@ -1,8 +1,9 @@
 // layout.js - Funcionalidad para el layout principal
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del menú móvil (adaptado para solo usar el dropdown de usuario)
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    // Elementos del menú móvil para usuarios no autenticados
+    const mobileDropdownBtn = document.querySelector('.mobile-dropdown-btn');
+    const mobileDropdownContent = document.querySelector('.mobile-dropdown-content');
     
     // Elementos de notificaciones y usuario
     const notificationBtn = document.getElementById('notificationBtn');
@@ -10,17 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const userDropdownBtns = document.querySelectorAll('.user-dropdown .dropdown-btn');
     const userDropdownContents = document.querySelectorAll('.user-dropdown .dropdown-content');
     
-    // Toggle del menú para móvil (ahora maneja el dropdown de usuario)
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function() {
+    // Toggle del menú para usuarios no autenticados
+    if (mobileDropdownBtn && mobileDropdownContent) {
+        mobileDropdownBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
             this.classList.toggle('active');
-            
-            // Mostrar el dropdown de usuario si existe
-            if (userDropdownContents.length > 0) {
-                userDropdownContents.forEach(dropdown => {
-                    dropdown.classList.toggle('show');
-                });
-            }
+            mobileDropdownContent.classList.toggle('show');
+        });
+        
+        // Evitar que se propague el clic dentro del menú móvil
+        mobileDropdownContent.addEventListener('click', function(event) {
+            event.stopPropagation();
         });
     }
     
@@ -82,6 +83,14 @@ document.addEventListener('DOMContentLoaded', function() {
         userDropdownContents.forEach(dropdown => {
             dropdown.classList.remove('show');
         });
+        
+        // Cerrar menú móvil para usuarios no autenticados
+        if (mobileDropdownContent) {
+            mobileDropdownContent.classList.remove('show');
+            if (mobileDropdownBtn) {
+                mobileDropdownBtn.classList.remove('active');
+            }
+        }
     });
     
     // Evitar que se propague el clic dentro de los dropdowns
@@ -92,13 +101,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Cerrar menú móvil al hacer clic en un enlace
-    const mobileMenuLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
-    mobileMenuLinks.forEach(function(link) {
+    // Cerrar menú móvil para usuarios no autenticados al hacer clic en un enlace
+    const mobileDropdownLinks = mobileDropdownContent ? mobileDropdownContent.querySelectorAll('a') : [];
+    mobileDropdownLinks.forEach(function(link) {
         link.addEventListener('click', function() {
-            mobileMenu.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            document.body.classList.remove('no-scroll');
+            mobileDropdownContent.classList.remove('show');
+            mobileDropdownBtn.classList.remove('active');
         });
     });
     

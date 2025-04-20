@@ -109,4 +109,6 @@ class ProfileController extends Controller
 
         return back()->withErrors(['general' => 'Error al actualizar el perfil'])->withInput();
     }
+
+    
 }
