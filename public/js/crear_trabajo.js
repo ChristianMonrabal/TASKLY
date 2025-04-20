@@ -31,11 +31,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const direccion = document.getElementById("direccion");
-        if (direccion.value.trim() === "") {
+        const direccionValor = direccion.value.trim();
+        
+        if (direccionValor === "") {
             showError(direccion, "Este campo es obligatorio.");
             isValid = false;
+        } else if (!/^\d{5}$/.test(direccionValor)) {
+            showError(direccion, "Debe tener exactamente 5 dígitos.");
+            isValid = false;
         }
-
+        
         // Validar selección de categorías
         const categorias = document.getElementById("categorias");
         if ([...categorias.selectedOptions].length === 0) {
