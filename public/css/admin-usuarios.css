@@ -83,3 +83,30 @@ body {
     color: #dc3545;
     margin-top: 0.25rem;
 }
+
+/* logout button styling */
+.logout-btn {
+    font-weight: 600;
+    border-width: 2px;
+    transition: background-color .2s, color .2s;
+  }
+  
+  .logout-btn:hover,
+  .logout-btn:focus {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  /* Responsive para inputs de filtro */
+@media (max-width: 768px) {
+    #filterNombre,
+    #filterApellidos,
+    #filterCorreo,
+    #filterDni,
+    #filterCodigoPostal {
+      display: block !important;
+      width: 100% !important;
+      margin-bottom: 0.75rem;
+    }
+  }
+  
