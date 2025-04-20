@@ -23,8 +23,6 @@ class ChatSeeder extends Seeder
             'contenido' => '¡Claro! ¿En qué puedo ayudarte?',
         ]);
 
-
-
         Chat::create([
             'trabajo_id' => 1,
             'emisor' => 4,

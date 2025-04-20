@@ -175,6 +175,7 @@ Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']
 Route::controller(ChatController::class)->group(function () {
     Route::get('/chat', 'Vistachat')->name('vista.chat');
     Route::post('/cargamensajes', 'cargamensajes');
+    Route::post('/enviomensaje', 'enviomensaje');
     // Route::post('/editarassignar', 'editarassignar');
     // Route::post('/editarprioridad', 'editarprioridad');
 });

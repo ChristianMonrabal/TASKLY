@@ -490,40 +490,51 @@
                     </div>
                 </div>
                 {{-- {{ $chats }} --}}
-                @foreach ($chats as $chat)
-                    @foreach ($chat->postulaciones as $postulante)
-                        <div class="contactos-list" onclick="cargamensaje({{ $postulante->id }})">
+                @foreach ($chats as $postulacion)
+                    <div class="contactos-list" onclick="cargamensaje({{ $postulacion->id }})">
+                        <form method="post" id="chat{{ $postulacion->id }}">
+                            @csrf
+                            <input type="hidden" name="trabajo_id" value="{{ $postulacion->trabajo_id }}">
+                            <input type="hidden" name="trabajador_id"
+                                value="{{ $postulacion->tipo == 'recibida' ? $postulacion->trabajador_id : $postulacion->trabajo->cliente_id }}">
 
-                            <form method="post" id="chat{{ $postulante->id }}">
-                                @csrf
-                                <input type="hidden" name="trabajo_id" value="{{ $postulante->trabajo_id }}">
-                                <input type="hidden" name="trabajador_id" value="{{ $postulante->trabajador_id }}">
-                                <div class="contacto-item" id="chatactivo{{ $postulante->id }}">
-                                    <div class="contacto-avatar">
-                                        <img src="{{ asset('img/profile_images/' . $postulante->trabajador->foto_perfil) }}"
-                                            alt="Ana García">
-                                    </div>
-                                    <div class="contacto-info">
-                                        <h4 class="contacto-nombre">{{ $postulante->trabajador->nombre }}</h4>
-                                        <p class="contacto-trabajo"> <span style="color: var(--primary);">Postulación:
-                                                {{ $chat->titulo }}</span>
-                                        </p>
-                                    </div>
-                                    <div class="contacto-meta">
-                                        <span class="contacto-tiempo">12:45</span>
-                                        <span class="contacto-badge">3</span>
-                                    </div>
+                            <div class="contacto-item" id="chatactivo{{ $postulacion->id }}">
+                                <div class="contacto-avatar">
+                                    <img src="{{ asset(
+                                        'img/profile_images/' .
+                                            ($postulacion->tipo == 'recibida'
+                                                ? $postulacion->trabajador->foto_perfil
+                                                : $postulacion->trabajo->cliente->foto_perfil ?? 'default.png'),
+                                    ) }}"
+                                        alt="Foto de perfil">
                                 </div>
-                            </form>
-                        </div>
-                    @endforeach
+                                <div class="contacto-info">
+                                    <h4 class="contacto-nombre">
+                                        {{ $postulacion->tipo == 'recibida'
+                                            ? $postulacion->trabajador->nombre
+                                            : $postulacion->trabajo->cliente->nombre ?? 'Cliente' }}
+                                    </h4>
+                                    <p class="contacto-trabajo">
+                                        <span style="color: var(--primary);">
+                                            {{ $postulacion->tipo == 'recibida' ? 'Postulación recibida:' : 'Postulación realizada:' }}
+                                            {{ $postulacion->trabajo->titulo }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="contacto-meta">
+                                    <span class="contacto-tiempo">12:45</span>
+                                    <span class="contacto-badge">3</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 @endforeach
             </div>
 
             <!-- Columna de chat -->
-            <div class="chat-column" id="columna-chat">
+            <div class="chat-column" style="display: none" id="seccionchat">
                 <div class="chat-header" id="infouser">
-                    <div class="chat-user">
+                    {{-- <div class="chat-user">
                         <div class="chat-user-avatar">
                             <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
                         </div>
@@ -543,7 +554,7 @@
                         <button class="chat-action-btn" title="Más opciones">
                             <i class="fas fa-ellipsis-v"></i>
                         </button>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="chat-messages" id="mensajes"
@@ -577,7 +588,7 @@
                     </div> --}}
                 </div>
 
-                <div class="chat-input">
+                <div class="chat-input" id="frmenviomensaje">
                     <div class="chat-input-actions">
                         <button class="chat-input-btn" title="Adjuntar archivo">
                             <i class="fas fa-paperclip"></i>
