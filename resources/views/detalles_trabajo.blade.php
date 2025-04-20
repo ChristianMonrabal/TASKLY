@@ -10,7 +10,10 @@
 </head>
 <body>
     <div class="container py-5">
-        <h1 class="mb-4">{{ $trabajo->titulo }}</h1>
+        <div class="position-relative mb-4">
+            <a href="{{ url('/') }}" class="btn btn-secondary position-absolute start-0 top-50 translate-middle-y">← Volver</a>
+            <h1 class="mb-4">{{ $trabajo->titulo }}</h1>
+        </div>
 
         <div class="row">
             <div class="col-md-6">
@@ -23,11 +26,12 @@
             </div>
         
             <div class="col-md-6">
-                <h4>Descripción</h4>
-                <p>{{ $trabajo->descripcion }}</p>
+                <p><strong>Descripción:</strong> {{ $trabajo->descripcion }}</p>
             
                 <p><strong>Precio:</strong> {{ $trabajo->precio }} €</p>
             
+                <p><strong>Código Postal:</strong> {{ $trabajo->direccion }}</p>
+                
                 @if($trabajo->categorias->isNotEmpty())
                     <p><strong>Categorías:</strong>
                         @foreach($trabajo->categorias as $categoria)
@@ -36,8 +40,6 @@
                     </p>
                 @endif
             
-                <!-- Botón para volver atrás -->
-                <a href="/trabajos_publicados" class="btn btn-secondary">Volver</a>
             </div>
 
         </div>
