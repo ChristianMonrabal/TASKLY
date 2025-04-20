@@ -61,7 +61,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('trabajos', TrabajoController::class);
     Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
     Route::resource('categorias', CategoriaController::class);
-
 });
 
 // Rutas API (defínelas aquí si no usas routes/api.php)
@@ -114,14 +113,14 @@ Route::get('/usuarios', function (Request $request) {
 
 Route::get('api/valoraciones', function (Illuminate\Http\Request $request) {
     $query = Valoracion::with(['trabajo.cliente', 'trabajador']);
-    
+
     // Filtrar por nombre del trabajador
     if ($request->filled('trabajador')) {
         $query->whereHas('trabajador', function ($q) use ($request) {
             $q->where('nombre', 'like', '%' . $request->trabajador . '%');
         });
     }
-    
+
     // Filtrar por nombre del cliente (relación a través de trabajo)
     if ($request->filled('cliente')) {
         $query->whereHas('trabajo.cliente', function ($q) use ($request) {
@@ -134,21 +133,21 @@ Route::get('api/valoraciones', function (Illuminate\Http\Request $request) {
 
 Route::get('api/trabajos', function (Request $request) {
     $query = Trabajo::with(['cliente', 'estado']);
-    
+
     // Filtrar por nombre del cliente (a través de la relación cliente)
     if ($request->filled('cliente')) {
         $query->whereHas('cliente', function ($q) use ($request) {
             $q->where('nombre', 'like', '%' . $request->cliente . '%');
         });
     }
-    
+
     // Filtrar por estado (filtrando por el nombre del estado)
     if ($request->filled('estado')) {
         $query->whereHas('estado', function ($q) use ($request) {
             $q->where('nombre', 'like', '%' . $request->estado . '%');
         });
     }
-    
+
     return response()->json($query->get());
 });
 Route::get('/api/estados/trabajos', function () {
@@ -159,10 +158,10 @@ Route::get('/api/estados/trabajos', function () {
 Route::get('api/categorias', function () {
     // Si deseas agregar filtro por nombre y ordenamiento lo podrías hacer acá.
     $query = Categoria::query();
-    if(request()->filled('nombre')){
+    if (request()->filled('nombre')) {
         $query->where('nombre', 'like', '%' . request()->nombre . '%');
     }
-    if(request()->filled('sort') && in_array(request()->sort, ['asc', 'desc'])){
+    if (request()->filled('sort') && in_array(request()->sort, ['asc', 'desc'])) {
         $query->orderBy('nombre', request()->sort);
     }
     return response()->json($query->get());
@@ -175,7 +174,6 @@ Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']
 
 Route::controller(ChatController::class)->group(function () {
     Route::get('/chat', 'Vistachat')->name('vista.chat');
-    
     Route::post('/cargamensajes', 'cargamensajes');
     // Route::post('/editarassignar', 'editarassignar');
     // Route::post('/editarprioridad', 'editarprioridad');

@@ -205,9 +205,9 @@
         }
 
         /* Columna de chat */
-        .chat-column {
+        º .chat-column {
             flex: 1;
-            display: none;
+            /* display: none; */
             flex-direction: column;
             min-width: 0;
             /* Evita que el contenido desborde en pantallas pequeñas */
@@ -467,7 +467,6 @@
         }
     </style>
 @endsection
-
 @section('content')
     <div class="container-fluid"> <!-- Cambiado a container-fluid para más ancho -->
         <div class="mensajes-container mx-auto"> <!-- Centrado horizontalmente -->
@@ -490,12 +489,15 @@
                         <input type="text" placeholder="Buscar conversaciones...">
                     </div>
                 </div>
-                {{-- {{ $chats->count() }} --}}
+                {{-- {{ $chats }} --}}
                 @foreach ($chats as $chat)
                     @foreach ($chat->postulaciones as $postulante)
-                        <div class="contactos-list">
-                            <form action="" method="post" id="chat{{ $postulante->id }}">
-                                <!-- Contacto activo -->
+                        <div class="contactos-list" onclick="cargamensaje({{ $postulante->id }})">
+
+                            <form method="post" id="chat{{ $postulante->id }}">
+                                @csrf
+                                <input type="hidden" name="trabajo_id" value="{{ $postulante->trabajo_id }}">
+                                <input type="hidden" name="trabajador_id" value="{{ $postulante->trabajador_id }}">
                                 <div class="contacto-item active">
                                     <div class="contacto-avatar">
                                         <img src="{{ asset('img/profile_images/' . $postulante->trabajador->foto_perfil) }}"
@@ -519,36 +521,35 @@
             </div>
 
             <!-- Columna de chat -->
-            <div class="chat-column">
-                <div>
-                    <div class="chat-header">
-                        <div class="chat-user">
-                            <div class="chat-user-avatar">
-                                <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
-                            </div>
-                            <div class="chat-user-info">
-                                <h3>Ana García <span class="chat-indicator"></span></h3>
-                                <p>Diseñadora gráfica</p>
-                                <div class="chat-context">Proyecto: Diseño de logo para empresa</div>
-                            </div>
+            <div class="chat-column" id="columna-chat">
+                <div class="chat-header" id="infouser">
+                    <div class="chat-user">
+                        <div class="chat-user-avatar">
+                            <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
                         </div>
-                        <div class="chat-actions">
-                            <button class="chat-action-btn" title="Llamar">
-                                <i class="fas fa-phone"></i>
-                            </button>
-                            <button class="chat-action-btn" title="Videollamada">
-                                <i class="fas fa-video"></i>
-                            </button>
-                            <button class="chat-action-btn" title="Más opciones">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
+                        <div class="chat-user-info">
+                            <h3>Ana García <span class="chat-indicator"></span></h3>
+                            <p>Diseñadora gráfica</p>
+                            <div class="chat-context">Proyecto: Diseño de logo para empresa</div>
                         </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" title="Llamar">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="chat-action-btn" title="Videollamada">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="chat-action-btn" title="Más opciones">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div class="chat-messages" style="padding: 25px; display: flex; flex-direction: column; gap: 18px;">
+                <div class="chat-messages" id="mensajes"
+                    style="padding: 25px; display: flex; flex-direction: column; gap: 18px;">
                     <!-- Mensajes recibidos -->
-                    <div class="message">
+                    {{-- <div class="message">
                         <div class="message-avatar">
                             <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
                         </div>
@@ -560,7 +561,6 @@
                             <div class="message-time">12:30 - Ana García</div>
                         </div>
                     </div>
-
                     <!-- Mensajes enviados -->
                     <div class="message outgoing">
                         <div class="message-avatar">
@@ -574,59 +574,7 @@
                             </div>
                             <div class="message-time">12:34 - {{ Auth::user()->name }}</div>
                         </div>
-                    </div>
-
-                    <div class="message">
-                        <div class="message-avatar">
-                            <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
-                        </div>
-                        <div class="message-content">
-                            <div class="message-bubble">
-                                <p class="message-text">¡Perfecto! Me vendría muy bien. ¿Qué tal a las 10:00 AM?</p>
-                            </div>
-                            <div class="message-time">12:37 - Ana García</div>
-                        </div>
-                    </div>
-
-                    <div class="message">
-                        <div class="message-avatar">
-                            <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
-                        </div>
-                        <div class="message-content">
-                            <div class="message-bubble">
-                                <p class="message-text">Por cierto, te envié unos ejemplos de logos que me gustan al correo.
-                                    ¿Los has recibido?</p>
-                            </div>
-                            <div class="message-time">12:38 - Ana García</div>
-                        </div>
-                    </div>
-
-                    <div class="message outgoing">
-                        <div class="message-avatar">
-                            <img src="{{ asset('img/profile_images/default.jpg') }}" alt="Tú">
-                        </div>
-                        <div class="message-content">
-                            <div class="message-bubble">
-                                <p class="message-text">Sí, 10:00 AM me parece perfecto. Y acabo de revisar el correo, tengo
-                                    los ejemplos que enviaste. Me ayudarán mucho a entender mejor tu estilo visual
-                                    preferido.</p>
-                            </div>
-                            <div class="message-time">12:42 - {{ Auth::user()->name }}</div>
-                        </div>
-                    </div>
-
-                    <div class="message">
-                        <div class="message-avatar">
-                            <img src="{{ asset('img/profile_images/profile_7_1744137153.jpeg') }}" alt="Ana García">
-                        </div>
-                        <div class="message-content">
-                            <div class="message-bubble">
-                                <p class="message-text">¡Genial! Entonces hablamos mañana. Estoy emocionada por ver tus
-                                    ideas.</p>
-                            </div>
-                            <div class="message-time">12:45 - Ana García</div>
-                        </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="chat-input">

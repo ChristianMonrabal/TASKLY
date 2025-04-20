@@ -11,27 +11,31 @@ class ChatSeeder extends Seeder
     {
         Chat::create([
             'trabajo_id' => 1,
-            'trabajador_id' => 3,
+            'emisor' => 3,
+            'receptor' => 2,
             'contenido' => 'Hola, tengo una duda sobre el trabajo.',
         ]);
 
         Chat::create([
             'trabajo_id' => 1,
-            'trabajador_id' => 2,
+            'emisor' => 2,
+            'receptor' => 3,
             'contenido' => '¡Claro! ¿En qué puedo ayudarte?',
         ]);
 
 
 
         Chat::create([
-            'trabajo_id' => 2,
-            'trabajador_id' => 4,
+            'trabajo_id' => 1,
+            'emisor' => 4,
+            'receptor' => 2,
             'contenido' => 'Hola, tengo una duda sobre el trabajo.',
         ]);
 
         Chat::create([
             'trabajo_id' => 3,
-            'trabajador_id' => 4,
+            'emisor' => 4,
+            'receptor' => 3,
             'contenido' => 'Hola, tengo una duda sobre el trabajo.',
         ]);
     }
