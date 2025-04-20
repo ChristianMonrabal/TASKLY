@@ -1,6 +1,20 @@
 function cargamensaje(postulacionId) {
+    // marcar el chat como activo
+    var chats = document.querySelectorAll('.contacto-item');
+    chats.forEach(function (chat) {
+        chat.classList.remove('active');
+    });
+
+    // Luego, activar el que corresponde
+    var chatactivo = document.getElementById("chatactivo" + postulacionId);
+    if (chatactivo) {
+        chatactivo.classList.add('active');
+    }
+    // donde se imprimiran los chats y la informacion del usuario
     var mensajes = document.getElementById("mensajes");
     var infouser = document.getElementById("infouser");
+
+    // envio de formulario adjuntando la id de usuario y la del trabajo 
     var form = document.getElementById("chat" + postulacionId);
     var formData = new FormData(form);
     var trabajador_id = formData.get("trabajador_id");
@@ -67,6 +81,5 @@ function cargamensaje(postulacionId) {
                 contenidouser += '</div>';
             });
             infouser.innerHTML = contenidouser;
-
         })
 }

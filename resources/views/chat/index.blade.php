@@ -498,7 +498,7 @@
                                 @csrf
                                 <input type="hidden" name="trabajo_id" value="{{ $postulante->trabajo_id }}">
                                 <input type="hidden" name="trabajador_id" value="{{ $postulante->trabajador_id }}">
-                                <div class="contacto-item active">
+                                <div class="contacto-item" id="chatactivo{{ $postulante->id }}">
                                     <div class="contacto-avatar">
                                         <img src="{{ asset('img/profile_images/' . $postulante->trabajador->foto_perfil) }}"
                                             alt="Ana García">
