@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Trabajo;
 use App\Models\Estado;
 
-class TrabajoController extends Controller
+class AdminJobController extends Controller
 {
     /**
      * Muestra la lista de trabajos.
