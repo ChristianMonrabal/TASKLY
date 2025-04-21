@@ -92,15 +92,24 @@ Route::middleware('auth')->group(function () {
     });
     
     // Rutas API Admin
-    Route::get('/usuarios', [UsuarioController::class, 'apiIndex']);
-    Route::get('api/usuarios', [UsuarioController::class, 'apiIndex']);
-    Route::get('api/usuarios/{id}', [UsuarioController::class, 'show']);
-    Route::get('api/valoraciones', [ValoracionController::class, 'apiIndex']);
-    Route::get('api/valoraciones/{id}', [ValoracionController::class, 'show']);
-    Route::get('api/trabajos', [AdminJobController::class, 'apiIndex']);
-    Route::get('api/trabajos/{id}', [AdminJobController::class, 'show']);
-    Route::get('/api/estados/trabajos', [AdminJobController::class, 'apiEstadosTrabajo']);
-    Route::get('api/categorias', [CategoriaController::class, 'apiIndex']);
-    Route::get('api/categorias/{id}', [CategoriaController::class, 'show']);
+    // —— API para el CRUD Admin ——
+// Usuarios:
+Route::get('/usuarios',    [UsuarioController::class, 'apiIndex']);
+Route::get('api/usuarios',    [UsuarioController::class, 'apiIndex']);
+Route::get('api/usuarios/{usuario}', [UsuarioController::class, 'show']);
+// Valoraciones:
+Route::get('api/valoraciones',    [ValoracionController::class, 'apiIndex']);
+Route::get('api/valoraciones/{valoracion}', [ValoracionController::class, 'show']);
+// Trabajos:
+Route::get('api/trabajos',    [AdminJobController::class, 'apiIndex']);
+Route::get('api/trabajos/{trabajo}', [AdminJobController::class, 'show']);
+Route::get('api/estados/trabajos', [AdminJobController::class, 'apiEstadosTrabajo']);
+// Categorías:
+Route::get('api/categorias',    [CategoriaController::class, 'apiIndex']);
+Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
+
+Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+
 
