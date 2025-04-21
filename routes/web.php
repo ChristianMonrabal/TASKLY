@@ -1,21 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TrabajoController;
-use App\Http\Controllers\Auth\GoogleController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\ValoracionController;
 use App\Http\Controllers\Admin\CategoriaController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TrabajoController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Admin\AdminJobController;
+use App\Http\Controllers\ChatController;
 use App\Models\Categoria;
 use App\Models\User;
 use App\Models\Valoracion;
 use App\Models\Trabajo;
-use App\Http\Controllers\ChatController;
+
 
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
 
@@ -51,7 +53,7 @@ Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    return redirect('/signin');
+    return redirect('/');
 })->name('logout');
 
 
@@ -179,3 +181,42 @@ Route::controller(ChatController::class)->group(function () {
     // Route::post('/editarassignar', 'editarassignar');
     // Route::post('/editarprioridad', 'editarprioridad');
 });
+Route::get('/crear_trabajo', [JobController::class, 'crear'])->name('trabajos.crear');
+Route::post('/trabajos', [JobController::class, 'store'])->name('trabajos.store');
+Route::get('/trabajos_publicados', function () {
+    return view('trabajos_publicados');
+})->name('trabajos.publicados');
+Route::get('/trabajos_publicados', [JobController::class, 'trabajosPublicados'])->name('trabajos.publicados');
+Route::get('/trabajo/{id}', [JobController::class, 'show'])->name('trabajos.show');
+Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
+// Ruta para ver los detalles del trabajo
+Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
+Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
+Route::get('trabajos/crear', [JobController::class, 'create'])->name('trabajos.create');
+Route::get('/trabajos_publicados', [JobController::class, 'trabajosPublicados'])
+    ->middleware('auth')
+    ->name('trabajos.publicados');
+
+Route::get('/login', function () {
+    return redirect('/signin');
+})->name('login');
+
+Route::get('/crear_trabajo', [JobController::class, 'crear'])->name('trabajos.crear');
+Route::post('/trabajos', [JobController::class, 'store'])->name('trabajos.store');
+Route::get('/trabajos_publicados', function () {
+    return view('trabajos_publicados');
+})->name('trabajos.publicados');
+Route::get('/trabajos_publicados', [JobController::class, 'trabajosPublicados'])->name('trabajos.publicados');
+Route::get('/trabajo/{id}', [JobController::class, 'show'])->name('trabajos.show');
+Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
+// Ruta para ver los detalles del trabajo
+Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
+Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
+Route::get('trabajos/crear', [JobController::class, 'create'])->name('trabajos.create');
+Route::get('/trabajos_publicados', [JobController::class, 'trabajosPublicados'])
+    ->middleware('auth')
+    ->name('trabajos.publicados');
+
+Route::get('/login', function () {
+    return redirect('/signin');
+})->name('login');

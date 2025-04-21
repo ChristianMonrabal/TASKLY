@@ -159,7 +159,7 @@
     </div>
   </div>
 
-  
+
 
   <section class="todos-trabajos">
     <h2 class="seccion-titulo">📋 Todos los Trabajos</h2>
