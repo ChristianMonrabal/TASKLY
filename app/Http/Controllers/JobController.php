@@ -66,10 +66,10 @@ class JobController extends Controller
                 if ($imagen) {
                     $filename = time() . '_' . $imagen->getClientOriginalName();
                     $imagen->move(public_path('img/trabajos'), $filename);
-                    $path = 'img/trabajos/' . $filename;
+                    // Guardar solo el nombre del archivo, sin la ruta
         
                     ImgTrabajo::create([
-                        'ruta_imagen' => $path,
+                        'ruta_imagen' => $filename,
                         'trabajo_id' => $trabajo->id,
                         'descripcion' => '',
                     ]);

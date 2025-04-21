@@ -21,7 +21,7 @@
                         <div class="card h-100 shadow-sm">
                             <!-- Imagen del trabajo -->
                             @if($trabajo->imagenes->isNotEmpty())
-                            <img src="{{ asset($trabajo->imagenes->first()->ruta_imagen) }}" class="card-img-top" alt="{{ $trabajo->titulo }}">
+                            <img src="{{ asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) }}" class="card-img-top" alt="{{ $trabajo->titulo }}">
                             @else
                                 <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen">
                             @endif
