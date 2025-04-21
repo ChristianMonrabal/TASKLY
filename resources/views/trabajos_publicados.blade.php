@@ -4,6 +4,21 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/trabajos_publicados.css') }}"/>
+    <style>
+        /* Estilos específicos para el header en esta página */
+        .main-header {
+            width: calc(100% - 20px);
+            left: 10px;
+            right: 10px;
+            position: fixed;
+        }
+        
+        /* Ajustes para el contenido principal */
+        .main-content {
+            margin-top: var(--header-height);
+            padding-top: 30px;
+        }
+    </style>
 @endsection
 
 @section('content')

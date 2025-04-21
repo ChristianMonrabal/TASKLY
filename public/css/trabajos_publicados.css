@@ -39,6 +39,12 @@ body {
     color: var(--text);
 }
 
+/* Ajustes específicos para el header en la página de trabajos publicados */
+.main-header {
+    width: calc(100% - 20px) !important;
+    margin: 0 auto !important;
+}
+
 .page-container {
     padding: 30px;
     margin: 10px;
