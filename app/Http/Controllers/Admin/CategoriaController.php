@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\CategoriaTipoTrabajo;
+use App\Models\Habilidad;
 
 class CategoriaController extends Controller
 {
@@ -87,27 +91,46 @@ class CategoriaController extends Controller
     }
 
     /**
-     * Elimina una categoría.
+     * Elimina una categoría y gestiona sus relaciones usando transacciones
+     * para garantizar la integridad de los datos.
      */
     public function destroy(Categoria $categoria)
     {
         try {
+            // Iniciar transacción para garantizar que todas las operaciones se completen o ninguna
+            DB::beginTransaction();
+            
+            // Eliminar relaciones en la tabla pivot (categorias_tipo_trabajo)
+            CategoriaTipoTrabajo::where('categoria_id', $categoria->id)->delete();
+            
+            // Eliminar las habilidades asociadas a esta categoría
+            Habilidad::where('categoria_id', $categoria->id)->delete();
+            
+            // Ahora eliminamos la categoría
             $categoria->delete();
-            if (request()->wantsJson()) {
+            
+            // Si todo salió bien, confirmar la transacción
+            DB::commit();
+            
+           
                 return response()->json([
                     'success' => true,
                     'message' => 'Categoría eliminada correctamente.'
                 ]);
-            }
-            return redirect()->route('admin.categorias.index')->with('success', 'Categoría eliminada correctamente.');
+           
         } catch (\Exception $e) {
-            if (request()->wantsJson()) {
+            // Registramos el error en el log
+            Log::error("Error al eliminar categoría {$categoria->id}: " . $e->getMessage());
+            
+            // Revertir la transacción en caso de error
+            DB::rollBack();
+            
+            
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al eliminar la categoría: ' . $e->getMessage()
                 ], 500);
-            }
-            return redirect()->back()->with('error', 'Error al eliminar la categoría: ' . $e->getMessage());
+           
         }
     }
 }

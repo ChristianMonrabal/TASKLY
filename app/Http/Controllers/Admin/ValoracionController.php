@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Valoracion;
+use Illuminate\Support\Facades\DB;
 
 class ValoracionController extends Controller
 {
@@ -83,19 +84,40 @@ class ValoracionController extends Controller
     }
 
     /**
-     * Elimina una valoración.
+     * Elimina una valoración usando transacciones.
      */
     public function destroy(Valoracion $valoracion)
     {
-        $valoracion->delete();
+        try {
+            // Iniciar transacción para garantizar que todas las operaciones se completen o ninguna
+            DB::beginTransaction();
+            
+            // Eliminar la valoración
+            $valoracion->delete();
+            
+            // Si todo salió bien, confirmar la transacción
+            DB::commit();
 
-        if (request()->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Valoración eliminada correctamente.'
-            ]);
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Valoración eliminada correctamente.'
+                ]);
+            }
+
+            return redirect()->route('admin.valoraciones.index')->with('success', 'Valoración eliminada correctamente.');
+        } catch (\Exception $e) {
+            // Si algo salió mal, revertir todos los cambios
+            DB::rollBack();
+            
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al eliminar la valoración: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->back()->with('error', 'Error al eliminar la valoración: ' . $e->getMessage());
         }
-
-        return redirect()->route('admin.valoraciones.index')->with('success', 'Valoración eliminada correctamente.');
     }
 }

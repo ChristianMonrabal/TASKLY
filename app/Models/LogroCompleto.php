@@ -8,5 +8,5 @@ class LogroCompleto extends Model
 {
     protected $table = 'logros_completos';
 
-    protected $fillable = ['user_id', 'logro_id', 'fecha_completado'];
+    protected $fillable = ['usuario_id', 'logro_id', 'fecha_completado'];
 }
