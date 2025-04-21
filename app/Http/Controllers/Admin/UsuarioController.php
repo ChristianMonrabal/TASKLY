@@ -5,8 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Log; // Añadir esta línea
+use App\Models\Trabajo;
+use App\Models\Pago;
+use App\Models\Chat;
+use App\Models\Postulacion;
+use App\Models\Valoracion;
+use App\Models\ImgTrabajo;
+use App\Models\DatosBancarios;
+use App\Models\Notificacion;
+use App\Models\CategoriaTipoTrabajo;
+use App\Models\LogroCompleto;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Models\Habilidad;
 
 
 
@@ -76,78 +87,96 @@ class UsuarioController extends Controller
     }
     
     /**
+     * Devuelve los usuarios (con filtro dinámico) en JSON.
+     * Antes estabas en web.php; ahora aquí.
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = User::with('rol');
+
+        if ($request->filled('nombre')) {
+            $query->where('nombre', 'like', "%{$request->nombre}%");
+        }
+        if ($request->filled('apellidos')) {
+            $query->where('apellidos', 'like', "%{$request->apellidos}%");
+        }
+        if ($request->filled('correo')) {
+            $query->where('email', 'like', "%{$request->correo}%");
+        }
+        if ($request->filled('dni')) {
+            $query->where('dni', 'like', "%{$request->dni}%");
+        }
+        if ($request->filled('codigo_postal')) {
+            $query->where('codigo_postal', 'like', "%{$request->codigo_postal}%");
+        }
+
+        return response()->json($query->get());
+    }
+
+    /**
      * Elimina un usuario y todas las relaciones dependientes usando una transacción.
+     * Utilizando modelos estáticos sin bucles.
      */
     public function destroy(User $usuario)
     {
         try {
+            // Iniciar transacción para garantizar que todas las operaciones se completen o ninguna
             DB::beginTransaction();
-
-            // --- Si el usuario actúa como cliente: eliminar trabajos y sus relaciones ---
-            foreach ($usuario->trabajosComoCliente as $trabajo) {
-                // Desvincular la relación many-to-many con categorías.
-                if (method_exists($trabajo, 'categoriastipotrabajo')) {
-                    $trabajo->categoriastipotrabajo()->detach();
-                }
-                // Eliminar los chats asociados a este trabajo.
-                if (method_exists($trabajo, 'chat') && $trabajo->chat()->exists()) {
-                    $trabajo->chat()->delete();
-                }
-                // Eliminar las postulaciones asociadas al trabajo.
-                if (method_exists($trabajo, 'postulaciones') && $trabajo->postulaciones()->exists()) {
-                    $trabajo->postulaciones()->delete();
-                }
-                // Eliminar imágenes asociadas.
-                if (method_exists($trabajo, 'imagenes') && $trabajo->imagenes()->exists()) {
-                    $trabajo->imagenes()->delete();
-                }
-                // Eliminar los pagos asociados al trabajo.
-                if (method_exists($trabajo, 'pagos') && $trabajo->pagos()->exists()) {
-                    $trabajo->pagos()->delete();
-                }
-                // Eliminar las valoraciones asociadas al trabajo.
-                if (method_exists($trabajo, 'valoraciones') && $trabajo->valoraciones()->exists()) {
-                    $trabajo->valoraciones()->delete();
-                }
-                // Eliminar el trabajo.
-                $trabajo->delete();
+            
+            // Obtener los IDs de los trabajos del usuario
+            $trabajosIds = $usuario->trabajosComoCliente()->pluck('id')->toArray();
+            
+            if (!empty($trabajosIds)) {
+                // Eliminar las relaciones de los trabajos usando modelos estáticos
+                
+                // Eliminar relaciones en tabla pivot
+                CategoriaTipoTrabajo::whereIn('trabajo_id', $trabajosIds)->delete();
+                
+                // Eliminar imágenes de los trabajos
+                ImgTrabajo::whereIn('trabajo_id', $trabajosIds)->delete();
+                
+                // Eliminar valoraciones de los trabajos
+                Valoracion::whereIn('trabajo_id', $trabajosIds)->delete();
+                
+                // Eliminar chats asociados a los trabajos
+                Chat::whereIn('trabajo_id', $trabajosIds)->delete();
+                
+                // Eliminar postulaciones a los trabajos
+                Postulacion::whereIn('trabajo_id', $trabajosIds)->delete();
+                
+                // Eliminar pagos de los trabajos
+                Pago::whereIn('trabajo_id', $trabajosIds)->delete();
+                
+                // Finalmente eliminar los trabajos
+                Trabajo::whereIn('id', $trabajosIds)->delete();
             }
-
-            // --- Eliminar relaciones directas del usuario cuando actúa como trabajador ---
-            if (method_exists($usuario, 'chats') && $usuario->chats()->exists()){
-                $usuario->chats()->delete();
-            }
-
-            if (method_exists($usuario, 'pagos') && $usuario->pagos()->exists()){
-                $usuario->pagos()->delete();
-            }
-
-            if (method_exists($usuario, 'postulaciones') && $usuario->postulaciones()->exists()){
-                $usuario->postulaciones()->delete();
-            }
-
-            // Ahora eliminamos las valoraciones donde el usuario es trabajador, usando la nueva relación.
-            if (method_exists($usuario, 'valoracionesComoTrabajador') && $usuario->valoracionesComoTrabajador()->exists()){
-                $usuario->valoracionesComoTrabajador()->delete();
-            }
-
-            // Eliminar datos bancarios, logros, habilidades y códigos de descuento.
-            if ($usuario->datosBancarios) {
-                $usuario->datosBancarios()->delete();
-            }
-            if (method_exists($usuario, 'logrosCompletos')) {
-                $usuario->logrosCompletos()->detach();
-            }
-            if (method_exists($usuario, 'habilidades')) {
-                $usuario->habilidades()->detach();
-            }
-            if (method_exists($usuario, 'codigosDescuento') && $usuario->codigosDescuento()->exists()){
-                $usuario->codigosDescuento()->delete();
-            }
-
-            // Finalmente, eliminar el usuario.
+            
+            // Eliminar relaciones directas del usuario
+            
+            // Eliminar postulaciones realizadas por el usuario
+            Postulacion::where('trabajador_id', $usuario->id)->delete();
+            
+            // Eliminar valoraciones realizadas por/para el usuario
+            Valoracion::where('trabajador_id', $usuario->id)
+                ->delete();
+            
+            // Eliminar pagos asociados al usuario
+            Pago::where('trabajador_id', $usuario->id)->delete();
+            
+            // Eliminar relaciones en tablas pivot
+            LogroCompleto::where('usuario_id', $usuario->id)->delete();
+            Habilidad::where('trabajador_id', $usuario->id)->delete();    
+            
+            // Eliminar datos bancarios
+            DatosBancarios::where('usuario_id', $usuario->id)->delete();
+            
+            // Eliminar notificaciones
+            Notificacion::where('usuario_id', $usuario->id)->delete();
+            
+            // Finalmente, eliminar el usuario
             $usuario->delete();
-
+            
+            // Si todo salió bien, confirmar la transacción
             DB::commit();
 
             if (request()->wantsJson()) {
@@ -158,7 +187,11 @@ class UsuarioController extends Controller
             }
             return redirect()->route('admin.usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         } catch (\Exception $e) {
+            // Si algo salió mal, revertir todos los cambios
             DB::rollBack();
+            echo $e->getMessage();
+            die();
+            
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,

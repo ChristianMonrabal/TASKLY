@@ -84,6 +84,7 @@ class TrabajoController extends Controller
     
     /**
      * Filtrar trabajos con múltiples criterios y devolver JSON
+     * @deprecated Esta función está obsoleta. Usar filtrarSimple() en su lugar.
      */
     public function filtrar(Request $request)
     {
@@ -165,6 +166,37 @@ class TrabajoController extends Controller
         return response()->json($trabajos);
     }
     
+    /**
+     * Método simplificado para filtrar trabajos solo por nombre y categoría
+     */
+    public function filtrarSimple(Request $request)
+    {
+        $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones']);
+        
+        // Filtro de búsqueda por texto (nombre/título)
+        if ($request->has('busqueda') && !empty($request->busqueda)) {
+            $busqueda = $request->busqueda;
+            $query->where(function($q) use ($busqueda) {
+                $q->where('titulo', 'like', "%{$busqueda}%")
+                  ->orWhere('descripcion', 'like', "%{$busqueda}%");
+            });
+        }
+        
+        // Filtro por categoría (una sola)
+        if ($request->has('categoria') && !empty($request->categoria) && $request->categoria !== 'todas') {
+            $query->whereHas('categoriastipotrabajo', function($q) use ($request) {
+                $q->where('categoria_id', $request->categoria);
+            });
+        }
+        
+        // Por defecto, ordenar por más recientes
+        $query->orderBy('created_at', 'desc');
+        
+        $trabajos = $query->get();
+        
+        return response()->json($trabajos);
+    }
+    
     // Método para mostrar la vista de detalles de un trabajo
     public function mostrarDetalle($id){
         $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones'])->findOrFail($id);
@@ -203,7 +235,7 @@ class TrabajoController extends Controller
             $postulacion = new Postulacion();
             $postulacion->trabajo_id = $id;
             $postulacion->trabajador_id = $usuario_id;
-            $postulacion->estado_id = 1; // Estado inicial (pendiente)
+            $postulacion->estado_id = 9; // Estado inicial (pendiente para postulaciones)
             $postulacion->save();
             
             return response()->json([

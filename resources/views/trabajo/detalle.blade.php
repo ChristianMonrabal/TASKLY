@@ -12,6 +12,7 @@
 <div class="container-fluid">
   <div class="trabajo-detalle-container">
     <!-- Galería de imágenes arriba -->
+
     @if($trabajo->imagenes && $trabajo->imagenes->count() > 0)
       <div class="galeria-imagenes">
         <!-- Imagen principal grande -->
@@ -121,7 +122,7 @@
             <!-- Botones de acción -->
             <div class="botones-accion">
               @if(Auth::check())
-                @if(Auth::id() != $trabajo->user_id)
+                @if(Auth::id() != $trabajo->cliente_id)
                   <div class="boton-wrapper">
                     @if(isset($yaPostulado) && $yaPostulado)
                       <!-- Usuario ya postulado -->
@@ -138,14 +139,19 @@
                       </form>
                     @endif
                   </div>
+                  
+                  <!-- Botón de chat con icono (solo visible si no es el creador) -->
+                  <div class="boton-wrapper">
+                    <a href="{{ route('vista.chat', $trabajo->id) }}" class="btn btn-chat" title="Chatear">
+                      <i class="fas fa-comments fa-lg"></i>
+                    </a>
+                  </div>
+                @else
+                  <!-- Mensaje si es el creador del trabajo -->
+                  <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> Eres el creador de este trabajo
+                  </div>
                 @endif
-                
-                <!-- Botón de chat con icono -->
-                <div class="boton-wrapper">
-                  <a href="{{ route('mensajes') }}" class="btn btn-chat" title="Chatear">
-                    <i class="fas fa-comments fa-lg"></i>
-                  </a>
-                </div>
               @else
                 <div class="boton-wrapper">
                   <button class="btn btn-postular" disabled>
