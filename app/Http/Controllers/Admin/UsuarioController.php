@@ -76,6 +76,33 @@ class UsuarioController extends Controller
     }
     
     /**
+     * Devuelve los usuarios (con filtro dinámico) en JSON.
+     * Antes estabas en web.php; ahora aquí.
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = User::with('rol');
+
+        if ($request->filled('nombre')) {
+            $query->where('nombre', 'like', "%{$request->nombre}%");
+        }
+        if ($request->filled('apellidos')) {
+            $query->where('apellidos', 'like', "%{$request->apellidos}%");
+        }
+        if ($request->filled('correo')) {
+            $query->where('email', 'like', "%{$request->correo}%");
+        }
+        if ($request->filled('dni')) {
+            $query->where('dni', 'like', "%{$request->dni}%");
+        }
+        if ($request->filled('codigo_postal')) {
+            $query->where('codigo_postal', 'like', "%{$request->codigo_postal}%");
+        }
+
+        return response()->json($query->get());
+    }
+
+    /**
      * Elimina un usuario y todas las relaciones dependientes usando una transacción.
      */
     public function destroy(User $usuario)

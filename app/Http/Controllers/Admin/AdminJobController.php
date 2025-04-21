@@ -68,6 +68,38 @@ class AdminJobController extends Controller
     }
 
     /**
+     * Devuelve los trabajos (con filtro por cliente/estado) en JSON.
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = Trabajo::with(['cliente', 'estado']);
+
+        if ($request->filled('cliente')) {
+            $query->whereHas('cliente', fn($q) =>
+                $q->where('nombre', 'like', "%{$request->cliente}%")
+            );
+        }
+        if ($request->filled('estado')) {
+            $query->whereHas('estado', fn($q) =>
+                $q->where('nombre', 'like', "%{$request->estado}%")
+            );
+        }
+
+        return response()->json($query->get());
+    }
+
+    /**
+     * Devuelve los estados de tipo "trabajos" en JSON.
+     */
+    public function apiEstadosTrabajo()
+    {
+        return response()->json(
+            Estado::where('tipo_estado', 'trabajos')->get()
+        );
+    }
+
+
+    /**
      * Elimina un trabajo.
      */
     public function destroy(Trabajo $trabajo)

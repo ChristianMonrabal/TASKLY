@@ -70,6 +70,23 @@ class CategoriaController extends Controller
     }
 
     /**
+     * Devuelve las categorías (con filtro por nombre y orden) en JSON.
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = Categoria::query();
+
+        if ($request->filled('nombre')) {
+            $query->where('nombre', 'like', "%{$request->nombre}%");
+        }
+        if ($request->filled('sort') && in_array($request->sort, ['asc','desc'])) {
+            $query->orderBy('nombre', $request->sort);
+        }
+
+        return response()->json($query->get());
+    }
+
+    /**
      * Elimina una categoría.
      */
     public function destroy(Categoria $categoria)
