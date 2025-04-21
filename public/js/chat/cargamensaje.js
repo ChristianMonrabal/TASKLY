@@ -110,9 +110,7 @@ function cargamensaje(postulacionId) {
             frmenvio += '       <i class="far fa-smile"></i>';
             frmenvio += "  </button>";
             frmenvio += "  </div>";
-            frmenvio += '  <div class="chat-input-field">';
-            frmenvio += '        <input type="text" id="mensajeaenviar" placeholder="Escribe un mensaje...">';
-            frmenvio += "  </div>";
+            frmenvio += '  <textarea class="message-input" id="mensajeaenviar" placeholder="Escribe un mensaje..."></textarea>';
             frmenvio += '  <button onclick="mandarmensaje()" class="send-btn">';
             frmenvio += '         <i class="fas fa-paper-plane"></i>';
             frmenvio += "  </button>";

@@ -10,22 +10,18 @@
             border-radius: 0;
             box-shadow: 0 5px 15px rgba(236, 106, 106, 0.15);
             overflow: hidden;
-            height: calc(100vh - 120px);
-            /* Más alto */
-            min-height: 650px;
-            /* Más alto */
+            height: calc(100vh - 100px);
+            min-height: 700px; /* Aumento de altura mínima */
             border: 2px solid var(--primary);
             margin-top: 10px;
             margin-bottom: 10px;
             width: 100%;
-            max-width: 1400px;
-            /* Más ancho para pantallas grandes */
+            max-width: 1600px; /* Aumentado para dar más espacio */
         }
 
         /* Columna de contactos */
         .contactos-column {
-            width: 300px;
-            /* Un poco más estrecha */
+            width: 320px; /* Ligeramente más ancha para mejor visualización */
             background-color: #f8f9fa;
             border-right: 1px solid var(--primary-light);
             overflow-y: auto;
@@ -205,12 +201,13 @@
         }
 
         /* Columna de chat */
-        º .chat-column {
+        .chat-column {
             flex: 1;
-            /* display: none; */
+            display: flex;
             flex-direction: column;
-            min-width: 0;
-            /* Evita que el contenido desborde en pantallas pequeñas */
+            background-color: white;
+            overflow: hidden;
+            min-width: 0; /* Evita que el contenido desborde la columna */
         }
 
         .chat-header {
@@ -293,17 +290,21 @@
             color: var(--primary);
         }
 
-        .chat-messages {
+        .messages-area {
             flex: 1;
-            padding: 20px;
             overflow-y: auto;
-            background-color: #f8f9fa;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNDB2NDBoLTQweiIvPjxwYXRoIGQ9Ik0xMCAxMGgyMHYyMGgtMjB6IiBmaWxsPSIjRUNFQ0VDIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48L2c+PC9zdmc+');
+            padding: 25px; /* Más padding para dar espacio a los mensajes */
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .message {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 22px; /* Más espacio entre mensajes */
+            max-width: 80%; /* Mensajes más anchos */
+            clear: both;
         }
 
         .message.outgoing {
@@ -333,32 +334,31 @@
 
         .message-content {
             max-width: 85%;
-            /* Mayor anchura para los mensajes */
+            width: auto;
+            flex: 1;
         }
 
         .message-bubble {
             background-color: white;
-            padding: 15px 18px;
-            /* Burbujas de chat más grandes */
+            padding: 14px 18px; /* Más padding interno en los mensajes */
             border-radius: 0;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            margin-bottom: 5px;
-            border: 1px solid var(--primary);
-            max-width: 80%;
-            /* Limita el ancho para mejor legibilidad */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 6px;
+            font-size: 15px; /* Texto más grande */
+            line-height: 1.5; /* Mejor espaciado entre líneas */
+            border: 1px solid #e0e0e0;
         }
 
         .message.outgoing .message-bubble {
             background-color: var(--primary);
             color: white;
             border-radius: 0;
+            border: 1px solid var(--primary);
         }
 
         .message-text {
             margin: 0;
-            line-height: 1.5;
-            font-size: 15px;
-            /* Texto más grande para mejor legibilidad */
+            font-size: 15px; /* Texto más grande para mejor legibilidad */
         }
 
         .message-time {
@@ -375,13 +375,13 @@
             color: var(--text-muted);
         }
 
-        .chat-input {
-            padding: 20px;
-            /* Más espacio para el área de entrada */
-            border-top: 1px solid var(--primary-light);
-            background-color: white;
+        /* Área de entrada de mensaje */
+        .message-input-area {
             display: flex;
             align-items: center;
+            padding: 20px 25px;
+            border-top: 1px solid var(--primary-light);
+            background-color: white;
         }
 
         .chat-input-actions {
@@ -409,16 +409,21 @@
             position: relative;
         }
 
-        .chat-input-field input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--primary);
+        .message-input {
+            flex: 1;
+            padding: 14px 18px; /* Más padding para el campo de texto */
+            border: 1px solid var(--primary-light);
             border-radius: 0;
-            font-size: 14px;
-            transition: all var(--transition);
+            font-size: 15px; /* Texto más grande */
+            resize: none;
+            min-height: 50px;
+            max-height: 130px; /* Más altura máxima */
+            overflow-y: auto;
+            line-height: 1.5; /* Mejor espaciado */
+            margin: 0 15px;
         }
 
-        .chat-input-field input:focus {
+        .message-input:focus {
             outline: none;
             border-color: var(--primary-light);
             box-shadow: 0 0 0 3px rgba(236, 106, 106, 0.1);
@@ -428,16 +433,16 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-left: 10px;
             cursor: pointer;
             transition: all var(--transition);
             box-shadow: 0 2px 8px rgba(236, 106, 106, 0.3);
+            flex-shrink: 0;
         }
 
         .send-btn:hover {
@@ -447,28 +452,30 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .mensajes-container {
                 flex-direction: column;
-                height: calc(100vh - 120px);
+                height: calc(100vh - 60px);
+                min-height: 800px; /* Mayor altura mínima en móvil */
             }
 
             .contactos-column {
                 width: 100%;
-                height: 100%;
-                max-height: 40vh;
-                border-right: none;
-                border-bottom: 1px solid var(--primary-light);
+                height: 350px; /* Más altura en la lista de contactos en móvil */
             }
-
-            .chat-column {
-                flex: 1;
+            
+            .message {
+                max-width: 90%; /* Mensajes más anchos en móvil */
+            }
+            
+            .message-text {
+                font-size: 16px; /* Texto más grande en móvil para mejor legibilidad */
             }
         }
     </style>
 @endsection
 @section('content')
-    <div class="container-fluid"> <!-- Cambiado a container-fluid para más ancho -->
+    <div class="container-fluid py-3"> <!-- Añadido padding vertical extra -->
         <div class="mensajes-container mx-auto"> <!-- Centrado horizontalmente -->
             <!-- Columna de contactos -->
             <div class="contactos-column">
@@ -555,8 +562,8 @@
                     </div> --}}
                 </div>
 
-                <div class="chat-messages" id="mensajes"
-                    style="padding: 25px; display: flex; flex-direction: column; gap: 18px;">
+                <div class="messages-area" id="mensajes">
+                    <!-- Contenedor de mensajes con todos los estilos aplicados desde CSS -->
                     <!-- Mensajes recibidos -->
                     {{-- <div class="message">
                         <div class="message-avatar">
@@ -586,7 +593,7 @@
                     </div> --}}
                 </div>
 
-                <div class="chat-input" id="frmenviomensaje">
+                <div class="message-input-area" id="frmenviomensaje">
                     <div class="chat-input-actions">
                         <button class="chat-input-btn" title="Adjuntar archivo">
                             <i class="fas fa-paperclip"></i>
@@ -595,9 +602,7 @@
                             <i class="far fa-smile"></i>
                         </button>
                     </div>
-                    <div class="chat-input-field">
-                        <input type="text" placeholder="Escribe un mensaje...">
-                    </div>
+                    <textarea class="message-input" placeholder="Escribe un mensaje..."></textarea>
                     <button class="send-btn">
                         <i class="fas fa-paper-plane"></i>
                     </button>
