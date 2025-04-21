@@ -33,13 +33,17 @@ class PostulacionController extends Controller
             }
             
             // Actualizar el estado de la postulación a "aceptado"
-            $postulacion->estado = 'aceptado';
+            // Segln el seeder, el ID 10 corresponde al estado "Aceptada" para postulaciones
+            $estadoAceptadoId = 10;
+            $postulacion->estado_id = $estadoAceptadoId;
             $postulacion->save();
             
             // Opcional: rechazar automáticamente las demás postulaciones
+            // Segln el seeder, el ID 11 corresponde al estado "Rechazada" para postulaciones
+            $estadoRechazadoId = 11;
             $trabajo->postulaciones()
                 ->where('id', '!=', $postulacionId)
-                ->update(['estado' => 'rechazado']);
+                ->update(['estado_id' => $estadoRechazadoId]);
             
             // Opcional: actualizar el estado del trabajo a "asignado"
             $trabajo->estado = 'asignado';
@@ -81,7 +85,9 @@ class PostulacionController extends Controller
             }
             
             // Actualizar el estado de la postulación a "rechazado"
-            $postulacion->estado = 'rechazado';
+            // Segln el seeder, el ID 11 corresponde al estado "Rechazada" para postulaciones
+            $estadoRechazadoId = 11;
+            $postulacion->estado_id = $estadoRechazadoId;
             $postulacion->save();
             
             return response()->json([

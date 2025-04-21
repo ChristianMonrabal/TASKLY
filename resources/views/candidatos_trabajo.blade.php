@@ -7,51 +7,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 @endsection
 
+@section('head_scripts')
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endsection
+
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function aceptarCandidato(postulacionId, event) {
-        event.preventDefault();
-        if (confirm('¿Estás seguro de que deseas aceptar a este candidato?')) {
-            $.ajax({
-                url: `/postulaciones/${postulacionId}/aceptar`,
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    alert('Candidato aceptado correctamente');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.message : 'Error al aceptar el candidato';
-                    alert(errorMsg);
-                }
-            });
-        }
-    }
-    
-    function rechazarCandidato(postulacionId, event) {
-        event.preventDefault();
-        if (confirm('¿Estás seguro de que deseas rechazar a este candidato?')) {
-            $.ajax({
-                url: `/postulaciones/${postulacionId}/rechazar`,
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    alert('Candidato rechazado correctamente');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.message : 'Error al rechazar el candidato';
-                    alert(errorMsg);
-                }
-            });
-        }
-    }
-</script>
+<script src="{{ asset('js/candidatos.js') }}"></script>
 @endsection
 
 @section('content')
@@ -69,7 +32,7 @@
                                 <div class="text-center mb-2">
                                     <div class="candidate-avatar mx-auto">
                                         @if($postulacion->trabajador->foto_perfil)
-                                            <img src="{{ asset('img/usuarios/' . $postulacion->trabajador->foto_perfil) }}" alt="{{ $postulacion->trabajador->nombre }}" class="rounded-circle">
+                                            <img src="{{ asset('img/profile_images/' . $postulacion->trabajador->foto_perfil) }}" alt="{{ $postulacion->trabajador->nombre }}" class="rounded-circle">
                                         @else
                                             <img src="{{ asset('img/perfil_default.png') }}" alt="Avatar por defecto" class="rounded-circle">
                                         @endif
@@ -80,9 +43,9 @@
                                 <h5 class="card-title mb-0">{{ $postulacion->trabajador->nombre }} {{ $postulacion->trabajador->apellidos }}</h5>
                                 
                                 <!-- Estado de la postulación -->
-                                @if($postulacion->estado === 'aceptado')
+                                @if($postulacion->estado_id === 10)
                                     <span class="badge estado-aceptado my-1">Aceptado</span>
-                                @elseif($postulacion->estado === 'rechazado')
+                                @elseif($postulacion->estado_id === 11)
                                     <span class="badge estado-rechazado my-1">Rechazado</span>
                                 @else
                                     <span class="badge estado-pendiente my-1">Pendiente</span>
@@ -96,10 +59,10 @@
                                 
                                 <!-- Acciones para el candidato (centradas) -->
                                 <div class="action-icons">
-                                    <a href="#" onclick="aceptarCandidato({{ $postulacion->id }}, event)" class="action-icon accept mx-1">
+                                    <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
                                         <i class="fas fa-check"></i>
                                     </a>
-                                    <a href="#" onclick="rechazarCandidato({{ $postulacion->id }}, event)" class="action-icon reject mx-1">
+                                    <a href="#" class="action-icon reject mx-1" data-id="{{ $postulacion->id }}">
                                         <i class="fas fa-times"></i>
                                     </a>
                                     <a href="/chat?user_id={{ $postulacion->trabajador->id }}" class="action-icon chat mx-1">

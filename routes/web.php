@@ -38,10 +38,9 @@ Route::get('/trabajos/todos', [TrabajoController::class, 'todos'])->name('trabaj
 Route::get('/trabajos/nuevos', [TrabajoController::class, 'nuevos'])->name('trabajos.nuevos');
 Route::get('/trabajos/categoria-json/{categoria_id}', [TrabajoController::class, 'categoriaJson'])->name('trabajos.categoria.json');
 Route::get('/trabajos/buscar-json', [TrabajoController::class, 'buscarJson'])->name('trabajos.buscar.json');
-Route::get('/trabajos/filtrar', [TrabajoController::class, 'filtrar'])->name('trabajos.filtrar');
+Route::get('/trabajos/filtrar-simple', [TrabajoController::class, 'filtrarSimple'])->name('trabajos.filtrar.simple');
 Route::get('/trabajos/categoria/{categoria_id}', [TrabajoController::class, 'filtrarPorCategoria'])->name('trabajos.categoria');
 Route::get('/trabajos/buscar', [TrabajoController::class, 'buscar'])->name('trabajos.buscar');
-Route::get('/view/trabajo/detalle/{id}', [TrabajoController::class, 'mostrarDetalle'])->name('view.trabajo.detalle');
 Route::get('/trabajos/{id}', [TrabajoController::class, 'mostrarDetalle'])->name('trabajos.detalle');
 
 // Todas las demás rutas requieren autenticación

@@ -16,6 +16,9 @@
 
     <!-- Estilos específicos de la página -->
     @yield('styles')
+    
+    <!-- Scripts en el head -->
+    @yield('head_scripts')
 </head>
 
 <body>

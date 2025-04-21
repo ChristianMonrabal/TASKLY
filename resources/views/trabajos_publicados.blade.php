@@ -46,7 +46,7 @@
                             </div>
                             <div class="card-actions">
                                 <div class="action-buttons">
-                                    <a href="/view/trabajo/detalle/{{ $trabajo->id }}" class="action-btn">Ver detalles</a>
+                                    <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                     <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
                                 </div>
                             </div>
