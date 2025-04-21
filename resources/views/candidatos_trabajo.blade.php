@@ -4,31 +4,108 @@
 
 @section('styles')
   <link rel="stylesheet" href="{{ asset('css/candidatos_trabajo.css') }}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+@endsection
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function aceptarCandidato(postulacionId, event) {
+        event.preventDefault();
+        if (confirm('¿Estás seguro de que deseas aceptar a este candidato?')) {
+            $.ajax({
+                url: `/postulaciones/${postulacionId}/aceptar`,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    alert('Candidato aceptado correctamente');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.message : 'Error al aceptar el candidato';
+                    alert(errorMsg);
+                }
+            });
+        }
+    }
+    
+    function rechazarCandidato(postulacionId, event) {
+        event.preventDefault();
+        if (confirm('¿Estás seguro de que deseas rechazar a este candidato?')) {
+            $.ajax({
+                url: `/postulaciones/${postulacionId}/rechazar`,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    alert('Candidato rechazado correctamente');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.message : 'Error al rechazar el candidato';
+                    alert(errorMsg);
+                }
+            });
+        }
+    }
+</script>
 @endsection
 
 @section('content')
     <div class="container py-5">
-        <h1 class="mb-4">Candidatos para el Trabajo: {{ $trabajo->titulo }}</h1>
+        <h1 class="text-center mb-4">Candidatos para el Trabajo: {{ $trabajo->titulo }}</h1>
 
         @if($trabajo->postulaciones->count() > 0)
-            <div class="row">
+            <div class="candidates-grid">
                 @foreach ($trabajo->postulaciones as $postulacion)
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm">
+                    <div class="candidate-item">
+                        <div class="card candidate-card text-center">
                             <!-- Información del candidato -->
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $postulacion->trabajador->nombre }} {{ $postulacion->trabajador->apellidos }}</h5>
-                                @if(isset($postulacion->trabajador->descripcion))
-                                    <p class="card-text">{{ Str::limit($postulacion->trabajador->descripcion, 100) }}</p>
+                            <div class="card-body p-3">
+                                <!-- Imagen del candidato centrada -->
+                                <div class="text-center mb-2">
+                                    <div class="candidate-avatar mx-auto">
+                                        @if($postulacion->trabajador->foto_perfil)
+                                            <img src="{{ asset('img/usuarios/' . $postulacion->trabajador->foto_perfil) }}" alt="{{ $postulacion->trabajador->nombre }}" class="rounded-circle">
+                                        @else
+                                            <img src="{{ asset('img/default-avatar.png') }}" alt="Avatar por defecto" class="rounded-circle">
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <!-- Nombre y estado -->
+                                <h5 class="card-title mb-0">{{ $postulacion->trabajador->nombre }} {{ $postulacion->trabajador->apellidos }}</h5>
+                                
+                                <!-- Estado de la postulación -->
+                                @if($postulacion->estado === 'aceptado')
+                                    <span class="badge estado-aceptado my-1">Aceptado</span>
+                                @elseif($postulacion->estado === 'rechazado')
+                                    <span class="badge estado-rechazado my-1">Rechazado</span>
+                                @else
+                                    <span class="badge estado-pendiente my-1">Pendiente</span>
                                 @endif
+                                
+                                <p class="card-text mb-1"><small>{{ $postulacion->created_at->format('d/m/Y') }}</small></p>
+                                
                                 @if(isset($postulacion->mensaje))
-                                    <p class="card-text"><strong>Mensaje:</strong> {{ Str::limit($postulacion->mensaje, 100) }}</p>
+                                    <p class="card-text small text-center">{{ Str::limit($postulacion->mensaje, 40) }}</p>
                                 @endif
-                                <p class="card-text"><strong>Fecha de postulación:</strong> {{ $postulacion->created_at->format('d/m/Y') }}</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <!-- Botón para contactar al candidato -->
-                                <a href="/mensajes?user_id={{ $postulacion->trabajador->id }}" class="btn btn-primary w-100">Contactar</a>
+                                
+                                <!-- Acciones para el candidato (centradas) -->
+                                <div class="action-icons">
+                                    <a href="#" onclick="aceptarCandidato({{ $postulacion->id }}, event)" class="action-icon accept mx-1">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <a href="#" onclick="rechazarCandidato({{ $postulacion->id }}, event)" class="action-icon reject mx-1">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                    <a href="/chat?user_id={{ $postulacion->trabajador->id }}" class="action-icon chat mx-1">
+                                        <i class="fas fa-comments"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
