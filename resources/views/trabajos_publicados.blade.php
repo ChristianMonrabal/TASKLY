@@ -34,7 +34,7 @@
                             <div class="card-footer bg-transparent border-0">
                                 <!-- Contenedor para los botones con clases para alinearlos -->
                                 <div class="d-flex gap-2">
-                                    <a href="/detalles_trabajo/{{ $trabajo->id }}" class="btn btn-primary w-50">Ver detalles</a>
+                                    <a href="/view/trabajo/detalle/{{ $trabajo->id }}" class="btn btn-primary w-50">Ver detalles</a>
                                     <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="btn btn-primary w-50">Ver candidatos</a>
                                 </div>
                             </div>

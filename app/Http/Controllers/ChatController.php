@@ -13,17 +13,16 @@ use App\Models\Postulacion;
 
 class ChatController extends Controller
 {
-    public function Vistachat()
+    public function Vistachat($id = null)
     {
         $user = Auth::user();
-        // $chats = Trabajo::with(['postulaciones', 'postulaciones.trabajador:id,nombre,apellidos,foto_perfil'])
-        //     ->where('cliente_id', Auth::user()->id)
-        //     ->get();
-        // $chats = Trabajo::with(['postulaciones', 'postulaciones.trabajador:id,nombre,apellidos,foto_perfil'])
-        //     ->join('postulaciones', 'trabajos.id', '=', 'postulaciones.trabajo_id')
-        //     ->where('cliente_id', Auth::user()->id)
-        //     ->orwhere('trabajador_id', Auth::user()->id)
-        //     ->get();
+        $trabajoSeleccionado = null;
+        
+        // Si se proporciona un ID de trabajo, lo cargamos para la vista
+        if ($id !== null) {
+            $trabajoSeleccionado = Trabajo::with(['cliente', 'postulaciones'])->findOrFail($id);
+        }
+        
         $postulacionesRecibidas = Postulacion::with(['trabajador:id,nombre,apellidos,foto_perfil', 'trabajo:id,titulo'])
             ->whereHas('trabajo', function ($query) use ($user) {
                 $query->where('cliente_id', $user->id);
@@ -45,7 +44,7 @@ class ChatController extends Controller
         // Aquí se mezclan
         $chats = $postulacionesRecibidas->merge($postulacionesRealizadas);
 
-        return view('chat.index', compact('chats', 'user'));
+        return view('chat.index', compact('chats', 'user', 'trabajoSeleccionado'));
     }
 
     public function cargamensajes(Request $request)

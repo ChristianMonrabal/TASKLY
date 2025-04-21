@@ -142,7 +142,7 @@
                 
                 <!-- Botón de chat con icono -->
                 <div class="boton-wrapper">
-                  <a href="{{ route('chat.index', $trabajo->id) }}" class="btn btn-chat" title="Chatear">
+                  <a href="{{ route('vista.chat', $trabajo->id) }}" class="btn btn-chat" title="Chatear">
                     <i class="fas fa-comments fa-lg"></i>
                   </a>
                 </div>

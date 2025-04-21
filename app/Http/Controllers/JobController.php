@@ -17,7 +17,7 @@ class JobController extends Controller
     public function crear()
     {
         $categorias = Categoria::all(); // Obtener todas las categorías
-        $user = auth()->user(); // Obtener el usuario autenticado
+        $user = Auth::user(); // Obtener el usuario autenticado
         return view('crear_trabajo', compact('categorias', 'user'));
     }
     
@@ -83,15 +83,27 @@ class JobController extends Controller
     public function trabajosPublicados()
     {
         $user = Auth::user();
-        $trabajos = Trabajo::where('cliente_id', $user->id)->get();
+        $trabajos = Trabajo::with('imagenes')->where('cliente_id', $user->id)->get();
 
         return view('trabajos_publicados', compact('trabajos'));
     }
 
     public function show($id)
     {
-        $trabajo = Trabajo::with('imagenes', 'categorias')->findOrFail($id);
+        $trabajo = Trabajo::with('imagenes', 'categoriastipotrabajo')->findOrFail($id);
 
         return view('detalles_trabajo', compact('trabajo'));
+    }
+
+    public function candidatos($id)
+    {
+        $trabajo = Trabajo::with('postulaciones.trabajador.user')->findOrFail($id);
+        
+        // Verificar que el trabajo pertenezca al usuario autenticado
+        if ($trabajo->cliente_id != Auth::id()) {
+            return redirect()->route('trabajos.publicados')->with('error', 'No tienes permiso para ver los candidatos de este trabajo.');
+        }
+        
+        return view('candidatos_trabajo', compact('trabajo'));
     }
 }
