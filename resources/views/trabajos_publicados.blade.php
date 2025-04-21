@@ -38,7 +38,7 @@
                             @else
                                 <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen">
                             @endif
-
+                            <br>
                             <div class="card-body">
                                 <h5 class="card-title">{{ $trabajo->titulo }}</h5>
                                 <p class="card-text">{{ Str::limit($trabajo->descripcion, 100) }}</p>
