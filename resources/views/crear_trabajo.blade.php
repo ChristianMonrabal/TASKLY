@@ -33,15 +33,18 @@
 
             <div class="form-group mb-3">
                 <label for="categorias">Tags:</label>
-                <select name="categorias[]" id="categorias" multiple class="form-select custom-multiselect">
+                <div class="tag-scroll-box" id="tag-container">
                     @foreach($categorias as $categoria)
-                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                        <div class="tag-option" data-id="{{ $categoria->id }}">
+                            {{ $categoria->nombre }}
+                        </div>
                     @endforeach
-                </select>
-                <small class="form-text text-muted">Puedes seleccionar varias categorías manteniendo pulsado Ctrl (Cmd en Mac) mientras haces clic.</small>
+                </div>
+                <input type="hidden" name="categorias" id="categorias" value="">
+                <small class="form-text text-muted">Haz clic en los tags para seleccionarlos.</small>
                 <span class="error-message" style="color: red; font-size: 0.9rem; display: none;"></span>
             </div>
-            
+                                    
             <div class="form-group mb-3">
                 <label for="direccion">Codigo postal del trabajo</label>
                 <input type="number" name="direccion" id="direccion" class="form-control" placeholder="Ubicación del trabajo">
