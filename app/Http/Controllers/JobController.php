@@ -23,6 +23,12 @@ class JobController extends Controller
     
     public function store(Request $request)
     {
+        if ($request->has('categorias') && is_string($request->categorias)) {
+            $request->merge([
+                'categorias' => explode(',', $request->categorias)
+            ]);
+        }
+        
         // Validación de los datos
         $validator = Validator::make($request->all(), [
             'titulo' => 'required|string|max:255',

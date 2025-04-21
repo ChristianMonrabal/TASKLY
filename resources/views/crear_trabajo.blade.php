@@ -41,7 +41,7 @@
                     @endforeach
                 </div>
                 <input type="hidden" name="categorias" id="categorias" value="">
-                <small class="form-text text-muted">Haz clic en los tags para seleccionarlos.</small>
+                <small class="form-text text-muted">Haz clic en las categorias para seleccionarlas.</small>
                 <span class="error-message" style="color: red; font-size: 0.9rem; display: none;"></span>
             </div>
                                     
