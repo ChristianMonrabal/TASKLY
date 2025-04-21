@@ -21,6 +21,14 @@ html {
     scroll-behavior: smooth;
 }
 
+.trabajos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 0 auto;
+    width: 100%;
+}
+
 body {
     font-family: var(--font-main);
     background: var(--bg);
@@ -86,6 +94,8 @@ h1 {
     flex-direction: column;
     justify-content: flex-start;
     transition: transform var(--transition), box-shadow var(--transition);
+    height: 100%;
+    border: 1px solid rgba(236, 106, 106, 0.1);
 }
 
 .card:hover {
@@ -137,6 +147,37 @@ h1 {
     font-size: 0.9em;
     margin-top: 10px;
     display: inline-block;
+}
+
+/* Estilos para los botones de acción */
+.card-actions {
+    margin-top: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px 12px;
+    text-align: center;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+.action-btn:hover {
+    background-color: #d55a5a;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Layout de scroll */
