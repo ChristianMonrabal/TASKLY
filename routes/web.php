@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrabajoController;
 use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\AdminJobController;
 
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
 
@@ -42,9 +43,7 @@ Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->mid
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
 // Ruta para la página de mensajes
-Route::get('/mensajes', function () {
-    return view('mensajes.index');
-})->name('mensajes')->middleware('auth');
+Route::get('/mensajes', function () {return view('mensajes.index');})->name('mensajes')->middleware('auth');
 
 
 Route::post('/logout', function () {
@@ -55,12 +54,12 @@ Route::post('/logout', function () {
 })->name('logout');
 
 
-Route::prefix('admin')->name('admin.')->group(function () {
+// Agrupamos TODO admin bajo auth
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('usuarios', UsuarioController::class);
-    Route::resource('trabajos', TrabajoController::class);
+    Route::resource('trabajos', AdminJobController::class);
     Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
     Route::resource('categorias', CategoriaController::class);
-
 });
 
 // Rutas API (defínelas aquí si no usas routes/api.php)
