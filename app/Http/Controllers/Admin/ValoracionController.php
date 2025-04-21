@@ -62,6 +62,27 @@ class ValoracionController extends Controller
 }
 
     /**
+     * Devuelve las valoraciones (con filtro por trabajador/cliente) en JSON.
+     */
+    public function apiIndex(Request $request)
+    {
+        $query = Valoracion::with(['trabajo.cliente', 'trabajador']);
+
+        if ($request->filled('trabajador')) {
+            $query->whereHas('trabajador', fn($q) =>
+                $q->where('nombre', 'like', "%{$request->trabajador}%")
+            );
+        }
+        if ($request->filled('cliente')) {
+            $query->whereHas('trabajo.cliente', fn($q) =>
+                $q->where('nombre', 'like', "%{$request->cliente}%")
+            );
+        }
+
+        return response()->json($query->get());
+    }
+
+    /**
      * Elimina una valoración.
      */
     public function destroy(Valoracion $valoracion)
