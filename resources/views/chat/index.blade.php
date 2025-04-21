@@ -474,7 +474,6 @@
             <div class="contactos-column">
                 <div class="contactos-header">
                     <h2>Mensajes</h2>
-
                     <div class="user-status">
                         <div class="current-user-avatar">
                             <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" alt="Tu avatar">
@@ -483,7 +482,6 @@
                             <h4 class="current-user-name">{{ $user->nombre }} {{ $user->apellidos }}</h4>
                         </div>
                     </div>
-
                     <div class="search-box">
                         <i class="fas fa-search"></i>
                         <input type="text" placeholder="Buscar conversaciones...">
@@ -516,7 +514,7 @@
                                     </h4>
                                     <p class="contacto-trabajo">
                                         <span style="color: var(--primary);">
-                                            {{ $postulacion->tipo == 'recibida' ? 'Postulación recibida:' : 'Postulación realizada:' }}
+                                            {{ $postulacion->tipo == 'recibida' ? 'recibida:' : 'realizada:' }}
                                             {{ $postulacion->trabajo->titulo }}
                                         </span>
                                     </p>

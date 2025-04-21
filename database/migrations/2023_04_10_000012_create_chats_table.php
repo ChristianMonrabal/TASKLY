@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('emisor')->constrained('users');
             $table->foreignId('receptor')->constrained('users');
             $table->text('contenido');
+            $table->tinyInteger('leido')->default(0);
             $table->timestamps();
         });
     }
