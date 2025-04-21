@@ -97,7 +97,7 @@ class JobController extends Controller
 
     public function candidatos($id)
     {
-        $trabajo = Trabajo::with('postulaciones.trabajador.user')->findOrFail($id);
+        $trabajo = Trabajo::with('postulaciones.trabajador')->findOrFail($id);
         
         // Verificar que el trabajo pertenezca al usuario autenticado
         if ($trabajo->cliente_id != Auth::id()) {

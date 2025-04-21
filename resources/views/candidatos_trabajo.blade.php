@@ -17,7 +17,7 @@
                         <div class="card h-100 shadow-sm">
                             <!-- Información del candidato -->
                             <div class="card-body">
-                                <h5 class="card-title">{{ $postulacion->trabajador->user->name }}</h5>
+                                <h5 class="card-title">{{ $postulacion->trabajador->nombre }} {{ $postulacion->trabajador->apellidos }}</h5>
                                 @if(isset($postulacion->trabajador->descripcion))
                                     <p class="card-text">{{ Str::limit($postulacion->trabajador->descripcion, 100) }}</p>
                                 @endif
@@ -28,7 +28,7 @@
                             </div>
                             <div class="card-footer bg-transparent border-0">
                                 <!-- Botón para contactar al candidato -->
-                                <a href="/mensajes?user_id={{ $postulacion->trabajador->user->id }}" class="btn btn-primary w-100">Contactar</a>
+                                <a href="/mensajes?user_id={{ $postulacion->trabajador->id }}" class="btn btn-primary w-100">Contactar</a>
                             </div>
                         </div>
                     </div>
