@@ -1,4 +1,4 @@
-<!-- recursos/views/trabajos/detalles_trabajo.blade.php -->
+{{-- <!-- recursos/views/trabajos/detalles_trabajo.blade.php -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -45,4 +45,4 @@
         </div>
     </div>
 </body>
-</html>
+</html> --}}

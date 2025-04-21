@@ -42,12 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Validar selección de categorías
-        const categorias = document.getElementById("categorias");
-        if ([...categorias.selectedOptions].length === 0) {
-            showError(categorias, "Selecciona al menos una categoría.");
+        const categoriasInput = document.getElementById("categorias");
+        const categoriasValor = categoriasInput.value.trim();
+        const tagContainer = document.getElementById("tag-container");
+        
+        if (categoriasValor === "") {
+            showError(tagContainer, "Selecciona al menos una categoría.");
             isValid = false;
         }
-
+        
         // Validar al menos una imagen
         const imagenes = [
             document.getElementById("imagen1"),
@@ -85,4 +88,27 @@ document.addEventListener("DOMContentLoaded", () => {
             errorSpan.style.display = "block";
         }
     }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tagContainer = document.getElementById("tag-container");
+    const categoriasInput = document.getElementById("categorias");
+    const selectedTags = new Set();
+
+    tagContainer.addEventListener("click", function (e) {
+        if (e.target.classList.contains("tag-option")) {
+            const tagElement = e.target;
+            const tagId = tagElement.getAttribute("data-id");
+
+            if (selectedTags.has(tagId)) {
+                selectedTags.delete(tagId);
+                tagElement.classList.remove("selected");
+            } else {
+                selectedTags.add(tagId);
+                tagElement.classList.add("selected");
+            }
+
+            categoriasInput.value = Array.from(selectedTags).join(',');
+        }
+    });
 });
