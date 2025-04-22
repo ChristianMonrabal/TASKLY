@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Valoracion;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ValoracionController extends Controller
 {
@@ -15,6 +16,9 @@ class ValoracionController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->rol_id != 1) {
+            return redirect()->route('trabajos.index');
+        }
         return view('Admin.valoraciones.index');
     }
 
