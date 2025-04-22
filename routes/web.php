@@ -117,4 +117,9 @@ Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->nam
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
-
+Route::get('/footer/sobre_nosotros', function () {
+    return view('/footer/sobre_nosotros');
+});
+Route::get('/footer/como_funciona', function () {
+    return view('/footer/como_funciona');
+});
