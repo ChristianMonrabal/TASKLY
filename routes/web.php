@@ -18,6 +18,8 @@ use App\Models\Categoria;
 use App\Models\User;
 use App\Models\Valoracion;
 use App\Models\Trabajo;
+use App\Http\Controllers\CalendarioController;
+
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -116,5 +118,8 @@ Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
 Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+
+// Calendario
+Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
 
 
