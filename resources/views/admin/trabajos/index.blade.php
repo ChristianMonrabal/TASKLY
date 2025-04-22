@@ -20,7 +20,7 @@
                 <option value="">Seleccione un Estado</option>
             </select>
         </div>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-trabajos">
             <thead>
                 <tr>
                     <th>Título</th>

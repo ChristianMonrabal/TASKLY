@@ -30,7 +30,7 @@
         </button>
 
         <!-- Tabla para mostrar categorías -->
-        <table class="table table-bordered">
+        <table class="table table-bordered table-categorias">
             <thead>
                 <tr>
                     <th>Nombre</th>

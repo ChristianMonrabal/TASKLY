@@ -21,14 +21,13 @@
             <input type="number" id="filterCodigoPostal" placeholder="Código Postal" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
             <input type="text" id="filterDni" placeholder="DNI" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
         </div>
-        <table class="table table-bordered">
+        <table id="tablaUsuarios" class="table table-bordered table-usuarios">
             <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Apellidos</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
-                    <th>Código Postal</th>
                     <th>Fecha Nacimiento</th>
                     <th>DNI</th>
                     <th>Rol</th>
