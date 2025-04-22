@@ -29,19 +29,19 @@
                             <!-- Información del candidato -->
                             <div class="card-body p-3">
                                 <!-- Imagen del candidato centrada -->
-                                <div class="text-center mb-2">
-                                    <div class="candidate-avatar mx-auto">
-                                        @if($postulacion->trabajador->foto_perfil)
-                                            <img src="{{ asset('img/profile_images/' . $postulacion->trabajador->foto_perfil) }}" alt="{{ $postulacion->trabajador->nombre }}" class="rounded-circle">
-                                        @else
-                                            <img src="{{ asset('img/perfil_default.png') }}" alt="Avatar por defecto" class="rounded-circle">
-                                        @endif
+                                <a href="{{ route('perfil.usuario', $postulacion->trabajador->id) }}" class="text-decoration-none text-dark">
+                                    <div class="text-center mb-2">
+                                        <div class="candidate-avatar mx-auto">
+                                            @if($postulacion->trabajador->foto_perfil)
+                                                <img src="{{ asset('img/profile_images/' . $postulacion->trabajador->foto_perfil) }}" alt="{{ $postulacion->trabajador->nombre }}" class="rounded-circle">
+                                            @else
+                                                <img src="{{ asset('img/perfil_default.png') }}" alt="Avatar por defecto" class="rounded-circle">
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <!-- Nombre y estado -->
-                                <h5 class="card-title mb-0">{{ $postulacion->trabajador->nombre }} {{ $postulacion->trabajador->apellidos }}</h5>
-                                
+                                    <h5 class="card-title mb-0">{{ $postulacion->trabajador->nombre }} {{ $postulacion->trabajador->apellidos }}</h5>
+                                </a>
+                                                                
                                 <!-- Estado de la postulación -->
                                 @if($postulacion->estado_id === 10)
                                     <span class="badge estado-aceptado my-1">Aceptado</span>

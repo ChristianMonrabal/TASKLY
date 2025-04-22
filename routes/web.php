@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Admin\AdminJobController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PostulacionController;
+use App\Http\Controllers\PerfilUsuarioController;
 use App\Models\Categoria;
 use App\Models\User;
 use App\Models\Valoracion;
@@ -123,3 +124,5 @@ Route::get('/footer/sobre_nosotros', function () {
 Route::get('/footer/como_funciona', function () {
     return view('/footer/como_funciona');
 });
+
+Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
