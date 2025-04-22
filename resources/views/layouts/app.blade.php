@@ -36,16 +36,42 @@
 
                     <nav class="main-nav">
                         <ul>
-                            <li><a href="{{ route('trabajos.index') }}"
-                                    class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}"><i
-                                        class="fas fa-briefcase"></i> Trabajos</a></li>
-                            <li><a href="{{ url('trabajos_publicados') }}" class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}"><i class="fas fa-project-diagram"></i> Mis
-                                    Trabajos</a></li>
-                            <li><a href="{{ route('vista.chat') }}"
-                                    class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}"><i
-                                        class="fas fa-envelope"></i> Mensajes</a></li>
+                            <li>
+                                <a href="{{ route('trabajos.index') }}"
+                                    class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}">
+                                    <i class="fas fa-briefcase"></i> Trabajos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('trabajos_publicados') }}"
+                                    class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}">
+                                    <i class="fas fa-project-diagram"></i> Mis Trabajos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('vista.chat') }}"
+                                    class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}">
+                                    <i class="fas fa-envelope"></i> Mensajes
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('calendario.index') }}"
+                                    class="nav-link {{ request()->is('calendario*') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar-alt"></i> Calendario
+                                </a>
+                            </li>
+                            @if(Auth::check() && Auth::user()->rol_id == 1)
+                                <li>
+                                    <a href="{{ url('/admin/usuarios') }}"
+                                        class="nav-link {{ request()->is('admin/usuarios*') ? 'active' : '' }}">
+                                        <i class="fas fa-user-shield"></i> Panel de administración
+                                    </a>
+                                </li>
+                            @endif  
                         </ul>
                     </nav>
+                    
+                    
 
                     <div class="user-actions">
                         <!-- Si el usuario está autenticado, mostrar notificaciones -->
@@ -189,8 +215,8 @@
                         <div class="footer-column">
                             <h3>Acerca de</h3>
                             <ul>
-                                <li><a href="/footer/sobre_nosotros">Sobre Nosotros</a></li>
-                                <li><a href="/footer/como_funciona">Cómo Funciona</a></li>
+                                <li><a href="#">Sobre Nosotros</a></li>
+                                <li><a href="#">Cómo Funciona</a></li>
                                 <li><a href="#">Contacto</a></li>
                             </ul>
                         </div>
@@ -227,5 +253,4 @@
     <!-- Scripts específicos de la página -->
     @yield('scripts')
 </body>
-
 </html>
