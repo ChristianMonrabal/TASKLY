@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'TASKLY - Plataforma de Trabajos Freelance')</title>
+    <link rel="icon" href="{{ asset('img/icon.png') }}" type="image/png" />
 
     <!-- Estilos principales -->
     <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
