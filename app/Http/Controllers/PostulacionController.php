@@ -46,7 +46,7 @@ class PostulacionController extends Controller
                 ->update(['estado_id' => $estadoRechazadoId]);
             
             // Opcional: actualizar el estado del trabajo a "asignado"
-            $trabajo->estado = 'asignado';
+            $trabajo->estado_id = $estadoAceptadoId;
             $trabajo->save();
             
             DB::commit();
