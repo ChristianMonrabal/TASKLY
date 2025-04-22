@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Trabajo;
 use App\Models\Estado;
+use Illuminate\Support\Facades\DB;
 
 class AdminJobController extends Controller
 {
@@ -100,11 +101,14 @@ class AdminJobController extends Controller
 
 
     /**
-     * Elimina un trabajo.
+     * Elimina un trabajo y todas sus relaciones usando transacciones.
      */
     public function destroy(Trabajo $trabajo)
     {
         try {
+            // Iniciar transacción para garantizar que todas las operaciones se completen o ninguna
+            DB::beginTransaction();
+            
             // Desvincular la relación many-to-many con categorías (tabla pivot "categorias_tipo_trabajo")
             if(method_exists($trabajo, 'categoriastipotrabajo')) {
                 $trabajo->categoriastipotrabajo()->detach();
@@ -137,6 +141,9 @@ class AdminJobController extends Controller
             
             // Finalmente, eliminar el trabajo
             $trabajo->delete();
+            
+            // Si todo salió bien, confirmar la transacción
+            DB::commit();
     
             if (request()->wantsJson()) {
                 return response()->json([
@@ -146,6 +153,9 @@ class AdminJobController extends Controller
             }
             return redirect()->route('admin.trabajos.index')->with('success', 'Trabajo eliminado correctamente.');
         } catch (\Exception $e) {
+            // Si algo salió mal, revertir todos los cambios
+            DB::rollBack();
+            
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,

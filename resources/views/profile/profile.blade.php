@@ -89,7 +89,7 @@
                         @endforeach
                     </select>
                 </div>
-        
+                
                 <div class="form-group">
                     <label for="habilidades">Seleccionar habilidades:</label>
                     <select name="habilidades[]" id="habilidades" multiple class="form-select custom-multiselect">

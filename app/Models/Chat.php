@@ -17,8 +17,13 @@ class Chat extends Model
         return $this->belongsTo(Trabajo::class);
     }
 
-    public function trabajador()
+    public function emisor()
     {
-        return $this->belongsTo(User::class, 'trabajador_id');
+        return $this->belongsTo(User::class, 'emisor');
+    }
+
+    public function receptor()
+    {
+        return $this->belongsTo(User::class, 'receptor');
     }
 }
