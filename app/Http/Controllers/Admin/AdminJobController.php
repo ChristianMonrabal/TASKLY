@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Trabajo;
 use App\Models\Estado;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AdminJobController extends Controller
 {
@@ -15,6 +16,9 @@ class AdminJobController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->rol_id != 1) {
+            return redirect()->route('trabajos.index');
+        }
         // Se cargan las relaciones cliente y estado para mostrar la información
         $trabajos = Trabajo::with(['cliente', 'estado'])->get();
         return view('Admin.trabajos.index', compact('trabajos'));

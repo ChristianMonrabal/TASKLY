@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\CategoriaTipoTrabajo;
 use App\Models\Habilidad;
+use Illuminate\Support\Facades\Auth;
 
 class CategoriaController extends Controller
 {
@@ -16,7 +17,9 @@ class CategoriaController extends Controller
      * Muestra la vista principal (index) donde se listan las categorías.
      */
     public function index()
-    {
+    {if (Auth::user()->rol_id != 1) {
+        return redirect()->route('trabajos.index');
+    }
         return view('Admin.categorias.index');
     }
     
