@@ -19,7 +19,7 @@
             <input type="text" id="filterTrabajador" placeholder="Trabajador" class="form-control d-inline-block" style="width: 45%;" oninput="filterValoraciones()">
             <input type="text" id="filterCliente" placeholder="Cliente" class="form-control d-inline-block" style="width: 45%;" oninput="filterValoraciones()">
         </div>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-valoraciones">
             <thead>
                 <tr>
                     <th>Trabajo</th>

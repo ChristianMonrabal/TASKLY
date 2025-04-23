@@ -80,7 +80,6 @@ function renderUsuarios(data) {
             <td>${usuario.apellidos}</td>
             <td>${usuario.email}</td>
             <td>${usuario.telefono || ''}</td>
-            <td>${usuario.codigo_postal || ''}</td>
             <td>${usuario.fecha_nacimiento ? new Date(usuario.fecha_nacimiento).toLocaleDateString() : ''}</td>
             <td>${usuario.dni || ''}</td>
             <td>${rolNombre}</td>
