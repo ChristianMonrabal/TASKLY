@@ -242,20 +242,19 @@
 }
 
 .btn {
-  padding: 12px 15px;
-  border: none;
-  border-radius: 0;
-  font-weight: 500;
-  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   transition: all 0.2s;
-  width: 100%;
   text-align: center;
   box-sizing: border-box;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  
 }
 
 .btn i {
@@ -265,11 +264,13 @@
 .btn-postular, .btn-chat {
   background-color: var(--primary);
   color: white;
+  width: 100%;
 }
 
 .btn-postular:hover, .btn-chat:hover {
   background-color: #d85a5a;
   color: white;
+  width: 100%;
 }
 
 /* Estilo para el botón cuando ya está postulado */
@@ -279,10 +280,12 @@
   cursor: not-allowed;
   opacity: 0.8;
   border: 2px solid #5a6268;
+  font-size: 15px;
 }
 
 .btn-postulado i {
   color: #a3d39c;
+  font-size: 15px;
 }
 
 @media (max-width: 768px) {
