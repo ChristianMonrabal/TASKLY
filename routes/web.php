@@ -20,6 +20,8 @@ use App\Models\User;
 use App\Http\Controllers\PerfilController;
 use App\Models\Valoracion;
 use App\Models\Trabajo;
+use App\Http\Controllers\CalendarioController;
+
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -69,7 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
     Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
     Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
-    
+
     // Rutas para gestión de postulaciones/candidatos
     Route::post('/postulaciones/{id}/aceptar', [PostulacionController::class, 'aceptar'])->name('postulaciones.aceptar');
     Route::post('/postulaciones/{id}/rechazar', [PostulacionController::class, 'rechazar'])->name('postulaciones.rechazar');
@@ -97,6 +99,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
     });
+    // Calendario
+    Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+
     
     // Rutas API Admin
     // —— API para el CRUD Admin ——
@@ -118,6 +123,7 @@ Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
 Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+
 
 Route::get('/footer/sobre_nosotros', function () {
     return view('/footer/sobre_nosotros');

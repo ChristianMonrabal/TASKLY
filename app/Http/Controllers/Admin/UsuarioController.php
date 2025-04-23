@@ -18,6 +18,10 @@ use App\Models\LogroCompleto;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\Habilidad;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Categoria;
+
+
 
 
 
@@ -29,6 +33,9 @@ class UsuarioController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->rol_id != 1) {
+            return redirect()->route('trabajos.index');
+        }
         return view('Admin.usuarios.index');
     }
     
