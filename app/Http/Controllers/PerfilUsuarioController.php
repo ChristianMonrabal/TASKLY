@@ -7,13 +7,6 @@ use Illuminate\Http\Request;
 
 class PerfilUsuarioController extends Controller
 {
-    // public function perfil($id)
-    // {
-    //     $usuario = User::with(['rol', 'valoracionesRecibidas.trabajo'])->findOrFail($id);
-    
-    //     return view('profile_user', compact('usuario'));
-    // }
-
     public function perfilPorNombre($nombre)
     {
         // Suponiendo que los usuarios tienen un campo 'nombre' y 'apellido'
@@ -32,6 +25,8 @@ class PerfilUsuarioController extends Controller
         // Buscar el usuario por nombre completo
         $usuario = User::whereRaw("CONCAT(nombre, ' ', apellidos) = ?", [$nombre])->firstOrFail();
 
-        return view('profile_user', compact('usuario'));
+        $mediaValoraciones = $usuario->valoracionesRecibidas()->avg('puntuacion');
+
+        return view('profile_user', compact('usuario', 'mediaValoraciones'));
     }
 }

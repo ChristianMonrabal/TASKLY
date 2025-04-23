@@ -17,14 +17,14 @@
                 <div class="card-body text-center">
 
                     {{-- Foto de perfil --}}
-                    <div class="mb-3">
+                    <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; border: 3px solid #dc3545; box-shadow: 0 0 10px rgba(0,0,0,0.2); margin: 0 auto;">
                         <img src="{{ $usuario->foto_perfil 
                             ? asset('img/profile_images/' . $usuario->foto_perfil) 
                             : asset('img/perfil_default.png') }}" 
-                            alt="Foto de perfil" 
-                            class="rounded-circle" 
-                            width="150" height="150">
+                            alt="Foto de perfil"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
+                    <br>
 
                     {{-- Nombre completo --}}
                     <h3 class="mb-0">{{ $usuario->nombre }} {{ $usuario->apellidos }}</h3>
@@ -54,8 +54,34 @@
                 <div class="card-body">
                     {{-- Título "Valoraciones recibidas" centrado y en color rojo --}}
                     <br>
-                    <h4 class="mb-4 ms-2 text-center text-danger">Valoraciones recibidas</h4>
+                    <h2 class="mb-4 ms-2 text-center text-danger"><strong>Valoraciones recibidas</strong></h2>
 
+                    @if($usuario->valoracionesRecibidas->count())
+                        <div class="text-center mb-4">
+                            <h4 class="text-dark">Valoración media de todos sus trabajos:</h4>
+                            <div class="text-warning fs-4">
+                                @php
+                                    $media = round($mediaValoraciones, 1);
+                                    $mediaEntera = floor($media);
+                                    $mediaDecimal = $media - $mediaEntera;
+                                @endphp
+
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= $mediaEntera)
+                                        <i class="fas fa-star"></i>
+                                    @elseif ($i == $mediaEntera + 1 && $mediaDecimal >= 0.5)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @else
+                                        <i class="far fa-star"></i>
+                                    @endif
+                                @endfor
+
+                                <span class="text-muted ms-2">({{ $media }}/5)</span>
+                            </div>
+                        </div>
+                    @endif
+    
+                    {{-- Contenedor para cada valoración individual --}}
                     @if($usuario->valoracionesRecibidas->count())
                         @foreach($usuario->valoracionesRecibidas as $valoracion)
                             <div class="mb-3">
