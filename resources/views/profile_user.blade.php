@@ -29,18 +29,10 @@
                     {{-- Nombre completo --}}
                     <h3 class="mb-0">{{ $usuario->nombre }} {{ $usuario->apellidos }}</h3>
 
-                    {{-- Rol --}}
-                    @if ($usuario->rol)
-                        <span class="badge bg-primary mt-2">{{ $usuario->rol->nombre }}</span>
-                    @endif
-
                     {{-- Información personal --}}
                     <div class="mt-4 text-start">
                         <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ $usuario->email }}</p>
                         <p><i class="fas fa-map-marker-alt"></i> <strong>Código postal:</strong> {{ $usuario->codigo_postal ?? 'No disponible' }}</p>
-                        <p><i class="fas fa-birthday-cake"></i> <strong>Fecha de nacimiento:</strong> 
-                            {{ $usuario->fecha_nacimiento ? \Carbon\Carbon::parse($usuario->fecha_nacimiento)->format('d/m/Y') : 'No disponible' }}
-                        </p>
                         <p><i class="fas fa-calendar-alt"></i> <strong>Miembro desde:</strong> {{ $usuario->created_at->format('d/m/Y') }}</p>
                     </div>
 
@@ -54,13 +46,15 @@
                         <i class="fas fa-comments"></i> Enviar mensaje
                     </a>
                 </div>
-
+                
                 {{-- Línea de separación entre la información del usuario y las valoraciones --}}
                 <hr class="my-4">   
 
                 {{-- Valoraciones recibidas --}}
                 <div class="card-body">
-                    <h4 class="mb-4 ms-2">Valoraciones recibidas</h4>
+                    {{-- Título "Valoraciones recibidas" centrado y en color rojo --}}
+                    <br>
+                    <h4 class="mb-4 ms-2 text-center text-danger">Valoraciones recibidas</h4>
 
                     @if($usuario->valoracionesRecibidas->count())
                         @foreach($usuario->valoracionesRecibidas as $valoracion)
