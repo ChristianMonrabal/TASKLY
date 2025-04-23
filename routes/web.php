@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Admin\AdminJobController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PostulacionController;
+use App\Http\Controllers\PerfilUsuarioController;
 use App\Models\Categoria;
 use App\Models\User;
 use App\Models\Valoracion;
