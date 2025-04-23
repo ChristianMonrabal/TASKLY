@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Trabajo extends Model
-{
+    {
     protected $fillable = [
         'titulo',
         'descripcion',
         'precio',
         'direccion',
         'cliente_id',
-        'estado_id'
+        'estado_id',
+        'alta_responsabilidad'
     ];
 
     public function cliente()

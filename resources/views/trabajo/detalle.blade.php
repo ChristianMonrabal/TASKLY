@@ -43,8 +43,6 @@
       
       <h1 class="trabajo-titulo">{{ $trabajo->titulo }}</h1>
       
-      {{-- <div class="precio">€{{ $trabajo->precio }}</div> --}}
-      
       <div class="info-grid">
         <div class="info-col content-col">
           <!-- Meta información -->
@@ -53,14 +51,21 @@
               <i class="fas fa-calendar"></i>
               <span>Publicado: {{ $trabajo->created_at->format('d/m/Y') }}</span>
             </div>
-            
+          
             @if($trabajo->fecha_expiracion)
               <div class="meta-item">
                 <i class="fas fa-hourglass-end"></i>
                 <span>Expira: {{ date('d/m/Y', strtotime($trabajo->fecha_expiracion)) }}</span>
               </div>
             @endif
-            
+
+            @if($trabajo->alta_responsabilidad === 'Sí')
+            <div class="meta-item">
+              <i class="fas fa-exclamation-triangle text-warning"></i>
+              <span><strong>Alta responsabilidad</strong></span>
+            </div>
+          @endif
+          
             <div class="meta-item">
               <i class="fas fa-tag"></i>
               <span>
@@ -71,13 +76,13 @@
                 @endif
               </span>
             </div>
-
+          
             <div class="meta-item precio-destacado">
               <i class="fas fa-euro-sign"></i>
               <span>Precio: {{ $trabajo->precio }}€</span>
             </div>
           </div>
-          
+                    
           <!-- Descripción -->
           <div class="seccion-detalle">
             <h3 class="seccion-titulo"><i class="fas fa-align-left"></i> Descripción del proyecto</h3>
@@ -125,12 +130,10 @@
                 @if(Auth::id() != $trabajo->cliente_id)
                   <div class="boton-wrapper">
                     @if(isset($yaPostulado) && $yaPostulado)
-                      <!-- Usuario ya postulado -->
                       <button type="button" class="btn btn-postulado" disabled>
                         <i class="fas fa-check"></i> Ya postulado
                       </button>
                     @else
-                      <!-- Usuario no postulado aún -->
                       <form class="postular-form" action="{{ route('trabajos.postular', $trabajo->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-postular">
@@ -140,14 +143,12 @@
                     @endif
                   </div>
                   
-                  <!-- Botón de chat con icono (solo visible si no es el creador) -->
                   <div class="boton-wrapper">
                     <a href="{{ route('vista.chat', $trabajo->id) }}" class="btn btn-chat" title="Chatear">
                       <i class="fas fa-comments fa-lg"></i>
                     </a>
                   </div>
                 @else
-                  <!-- Mensaje si es el creador del trabajo -->
                   <div class="alert alert-info text-center">
                     <i class="fas fa-info-circle"></i> Eres el creador de este trabajo
                   </div>
@@ -168,14 +169,12 @@
             </div>
           </div>
               
-              @if($trabajo->postulantes_count)
-              <li class="meta-item">
-                <i class="fas fa-users"></i>
-                <span>Postulaciones: {{ $trabajo->postulantes_count }}</span>
-              </li>
-              @endif
-            </ul>
-          </div>
+          @if($trabajo->postulantes_count)
+          <li class="meta-item">
+            <i class="fas fa-users"></i>
+            <span>Postulaciones: {{ $trabajo->postulantes_count }}</span>
+          </li>
+          @endif
         </div>
       </div>
     </div>
