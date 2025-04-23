@@ -30,35 +30,37 @@
         @if ($trabajos->count() > 0)
             <div class="trabajos-grid">
                 @foreach ($trabajos as $trabajo)
-                    <div class="trabajo-item">
-                        <div class="card">
-                            <!-- Imagen del trabajo -->
-                            @if($trabajo->imagenes->isNotEmpty())
+                <div class="trabajo-item">
+                    <div class="card">
+                        @if($trabajo->imagenes->isNotEmpty())
                             <img src="{{ asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) }}" class="card-img-top" alt="{{ $trabajo->titulo }}">
-                            @else
-                                <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen">
-                            @endif
-                            <br>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $trabajo->titulo }}</h5>
-                                <p class="card-text">{{ Str::limit($trabajo->descripcion, 100) }}</p>
-                                <p class="card-text"><strong>Precio:</strong> {{ $trabajo->precio }} €</p>
-                            </div>
-                            <div class="card-actions">
-                                <div class="action-buttons">
-                                    <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
-                                    <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
-                                </div>
+                        @else
+                            <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen">
+                        @endif
+                        <br>
+                        <div class="card-body">
+                            <h2 class="card-title">{{ $trabajo->titulo }}</h2>
+                            <p class="card-text">{{ Str::limit($trabajo->descripcion, 100) }}</p>
+                            <p class="card-text"><strong>Precio:</strong> {{ $trabajo->precio }} €</p>
+                        </div>
+                        <div class="card-actions">
+                            <div class="action-buttons">
+                                <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
+                                <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
+                                <br>
+                                <button class="action-btn add-date-btn" data-trabajo-id="{{ $trabajo->id }}">Añadir fecha de encuentro</button>
                             </div>
                         </div>
                     </div>
-                @endforeach
+                </div>
+            @endforeach
             </div>
         @else
             <div class="alert alert-info">
                 No has publicado ningún trabajo todavía.
             </div>
         @endif
-
     </div>
 @endsection
+
+<script src="{{ asset('js/sweet_alert_calendario.js') }}"></script>
