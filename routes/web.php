@@ -97,6 +97,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
     });
+    // Calendario
+    Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+
     
     // Rutas API Admin
     // —— API para el CRUD Admin ——
@@ -119,8 +122,6 @@ Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->nam
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
-// Calendario
-Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
 
 Route::get('/footer/sobre_nosotros', function () {
     return view('/footer/sobre_nosotros');

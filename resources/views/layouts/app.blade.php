@@ -33,7 +33,7 @@
                             <img src="{{ asset('img/icon.png') }}" alt="TASKLY Logo" class="logo-img">
                         </a>
                     </div>
-
+        
                     <nav class="main-nav">
                         <ul>
                             <li>
@@ -70,20 +70,15 @@
                             @endif  
                         </ul>
                     </nav>
-                    
-                    
-
+        
                     <div class="user-actions">
-                        <!-- Si el usuario está autenticado, mostrar notificaciones -->
                         @auth
-                            <!-- Icono para añadir trabajo -->
                             <div class="trabajo-icon">
                                 <a href="/crear_trabajo" class="trabajo-btn" title="Añadir nuevo trabajo">
                                     <i class="fas fa-plus-circle"></i>
                                 </a>
                             </div>
-
-                            <!-- Botón de notificaciones -->
+        
                             <div class="notification-bell">
                                 <button class="notification-btn" id="notificationBtn">
                                     <i class="fas fa-bell"></i>
@@ -128,22 +123,18 @@
                                     </div>
                                 </div>
                             </div>
-
+        
                             <div class="user-dropdown">
                                 <button class="dropdown-btn">
                                     <div class="user-avatar">
                                         <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}"
                                             class="current-photo">
-
                                     </div>
                                     <span class="user-name">{{ Auth::user()->name }}</span>
                                     <span class="icon">▼</span>
                                 </button>
                                 <div class="dropdown-content">
                                     <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
-                                    <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
-                                    <a href="{{ url('/trabajos_publicados') }}"><i class="fas fa-project-diagram"></i> Mis Trabajos</a>
-                                    <a href="{{ route('vista.chat') }}"><i class="fas fa-envelope"></i> Mensajes</a>
                                     <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                         @csrf
                                         <a href="{{ route('logout') }}"
@@ -151,30 +142,38 @@
                                             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                                         </a>
                                     </form>
+        
+                                    <!-- Opciones adicionales solo visibles en móvil -->
+                                    <div class="mobile-only">
+                                        <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                        <a href="{{ url('/trabajos_publicados') }}"><i class="fas fa-project-diagram"></i> Mis Trabajos</a>
+                                        <a href="{{ route('vista.chat') }}"><i class="fas fa-envelope"></i> Mensajes</a>
+                                        <a href="{{ route('calendario.index') }}"><i class="fas fa-calendar-alt"></i> Calendario</a>
+                                        @if(Auth::user()->rol_id == 1)
+                                            <a href="{{ url('/admin/usuarios') }}"><i class="fas fa-user-shield"></i> Panel de administración</a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         @else
-                            <!-- Si el usuario no está autenticado -->
                             <div class="auth-buttons">
                                 <a href="{{ route('signin.auth') }}" class="btn btn-outline">Iniciar Sesión</a>
                                 <a href="{{ route('signup.auth') }}" class="btn btn-primary">Registrarse</a>
                             </div>
-
-                            <!-- Menú móvil para no autenticados (sólo visible en móvil) -->
+        
                             <div class="mobile-menu-no-auth">
                                 <button class="mobile-dropdown-btn">
                                     <span class="icon">▼</span>
                                 </button>
                                 <div class="mobile-dropdown-content">
                                     <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
-                                    <a href="{{ route('signin.auth') }}"><i class="fas fa-sign-in-alt"></i> Iniciar
-                                        Sesión</a>
+                                    <a href="{{ route('signin.auth') }}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
                                     <a href="{{ route('signup.auth') }}"><i class="fas fa-user-plus"></i> Registrarse</a>
                                 </div>
                             </div>
                         @endauth
                     </div>
-
+        
                     <button class="mobile-menu-btn" id="mobileMenuBtn">
                         <span></span>
                         <span></span>
@@ -183,17 +182,14 @@
                 </div>
             </div>
         </header>
+        
 
-        <!-- Eliminamos el menú móvil independiente -->
-
-        <!-- Contenido principal -->
         <main class="main-content">
             <div class="container">
                 @yield('content')
             </div>
         </main>
 
-        <!-- Pie de página -->
         <footer class="main-footer">
             <div class="container">
                 <div class="footer-content">
@@ -245,12 +241,8 @@
         </footer>
     </div>
 
-    <!-- Scripts comunes -->
     <script src="{{ asset('js/layout.js') }}"></script>
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <!-- Scripts específicos de la página -->
     @yield('scripts')
 </body>
 </html>
