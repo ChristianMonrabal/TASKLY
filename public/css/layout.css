@@ -643,6 +643,10 @@
   transform: translateY(-3px);
 }
 
+.mobile-only {
+  display: none;
+}
+
 /* Mejoramos el comportamiento del scroll */
 html, body {
   scroll-behavior: smooth;
@@ -667,6 +671,10 @@ html, body {
   .main-nav {
     display: none;
   }
+
+  .mobile-only {
+    display: block;
+}
   
   /* Mostrar el menú móvil para usuarios no autenticados */
   .mobile-menu-no-auth {

@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Trabajo;
 use App\Models\ImgTrabajo;
+use Illuminate\Support\Facades\DB;
+
 
 class TrabajoSeeder extends Seeder
 {

@@ -32,6 +32,14 @@
             </div>
 
             <div class="form-group mb-3">
+                <label for="alta_responsabilidad">¿Trabajo de alta responsabilidad?</label>
+                <select name="alta_responsabilidad" id="alta_responsabilidad" class="form-control">
+                    <option value="No" selected>No</option>
+                    <option value="Sí">Sí</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
                 <label for="categorias">Tags:</label>
                 <div class="tag-scroll-box" id="tag-container">
                     @foreach($categorias as $categoria)
