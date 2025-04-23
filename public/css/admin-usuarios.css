@@ -109,4 +109,63 @@ body {
       margin-bottom: 0.75rem;
     }
   }
-  
+/* public/css/admin-usuarios.css */
+
+/* ... (mantén todos los estilos existentes) ... */
+
+/* Responsive para cada tipo de CRUD */
+@media (max-width: 768px) {
+    /* GESTIÓN DE USUARIOS - Mostrar solo Correo y Acciones */
+    .table-usuarios thead th:not(:nth-child(3)):not(:nth-child(9)),
+    .table-usuarios tbody td:not(:nth-child(3)):not(:nth-child(9)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE CATEGORÍAS - Mostrar solo Nombre y Acciones */
+    .table-categorias thead th:not(:nth-child(1)):not(:nth-child(2)),
+    .table-categorias tbody td:not(:nth-child(1)):not(:nth-child(2)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE TRABAJOS - Mostrar solo Título y Acciones */
+    .table-trabajos thead th:not(:nth-child(1)):not(:nth-child(7)),
+    .table-trabajos tbody td:not(:nth-child(1)):not(:nth-child(7)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE VALORACIONES - Mostrar solo Puntuación y Acciones */
+    .table-valoraciones thead th:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(6)),
+    .table-valoraciones tbody td:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(6)) {
+        display: none;
+    }
+}
+
+/* Mejoras para móviles */
+@media (max-width: 768px) {
+    /* Ajustar padding en celdas para móviles */
+    .table thead th,
+    .table tbody td {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+    }
+    
+    /* Ajustar tamaño de botones */
+    .btn-sm {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+    }
+    
+    /* Ajustar márgenes en los filtros */
+    #filterNombre, #filterApellidos, #filterCorreo,
+    #filterCodigoPostal, #filterDni, #filterCliente,
+    #filterTrabajador, #filterEstado {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Ajustar el outer-border */
+    .outer-border {
+        padding: 10px;
+        margin: 10px;
+    }
+}

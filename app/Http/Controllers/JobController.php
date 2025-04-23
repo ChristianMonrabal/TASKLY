@@ -37,6 +37,7 @@ class JobController extends Controller
             'direccion' => 'required|string|max:255',
             'categorias' => 'required|array',
             'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Permitir hasta 5 imágenes
+            'alta_responsabilidad' => 'required|in:Sí,No',
         ]);
 
         if ($validator->fails()) {
@@ -55,6 +56,7 @@ class JobController extends Controller
         $trabajo->direccion = $request->direccion;
         $trabajo->estado_id = Estado::first()->id; // Asignar un estado por defecto
         $trabajo->fecha_limite = now()->addDays(7); // Establecer una fecha límite por defecto
+        $trabajo->alta_responsabilidad = $request->input('alta_responsabilidad', 'No');
         $trabajo->save();
 
         // Asignar las categorías al trabajo
