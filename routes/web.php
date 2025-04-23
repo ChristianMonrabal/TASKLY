@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\ValoracionController;
@@ -15,11 +14,9 @@ use App\Http\Controllers\Admin\AdminJobController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PostulacionController;
 use App\Http\Controllers\PerfilUsuarioController;
-use App\Models\Categoria;
 use App\Models\User;
 use App\Http\Controllers\PerfilController;
-use App\Models\Valoracion;
-use App\Models\Trabajo;
+use App\Http\Controllers\CalendarioController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -50,16 +47,18 @@ Route::middleware('auth')->group(function () {
     // Rutas de perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    
+
     // Ruta para la página de mensajes
-    Route::get('/mensajes', function () {return view('mensajes.index');})->name('mensajes');
-    
+    Route::get('/mensajes', function () {
+        return view('mensajes.index');
+    })->name('mensajes');
+
     // Ruta para mostrar todos los usuarios
     Route::get('/usuarios', function () {
         $users = User::with('rol')->get();
         return view('usuarios.index', compact('users'));
     })->name('usuarios.index');
-    
+
     // Rutas de trabajos protegidas
     Route::post('/trabajos/{id}/postular', [TrabajoController::class, 'postular'])->name('trabajos.postular');
     Route::get('/crear_trabajo', [JobController::class, 'crear'])->name('trabajos.crear');
@@ -69,19 +68,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
     Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
     Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
-    
+
     // Rutas para gestión de postulaciones/candidatos
     Route::post('/postulaciones/{id}/aceptar', [PostulacionController::class, 'aceptar'])->name('postulaciones.aceptar');
     Route::post('/postulaciones/{id}/rechazar', [PostulacionController::class, 'rechazar'])->name('postulaciones.rechazar');
     Route::get('/trabajo/{id}/postulaciones', [PostulacionController::class, 'estadoPostulaciones'])->name('trabajo.postulaciones');
-    
+
     // Chat
     Route::controller(ChatController::class)->group(function () {
         Route::get('/chat', 'Vistachat')->name('vista.chat');
         Route::post('/cargamensajes', 'cargamensajes');
         Route::post('/enviomensaje', 'enviomensaje');
     });
-    
+
     // Logout
     Route::post('/logout', function () {
         Auth::logout();
@@ -89,7 +88,7 @@ Route::middleware('auth')->group(function () {
         request()->session()->regenerateToken();
         return redirect('/');
     })->name('logout');
-    
+
     // Rutas de administración
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('usuarios', UsuarioController::class);
@@ -97,26 +96,28 @@ Route::middleware('auth')->group(function () {
         Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
     });
-    
+    // Calendario
+    Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+
     // Rutas API Admin
     // —— API para el CRUD Admin ——
-// Usuarios:
-Route::get('/usuarios',    [UsuarioController::class, 'apiIndex']);
-Route::get('api/usuarios',    [UsuarioController::class, 'apiIndex']);
-Route::get('api/usuarios/{usuario}', [UsuarioController::class, 'show']);
-// Valoraciones:
-Route::get('api/valoraciones',    [ValoracionController::class, 'apiIndex']);
-Route::get('api/valoraciones/{valoracion}', [ValoracionController::class, 'show']);
-// Trabajos:
-Route::get('api/trabajos',    [AdminJobController::class, 'apiIndex']);
-Route::get('api/trabajos/{trabajo}', [AdminJobController::class, 'show']);
-Route::get('api/estados/trabajos', [AdminJobController::class, 'apiEstadosTrabajo']);
-// Categorías:
-Route::get('api/categorias',    [CategoriaController::class, 'apiIndex']);
-Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
+    // Usuarios:
+    Route::get('/usuarios',    [UsuarioController::class, 'apiIndex']);
+    Route::get('api/usuarios',    [UsuarioController::class, 'apiIndex']);
+    Route::get('api/usuarios/{usuario}', [UsuarioController::class, 'show']);
+    // Valoraciones:
+    Route::get('api/valoraciones',    [ValoracionController::class, 'apiIndex']);
+    Route::get('api/valoraciones/{valoracion}', [ValoracionController::class, 'show']);
+    // Trabajos:
+    Route::get('api/trabajos',    [AdminJobController::class, 'apiIndex']);
+    Route::get('api/trabajos/{trabajo}', [AdminJobController::class, 'show']);
+    Route::get('api/estados/trabajos', [AdminJobController::class, 'apiEstadosTrabajo']);
+    // Categorías:
+    Route::get('api/categorias',    [CategoriaController::class, 'apiIndex']);
+    Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
 
-Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
-Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
+    Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
+    Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 Route::get('/footer/sobre_nosotros', function () {
