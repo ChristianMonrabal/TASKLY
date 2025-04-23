@@ -120,6 +120,7 @@ Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']
 Route::get('/footer/sobre_nosotros', function () {
     return view('/footer/sobre_nosotros');
 });
-Route::get('/footer/como_funciona', function () {
-    return view('/footer/como_funciona');
-});
+
+// Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
+Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'perfilPorNombre'])->name('perfil.usuario');
+Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'mostrar'])->name('perfil.usuario');
