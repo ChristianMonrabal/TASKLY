@@ -17,6 +17,7 @@ use App\Http\Controllers\PostulacionController;
 use App\Http\Controllers\PerfilUsuarioController;
 use App\Models\Categoria;
 use App\Models\User;
+use App\Http\Controllers\PerfilController;
 use App\Models\Valoracion;
 use App\Models\Trabajo;
 
@@ -125,4 +126,6 @@ Route::get('/footer/como_funciona', function () {
     return view('/footer/como_funciona');
 });
 
-Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
+// Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
+Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'perfilPorNombre'])->name('perfil.usuario');
+Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'mostrar'])->name('perfil.usuario');
