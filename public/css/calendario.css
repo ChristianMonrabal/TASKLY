@@ -2,6 +2,7 @@
     max-width: 1000px;
     margin: auto;
     text-align: center;
+    padding: 15px; /* Añadido padding para que no quede pegado a los bordes en dispositivos pequeños */
 }
 
 .calendar-header {
@@ -42,6 +43,7 @@
     text-align: left;
     position: relative;
     cursor: pointer;
+    font-size: 0.9rem; /* Tamaño de texto más pequeño */
 }
 
 .days-grid div:hover {
@@ -75,4 +77,60 @@
     font-size: 1.2rem;
     color: #EC6A6A;
     margin-left: 5px;
+}
+
+/* Media Queries para dispositivos móviles */
+@media (max-width: 768px) {
+    .calendar-container {
+        padding: 10px;
+    }
+
+    .calendar-header {
+        flex-direction: row; /* Cambié a fila para mantener las flechas a los lados */
+        justify-content: space-between; /* Asegura que las flechas se mantengan en los lados */
+        align-items: center;
+    }
+
+    .calendar-btn {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .day-names div {
+        font-size: 0.9rem;
+        padding: 8px 0;
+    }
+
+    .days-grid div {
+        height: 100px;
+        font-size: 0.8rem;
+        padding: 5px 6px;
+    }
+
+    /* Ajustamos el grid para dispositivos pequeños */
+    .days-grid {
+        grid-template-columns: repeat(4, 1fr); /* Solo 4 columnas en pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    .days-grid {
+        grid-template-columns: repeat(3, 1fr); /* Solo 3 columnas en pantallas aún más pequeñas */
+    }
+
+    .calendar-btn {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .day-names div {
+        font-size: 0.8rem;
+        padding: 6px 0;
+    }
+
+    .days-grid div {
+        height: 80px;
+        font-size: 0.7rem;
+        padding: 4px 5px;
+    }
 }
