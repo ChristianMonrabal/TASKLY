@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Trabajo;
 use App\Models\Categoria;
 use App\Models\Postulacion;
+use App\Models\Valoracion;
 use Illuminate\Support\Facades\Auth;
 
 class TrabajoController extends Controller
@@ -182,7 +183,9 @@ class TrabajoController extends Controller
                 ->exists();
         }
 
-        return view('trabajo.detalle', compact('trabajo', 'yaPostulado'));
+        $totalValoraciones = Valoracion::where('trabajo_id', $id)->count();
+
+        return view('trabajo.detalle', compact('trabajo', 'yaPostulado', 'totalValoraciones'));
     }
 
     public function postular($id)
