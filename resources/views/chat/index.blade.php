@@ -11,17 +11,20 @@
             box-shadow: 0 5px 15px rgba(236, 106, 106, 0.15);
             overflow: hidden;
             height: calc(100vh - 100px);
-            min-height: 700px; /* Aumento de altura mínima */
+            min-height: 700px;
+            /* Aumento de altura mínima */
             border: 2px solid var(--primary);
             margin-top: 10px;
             margin-bottom: 10px;
             width: 100%;
-            max-width: 1600px; /* Aumentado para dar más espacio */
+            max-width: 1600px;
+            /* Aumentado para dar más espacio */
         }
 
         /* Columna de contactos */
         .contactos-column {
-            width: 320px; /* Ligeramente más ancha para mejor visualización */
+            width: 320px;
+            /* Ligeramente más ancha para mejor visualización */
             background-color: #f8f9fa;
             border-right: 1px solid var(--primary-light);
             overflow-y: auto;
@@ -207,7 +210,8 @@
             flex-direction: column;
             background-color: white;
             overflow: hidden;
-            min-width: 0; /* Evita que el contenido desborde la columna */
+            min-width: 0;
+            /* Evita que el contenido desborde la columna */
         }
 
         .chat-header {
@@ -293,7 +297,8 @@
         .messages-area {
             flex: 1;
             overflow-y: auto;
-            padding: 25px; /* Más padding para dar espacio a los mensajes */
+            padding: 25px;
+            /* Más padding para dar espacio a los mensajes */
             background-color: #f9f9f9;
             display: flex;
             flex-direction: column;
@@ -302,8 +307,10 @@
 
         .message {
             display: flex;
-            margin-bottom: 22px; /* Más espacio entre mensajes */
-            max-width: 80%; /* Mensajes más anchos */
+            margin-bottom: 22px;
+            /* Más espacio entre mensajes */
+            max-width: 80%;
+            /* Mensajes más anchos */
             clear: both;
         }
 
@@ -340,12 +347,15 @@
 
         .message-bubble {
             background-color: white;
-            padding: 14px 18px; /* Más padding interno en los mensajes */
+            padding: 14px 18px;
+            /* Más padding interno en los mensajes */
             border-radius: 0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             margin-bottom: 6px;
-            font-size: 15px; /* Texto más grande */
-            line-height: 1.5; /* Mejor espaciado entre líneas */
+            font-size: 15px;
+            /* Texto más grande */
+            line-height: 1.5;
+            /* Mejor espaciado entre líneas */
             border: 1px solid #e0e0e0;
         }
 
@@ -358,7 +368,8 @@
 
         .message-text {
             margin: 0;
-            font-size: 15px; /* Texto más grande para mejor legibilidad */
+            font-size: 15px;
+            /* Texto más grande para mejor legibilidad */
         }
 
         .message-time {
@@ -411,15 +422,19 @@
 
         .message-input {
             flex: 1;
-            padding: 14px 18px; /* Más padding para el campo de texto */
+            padding: 14px 18px;
+            /* Más padding para el campo de texto */
             border: 1px solid var(--primary-light);
             border-radius: 0;
-            font-size: 15px; /* Texto más grande */
+            font-size: 15px;
+            /* Texto más grande */
             resize: none;
             min-height: 50px;
-            max-height: 130px; /* Más altura máxima */
+            max-height: 130px;
+            /* Más altura máxima */
             overflow-y: auto;
-            line-height: 1.5; /* Mejor espaciado */
+            line-height: 1.5;
+            /* Mejor espaciado */
             margin: 0 15px;
         }
 
@@ -456,20 +471,24 @@
             .mensajes-container {
                 flex-direction: column;
                 height: calc(100vh - 60px);
-                min-height: 800px; /* Mayor altura mínima en móvil */
+                min-height: 800px;
+                /* Mayor altura mínima en móvil */
             }
 
             .contactos-column {
                 width: 100%;
-                height: 350px; /* Más altura en la lista de contactos en móvil */
+                height: 350px;
+                /* Más altura en la lista de contactos en móvil */
             }
-            
+
             .message {
-                max-width: 90%; /* Mensajes más anchos en móvil */
+                max-width: 90%;
+                /* Mensajes más anchos en móvil */
             }
-            
+
             .message-text {
-                font-size: 16px; /* Texto más grande en móvil para mejor legibilidad */
+                font-size: 16px;
+                /* Texto más grande en móvil para mejor legibilidad */
             }
         }
     </style>
@@ -521,8 +540,9 @@
                                     </h4>
                                     <p class="contacto-trabajo">
                                         <span style="color: var(--primary);">
-                                            {{ $postulacion->tipo == 'recibida' ? 'recibida:' : 'realizada:' }}
-                                            {{ $postulacion->trabajo->titulo }}
+                                            {{ $postulacion->tipo == 'recibida' ? 'para:' : 'aplicaste a:' }}
+                                            <span id="infotrabajo{{ $postulacion->id }}">
+                                                {{ $postulacion->trabajo->titulo }} </span>
                                         </span>
                                     </p>
                                 </div>
