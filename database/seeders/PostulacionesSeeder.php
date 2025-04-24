@@ -13,123 +13,30 @@ class PostulacionesSeeder extends Seeder
 {
     public function run(): void
     {
+        // Trabajo 1: El cliente es el usuario con id 3 (Christian)
+        // Postulantes: Alex (id 2), Juan Carlos (id 4)
         Postulacion::create([
             'trabajo_id' => 1,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
+            'trabajador_id' => 2,  // Alex
+            'estado_id' => 9,
         ]);
         Postulacion::create([
             'trabajo_id' => 1,
-            'trabajador_id' => 4, // Juan Carlos (trabajador)
-            'estado_id' => 10, // Estado de la postulación
+            'trabajador_id' => 4,  // Juan Carlos
+            'estado_id' => 9,
         ]);
 
-        // Trabajo 2: El cliente es el usuario con id 3 (Christian), los postulantes no serán este usuario
+        // Trabajo 2: El cliente es el usuario con id 4 (Juan Carlos)
+        // Postulantes: Daniel (id 3), Julio César (id 5)
         Postulacion::create([
             'trabajo_id' => 2,
-            'trabajador_id' => 3, // Daniel (trabajador)
-            'estado_id' => 10, // Estado de la postulación
+            'trabajador_id' => 4,  // Daniel
+            'estado_id' => 9,
         ]);
         Postulacion::create([
             'trabajo_id' => 2,
-            'trabajador_id' => 5, // Julio César (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 3: El cliente es el usuario con id 3 (Christian), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 3,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 3,
-            'trabajador_id' => 4, // Juan Carlos (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 4: El cliente es el usuario con id 4 (Juan Carlos), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 4,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 4,
-            'trabajador_id' => 3, // Daniel (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 5: El cliente es el usuario con id 4 (Juan Carlos), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 5,
-            'trabajador_id' => 5, // Julio César (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 5,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 6: El cliente es el usuario con id 4 (Juan Carlos), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 6,
-            'trabajador_id' => 3, // Daniel (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 6,
-            'trabajador_id' => 5, // Julio César (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 7: El cliente es el usuario con id 4 (Juan Carlos), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 7,
-            'trabajador_id' => 3, // Daniel (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 7,
-            'trabajador_id' => 4, // Juan Carlos (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 8: El cliente es el usuario con id 5 (Pablo), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 8,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 8,
-            'trabajador_id' => 3, // Daniel (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 9: El cliente es el usuario con id 5 (Pablo), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 9,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 9,
-            'trabajador_id' => 4, // Juan Carlos (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-
-        // Trabajo 10: El cliente es el usuario con id 5 (Pablo), los postulantes no serán este usuario
-        Postulacion::create([
-            'trabajo_id' => 10,
-            'trabajador_id' => 2, // Alex (trabajador)
-            'estado_id' => 10, // Estado de la postulación
-        ]);
-        Postulacion::create([
-            'trabajo_id' => 10,
-            'trabajador_id' => 3, // Daniel (trabajador)
-            'estado_id' => 10, // Estado de la postulación
+            'trabajador_id' => 6,  // Julio César
+            'estado_id' => 9,
         ]);
     }
 }

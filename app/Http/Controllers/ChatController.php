@@ -17,16 +17,17 @@ class ChatController extends Controller
     {
         $user = Auth::user();
         $trabajoSeleccionado = null;
-        
+
         // Si se proporciona un ID de trabajo, lo cargamos para la vista
         if ($id !== null) {
             $trabajoSeleccionado = Trabajo::with(['cliente', 'postulaciones'])->findOrFail($id);
         }
-        
+
         $postulacionesRecibidas = Postulacion::with(['trabajador:id,nombre,apellidos,foto_perfil', 'trabajo:id,titulo'])
             ->whereHas('trabajo', function ($query) use ($user) {
                 $query->where('cliente_id', $user->id);
             })
+            ->where('estado_id', 10) // Estado de postulacion recibida
             ->get()
             ->map(function ($postulacion) {
                 $postulacion->tipo = 'recibida';
@@ -35,6 +36,7 @@ class ChatController extends Controller
 
         $postulacionesRealizadas = Postulacion::with(['trabajo:id,titulo,cliente_id', 'trabajo.cliente:id,nombre,apellidos,foto_perfil'])
             ->where('trabajador_id', $user->id)
+            ->where('estado_id', 10)
             ->get()
             ->map(function ($postulacion) {
                 $postulacion->tipo = 'realizada';
