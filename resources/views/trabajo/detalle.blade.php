@@ -107,13 +107,13 @@
         <div class="info-col sidebar-col">
           <!-- Información del usuario -->
           <div class="sidebar-card">
-            <h4 class="card-titulo">Publicado por</h4>
+            <h4 class="card-titulo">Publicado por {{ $trabajo->cliente->nombre }}</h4>
             <div class="usuario-info">
               <div class="usuario-avatar">
-                <img src="{{ asset('img/profile_images/perfil_default.png') }}" alt="{{ $trabajo->user->name ?? 'Usuario' }}">
+                <img src="{{ asset('img/profile_images/default-avatar.png') }}" alt="{{ $trabajo->cliente->foto_perfil ?? 'Usuario' }}">
               </div>
               <div>
-                <div class="usuario-nombre">{{ $trabajo->user->name ?? 'Usuario' }}</div>
+                <div class="usuario-nombre">{{ $trabajo->cliente->nombre ?? 'Usuario' }}</div>
                 @php
                   $totalValoraciones = $trabajo->user ? $trabajo->user->valoraciones()->count() : 0;
                 @endphp
