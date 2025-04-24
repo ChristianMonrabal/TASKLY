@@ -16,7 +16,7 @@ class ValoracionesSeeder extends Seeder
             'trabajo_id' => 1,
             'trabajador_id' => 3,
             'puntuacion' => rand(1, 5),
-            'img_valoracion' => 'foto.jpg',
+            'img_valoracion' => 'persiana.png',
             'comentario' => 'Bien',
         ]);
     }
