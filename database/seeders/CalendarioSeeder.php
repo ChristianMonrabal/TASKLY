@@ -26,7 +26,7 @@ class CalendarioSeeder extends Seeder
             'titulo' => 'Acudir a: Instalación de enchufes',
             'descripcion' => 'Instalación de enchufes',
             'trabajo' => 2,
-            'trabajador' => 3,
+            'cliente' => 3,
             'trabajador' => 2,
             'fecha' => now()->addDays(3),
         ]);
