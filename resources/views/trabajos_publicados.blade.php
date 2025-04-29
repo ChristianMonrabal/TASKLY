@@ -48,7 +48,9 @@
                                 <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                 <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
                                 <br>
-                                <button class="action-btn add-date-btn" data-trabajo-id="{{ $trabajo->id }}">Añadir fecha de encuentro</button>
+                                <button class="action-btn add-date-btn" data-trabajo-id="{{ $trabajo->id }}">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>

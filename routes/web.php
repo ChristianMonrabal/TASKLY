@@ -99,6 +99,9 @@ Route::middleware('auth')->group(function () {
     });
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+    Route::get('/calendario/fecha/{trabajoId}', [CalendarioController::class, 'obtenerFecha']);
+    Route::post('/calendario/insertar', [CalendarioController::class, 'insertar']);
+    Route::post('/calendario/actualizar', [CalendarioController::class, 'actualizar']);
 
     // Rutas API Admin
     // —— API para el CRUD Admin ——
