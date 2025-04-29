@@ -11,24 +11,24 @@ use Illuminate\Support\Facades\Auth;
 
 class TrabajoController extends Controller
 {
-    public function index()
-    {
-        $categorias = Categoria::all();
-        $user = Auth::user();
-    
-        $trabajosCercanos = [];
-    
-        if ($user && $user->codigo_postal) {
-            $trabajosCercanos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
-                ->where('direccion', $user->codigo_postal)
-                ->orderBy('created_at', 'desc')
-                ->take(10)
-                ->get();
-        }
-    
-        return view('index', compact('categorias', 'user', 'trabajosCercanos'));
+public function index()
+{
+    $categorias = Categoria::all();
+    $user = Auth::user();
+
+    $trabajosCercanos = [];
+
+    if ($user && $user->codigo_postal) {
+        $trabajosCercanos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
+            ->where('direccion', $user->codigo_postal)
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
     }
-    
+
+    return view('index', compact('categorias', 'user', 'trabajosCercanos'));
+}
+
 
     public function filtrarPorCategoria($categoria_id)
     {
@@ -255,6 +255,33 @@ class TrabajoController extends Controller
                 'success' => false,
                 'message' => 'Error al procesar la postulación: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function cancelarPostulacion($id)
+    {
+        try {
+            $usuario = Auth::user();
+    
+            if (!$usuario) {
+                return redirect()->back()->with('error', 'Debes iniciar sesión para cancelar tu postulación');
+            }
+    
+            // Buscar la postulación existente
+            $postulacion = Postulacion::where('trabajo_id', $id)
+                ->where('trabajador_id', $usuario->id)
+                ->first();
+    
+            if (!$postulacion) {
+                return redirect()->back()->with('error', 'No te has postulado a este trabajo');
+            }
+    
+            // Eliminar la postulación
+            $postulacion->delete();
+    
+            return redirect()->back()->with('success', 'Postulación cancelada exitosamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al cancelar la postulación: ' . $e->getMessage());
         }
     }
 }

@@ -6,6 +6,8 @@
     <!-- Fontawesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('css/detalle.css') }}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
 @endsection
 
 @section('content')
@@ -134,8 +136,13 @@
                                     @if (Auth::id() != $trabajo->cliente_id)
                                         <div class="boton-wrapper">
                                             @if (isset($yaPostulado) && $yaPostulado)
-                                                <button type="button" class="btn btn-postulado" disabled>
-                                                    <i class="fas fa-check"></i> Ya postulado
+                                                <!-- Cambiar a cancelar si ya se ha postulado -->
+                                                <form id="cancelar-postulacion-form" action="{{ route('trabajos.cancelarPostulacion', $trabajo->id) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                                <button type="button" class="btn btn-cancelar" onclick="confirmarCancelacion()">
+                                                    <i class="fas fa-times"></i> Cancelar postulación
                                                 </button>
                                             @else
                                                 <form class="postular-form"
@@ -189,5 +196,23 @@
 @endsection
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function confirmarCancelacion() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Una vez que canceles tu postulación, no podrás volver a postularte a este trabajo.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, cancelar',
+                cancelButtonText: 'No, volver',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario de cancelación
+                    document.getElementById('cancelar-postulacion-form').submit();
+                }
+            });
+        }
+    </script>
     <script src="{{ asset('js/detalle.js') }}"></script>
 @endsection
