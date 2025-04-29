@@ -89,14 +89,29 @@ Route::middleware('auth')->group(function () {
         return redirect('/');
     })->name('logout');
 
-    // Rutas de administración
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')
+    ->name('admin.')
+    ->middleware('auth')
+    ->group(function () {
+        
+        // listado/­vista de completados
+        Route::get('trabajos/completados', [AdminJobController::class, 'completadosIndex'])
+             ->name('trabajos.completados');
+
+        // 2) Endpoint JSON para fetch + filtros
+        Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])
+            ->name('trabajos.completados.json');
+
+        // resto de recursos
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('trabajos', AdminJobController::class);
-        Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
+        Route::resource('valoraciones', ValoracionController::class)
+             ->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
-        Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])->name('categorias.toggleVisible');
-    });
+        Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
+             ->name('categorias.toggleVisible');
+});
+
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
 
@@ -120,6 +135,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+
 Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
      ->name('admin.categorias.toggleVisible');
 

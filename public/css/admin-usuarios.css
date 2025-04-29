@@ -138,6 +138,12 @@ body {
     .table-valoraciones tbody td:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(6)) {
         display: none;
     }
+
+    /* GESTIÓN DE VALORACIONES - Mostrar solo Puntuación y Acciones */
+    .table-completados thead th:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(6)),
+    .table-completados tbody td:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(6)) {
+        display: none;
+    }
 }
 
 /* Mejoras para móviles */
