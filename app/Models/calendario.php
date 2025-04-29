@@ -27,4 +27,5 @@ class calendario extends Model
     {
         return $this->belongsTo(User::class, 'trabajador');
     }
+    
 }

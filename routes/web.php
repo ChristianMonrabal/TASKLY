@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     });
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+    Route::post('/calendario/insertar', [CalendarioController::class, 'insertar'])->name('calendario.insertar');
 
     // Rutas API Admin
     // —— API para el CRUD Admin ——

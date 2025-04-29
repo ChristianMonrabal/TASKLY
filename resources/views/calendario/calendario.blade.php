@@ -33,3 +33,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/calendario.js') }}"></script>
 @endsection
+<script>
+    const events = @json($eventos);
+</script>
