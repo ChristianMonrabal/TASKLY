@@ -43,62 +43,76 @@
         </table>
     </div>
 
-    <!-- Modal para CREAR Categoría -->
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="createModalLabel">Crear Categoría</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-             </div>
-             <div class="modal-body">
-                 <form id="createCategoriaForm">
-                     <div class="mb-3">
-                         <label for="createNombre" class="form-label">Nombre</label>
-                         <input type="text" name="nombre" id="createNombre" class="form-control" placeholder="Ingrese el nombre de la categoría">
-                         <div id="errorCreateNombre" class="error-message"></div>
-                     </div>
-                 </form>
-                 <div id="createCategoriaErrors" class="alert alert-danger d-none">
-                     <ul></ul>
-                 </div>
-             </div>
-             <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                 <button type="button" class="btn btn-success" onclick="submitCreateCategoria()">Crear</button>
-             </div>
-         </div>
-      </div>
+    <!-- CREATE MODAL -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form id="createCategoriaForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nueva Categoría</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- nombre -->
+            <div class="mb-3">
+              <label for="createNombre" class="form-label">Nombre</label>
+              <input type="text" id="createNombre" name="nombre" class="form-control">
+              <div id="errorCreateNombre" class="error-message"></div>
+            </div>
+            <!-- visible -->
+            <div class="mb-3">
+              <label for="createVisible" class="form-label">Visible</label>
+              <select id="createVisible" name="visible" class="form-select">
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div id="createCategoriaErrors" class="alert alert-danger d-none"><ul></ul></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="submitCreateCategoria()">Crear</button>
+          </div>
+        </div>
+      </form>
     </div>
-
-    <!-- Modal para EDITAR Categoría -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="editModalLabel">Editar Categoría</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-             </div>
-             <div class="modal-body">
-                 <form id="editCategoriaForm">
-                     <input type="hidden" id="editCategoriaId">
-                     <div class="mb-3">
-                         <label for="editNombre" class="form-label">Nombre</label>
-                         <input type="text" name="nombre" id="editNombre" class="form-control" onblur="validateNonEmpty('editNombre','El campo Nombre es obligatorio')">
-                         <div id="errorEditNombre" class="error-message"></div>
-                     </div>
-                 </form>
-                 <div id="editCategoriaErrors" class="alert alert-danger d-none">
-                     <ul></ul>
-                 </div>
-             </div>
-             <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                 <button type="button" class="btn btn-primary" onclick="submitEditCategoria()">Actualizar</button>
-             </div>
-         </div>
-      </div>
+  </div>
+  
+  <!-- EDIT MODAL -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form id="editCategoriaForm">
+        <input type="hidden" id="editCategoriaId" name="id">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Categoría</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- nombre -->
+            <div class="mb-3">
+              <label for="editNombre" class="form-label">Nombre</label>
+              <input type="text" id="editNombre" name="nombre" class="form-control">
+              <div id="errorEditNombre" class="error-message"></div>
+            </div>
+            <!-- visible -->
+            <div class="mb-3">
+              <label for="editVisible" class="form-label">Visible</label>
+              <select id="editVisible" name="visible" class="form-select">
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div id="editCategoriaErrors" class="alert alert-danger d-none"><ul></ul></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="submitEditCategoria()">Guardar</button>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
 @endsection
 
 @section('scripts')

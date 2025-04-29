@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('trabajos', AdminJobController::class);
         Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
+        Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])->name('categorias.toggleVisible');
     });
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
@@ -119,6 +120,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
+     ->name('admin.categorias.toggleVisible');
 
 Route::get('/footer/sobre_nosotros', function () {
     return view('/footer/sobre_nosotros');
