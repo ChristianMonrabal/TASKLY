@@ -20,6 +20,9 @@
                 <option value="">Seleccione un Estado</option>
             </select>
         </div>
+        <a href="{{ route('admin.trabajos.completados') }}" class="btn btn-secondary mb-3">
+            <i class="fas fa-history"></i> Historial de trabajos completados
+        </a>
         <table class="table table-bordered table-trabajos">
             <thead>
                 <tr>
