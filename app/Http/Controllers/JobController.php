@@ -16,7 +16,8 @@ class JobController extends Controller
 {
     public function crear()
     {
-        $categorias = Categoria::all(); // Obtener todas las categorías
+        // Sólo traemos las categorías visibles
+        $categorias = Categoria::where('visible', 'Sí')->get();
         $user = Auth::user(); // Obtener el usuario autenticado
         return view('crear_trabajo', compact('categorias', 'user'));
     }
