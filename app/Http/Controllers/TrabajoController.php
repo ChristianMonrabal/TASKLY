@@ -15,8 +15,20 @@ class TrabajoController extends Controller
     {
         $categorias = Categoria::all();
         $user = Auth::user();
-        return view('index', compact('categorias', 'user'));
+    
+        $trabajosCercanos = [];
+    
+        if ($user && $user->codigo_postal) {
+            $trabajosCercanos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
+                ->where('direccion', $user->codigo_postal)
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
+        }
+    
+        return view('index', compact('categorias', 'user', 'trabajosCercanos'));
     }
+    
 
     public function filtrarPorCategoria($categoria_id)
     {

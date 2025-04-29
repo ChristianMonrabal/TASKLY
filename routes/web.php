@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
     Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
     Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
+    
 
     // Rutas para gestión de postulaciones/candidatos
     Route::post('/postulaciones/{id}/aceptar', [PostulacionController::class, 'aceptar'])->name('postulaciones.aceptar');
