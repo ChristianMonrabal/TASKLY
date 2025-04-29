@@ -1,4 +1,3 @@
-{{-- <!-- recursos/views/trabajos/detalles_trabajo.blade.php -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,7 +16,6 @@
 
         <div class="row">
             <div class="col-md-6">
-                <!-- Imagen del trabajo -->
                 @if($trabajo->imagenes->isNotEmpty())
                     <img src="{{ asset($trabajo->imagenes->first()->ruta_imagen) }}" class="img-fluid" alt="{{ $trabajo->titulo }}">
                 @else
@@ -45,4 +43,4 @@
         </div>
     </div>
 </body>
-</html> --}}
+</html> 

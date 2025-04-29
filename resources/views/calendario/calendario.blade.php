@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container">
-    <h1>Calendario</h1>
     <div class="calendar-container">
         <div class="calendar-header">
             <button id="prev" class="calendar-btn">&laquo;</button>

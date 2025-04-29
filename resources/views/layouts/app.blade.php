@@ -45,7 +45,7 @@
                             <li>
                                 <a href="{{ url('trabajos_publicados') }}"
                                     class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}">
-                                    <i class="fas fa-project-diagram"></i> Mis Trabajos
+                                    <i class="fas fa-project-diagram"></i> Mis trabajos
                                 </a>
                             </li>
                             <li>

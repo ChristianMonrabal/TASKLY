@@ -7,8 +7,6 @@
 @endsection
 
 @section('content')
-  <h1 class="text-center mb-4">🎯 Trabajos Disponibles</h1>
-  
   <section class="nuevos-trabajos">
     <h2 class="seccion-titulo">🆕 Nuevos Trabajos</h2>
     <div class="scroll-wrapper">
