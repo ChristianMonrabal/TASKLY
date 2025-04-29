@@ -19,6 +19,8 @@ use App\Models\User;
 use App\Models\Valoracion;
 use App\Models\Trabajo;
 use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WebhookController;
 
 
 // Ruta principal (index) - Accesible sin autenticación
@@ -129,3 +131,9 @@ Route::get('/footer/sobre_nosotros', function () {
 Route::get('/footer/como_funciona', function () {
     return view('/footer/como_funciona');
 });
+
+
+
+Route::get('/pago', [PaymentController::class, 'show'])->name('pago.show');
+Route::post('/pago/intent', [PaymentController::class, 'createIntent'])->name('pago.intent');
+Route::post('/stripe/webhook', [WebhookController::class, 'handle'])->name('stripe.webhook');
