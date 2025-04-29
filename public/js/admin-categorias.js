@@ -39,7 +39,7 @@ function renderCategorias(data) {
             <td>
                 <!-- Toggle visibility -->
                 <button
-                  class="btn btn-sm"
+                  class="btn btn-info btn-sm"
                   onclick="toggleVisibleCategoria(${categoria.id}, this)"
                   title="${isVisible ? 'Ocultar' : 'Hacer visible'}">
                     <i class="fas ${isVisible ? 'fa-eye' : 'fa-eye-slash'}"></i>

@@ -243,23 +243,22 @@ function deleteTrabajo(trabajoId) {
     fetch('/admin/trabajos/' + trabajoId, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             'Accept': 'application/json'
         }
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Error al eliminar el trabajo.');
-        }
+    .then(async response => {
+        const data = await response.json();
+        if (!response.ok) throw data;
+        return data;
     })
     .then(data => {
-        filterTrabajos();
+        filterTrabajos(); // o la función que recargue la lista
         Swal.fire('Eliminado', data.message, 'success');
     })
-    .catch(error => console.error('Error en la petición DELETE:', error));
+    .catch(error => {
+        Swal.fire('Error', error.message || 'No se pudo eliminar el trabajo.', 'error');
+    });
 }
 
 // Al cargar la página, obtener la lista de trabajos y cargar el select del filtro de estados.

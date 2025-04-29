@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             ValoracionesSeeder::class,
             PagosSeeder::class,
             CalendarioSeeder::class,
+            TrabajoFinalizadosSeeder::class,
         ]);
     }
 }
