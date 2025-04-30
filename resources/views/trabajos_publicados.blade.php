@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <style>
-        /* Estilos específicos para el header en esta página */
         .main-header {
             width: calc(100% - 20px);
             left: 10px;
@@ -21,6 +20,7 @@
 
         /* Ajustes para el contenido principal */
         .main-content {
+            margin-top: 0;
             margin-top: 0;
             padding-top: 30px;
         }
@@ -148,6 +148,7 @@
                         </div>
                     </div>
                 </div>
+                @endforeach
                 @endforeach
             </div>
         @else

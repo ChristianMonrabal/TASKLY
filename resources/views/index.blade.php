@@ -7,10 +7,28 @@
 @endsection
 
 @section('content')
-  <h1 class="text-center mb-4">🎯 Trabajos Disponibles</h1>
-  
+  @if(Auth::check() && count($trabajosCercanos) > 0)
+    <section class="trabajos-cercanos">
+      <h2 class="seccion-titulo"><i class="fas fa-globe" style="color: #4A90E2;"></i> Trabajos cercanos a ti ({{ Auth::user()->codigo_postal }})</h2>
+      <div class="scroll-wrapper">
+        <button class="scroll-btn" id="btn-left-cercanos"><i class="fas fa-chevron-left"></i></button>
+        <div class="scroll-container" id="cardScrollCercanos">
+          @foreach($trabajosCercanos as $trabajo)
+            <div class="trabajo-card">
+              <h3>{{ $trabajo->titulo }}</h3>
+              <p>{{ Str::limit($trabajo->descripcion, 100) }}</p>
+              <span class="precio">{{ $trabajo->precio }}€</span>
+              <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="btn-ver">Ver más</a>
+            </div>
+          @endforeach
+        </div>
+        <button class="scroll-btn" id="btn-right-cercanos"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+  @endif
+
   <section class="nuevos-trabajos">
-    <h2 class="seccion-titulo">🆕 Nuevos Trabajos</h2>
+    <h2 class="seccion-titulo">🆕 Nuevos trabajos</h2>
     <div class="scroll-wrapper">
       <button class="scroll-btn" id="btn-left-nuevos"><i class="fas fa-chevron-left"></i></button>
       <div class="scroll-container" id="cardScrollNuevos">
@@ -43,7 +61,7 @@
   </div>
 
   <section class="todos-trabajos">
-    <h2 class="seccion-titulo">📋 Todos los Trabajos</h2>
+    <h2 class="seccion-titulo">📋 Todos los trabajos</h2>
     <div class="grid-trabajos" id="gridTrabajos">
       <div class="loading">Cargando trabajos...</div>
     </div>
