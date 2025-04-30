@@ -14,9 +14,9 @@ class ValoracionesSeeder extends Seeder
     {
         Valoracion::create([
             'trabajo_id' => 1,
-            'trabajador_id' => 3,
+            'trabajador_id' => 2,
             'puntuacion' => rand(1, 5),
-            'img_valoracion' => 'foto.jpg',
+            'img_valoracion' => 'persiana.png',
             'comentario' => 'Bien',
         ]);
     }
