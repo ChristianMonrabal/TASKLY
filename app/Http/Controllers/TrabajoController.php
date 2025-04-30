@@ -41,7 +41,7 @@ class TrabajoController extends Controller
 
     public function nuevos()
     {
-        $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->take(10)->get();
+        $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->take(5)->get();
         return response()->json($nuevosTrabajos);
     }
 

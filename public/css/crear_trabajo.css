@@ -148,6 +148,13 @@ h1 {
 }
 
 .image-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* 👈 Esto permite que el input debajo siga siendo clickeable */
 }
 
 .image-upload:has(img[src][style*="display: block"]) label {

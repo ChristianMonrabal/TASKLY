@@ -103,4 +103,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Valoracion::class, 'trabajador_id');
     }
+    public function valoracionesRecibidas()
+    {
+        return $this->hasMany(\App\Models\Valoracion::class, 'trabajador_id');
+    }
 }
