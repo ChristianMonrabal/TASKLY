@@ -48,6 +48,7 @@
                                 <div class="action-buttons">
                                     <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                     <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
+                                    <a href="{{ route('pago.show', $trabajo->id) }}" class="action-btn">Pagar y finalizar</a>
                                 </div>
                             </div>
                         </div>

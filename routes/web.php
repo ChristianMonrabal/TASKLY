@@ -134,6 +134,6 @@ Route::get('/footer/como_funciona', function () {
 
 
 
-Route::get('/pago', [PaymentController::class, 'show'])->name('pago.show');
+Route::get('/pago/{trabajo}', [PaymentController::class, 'show'])->name('pago.show');
 Route::post('/pago/intent', [PaymentController::class, 'createIntent'])->name('pago.intent');
 Route::post('/stripe/webhook', [WebhookController::class, 'handle'])->name('stripe.webhook');
