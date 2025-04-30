@@ -85,13 +85,7 @@ class ProfileController extends Controller
 
                 file_put_contents($directory . '/' . $fileName, $imageData);
 
-                // No eliminar la imagen si es la predeterminada
-                $defaultPhoto = 'perfil_default.jpg';
-                if (
-                    $user->foto_perfil &&
-                    $user->foto_perfil !== $defaultPhoto &&
-                    file_exists($directory . '/' . $user->foto_perfil)
-                ) {
+                if ($user->foto_perfil && file_exists($directory . '/' . $user->foto_perfil)) {
                     @unlink($directory . '/' . $user->foto_perfil);
                 }
 
@@ -115,4 +109,6 @@ class ProfileController extends Controller
 
         return back()->withErrors(['general' => 'Error al actualizar el perfil'])->withInput();
     }
+
+    
 }
