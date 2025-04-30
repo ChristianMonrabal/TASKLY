@@ -17,6 +17,7 @@ use App\Http\Controllers\PerfilUsuarioController;
 use App\Models\User;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\Admin\LogroController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -102,6 +103,7 @@ Route::middleware('auth')->group(function () {
         Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])
             ->name('trabajos.completados.json');
 
+        Route::resource('logros', LogroController::class);
         // resto de recursos
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('trabajos', AdminJobController::class);
@@ -131,6 +133,10 @@ Route::middleware('auth')->group(function () {
     // Categorías:
     Route::get('api/categorias',    [CategoriaController::class, 'apiIndex']);
     Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
+
+    // Logros:
+    Route::get('api/logros',      [LogroController::class, 'apiIndex']);
+    Route::get('api/logros/{logro}', [LogroController::class, 'show']);
 
     Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
