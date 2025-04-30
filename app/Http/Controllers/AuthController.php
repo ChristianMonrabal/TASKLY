@@ -95,6 +95,7 @@ class AuthController extends Controller
             'dni' => strtoupper($data['dni']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'foto_perfil' => 'perfil_default.jpg',
             'rol_id' => 2,
         ]);
     

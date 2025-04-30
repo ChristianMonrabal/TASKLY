@@ -197,22 +197,5 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
-    <script>
-        function confirmarCancelacion() {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Una vez que canceles tu postulación, no podrás volver a postularte a este trabajo.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, cancelar',
-                cancelButtonText: 'No, volver',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, enviar el formulario de cancelación
-                    document.getElementById('cancelar-postulacion-form').submit();
-                }
-            });
-        }
-    </script>
     <script src="{{ asset('js/detalle.js') }}"></script>
 @endsection
