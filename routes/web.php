@@ -127,3 +127,12 @@ Route::get('/footer/sobre_nosotros', function () {
 // Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
 Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'perfilPorNombre'])->name('perfil.usuario');
 Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'mostrar'])->name('perfil.usuario');
+
+// Editar trabajo
+Route::get('/trabajos/editar/{id}', [JobController::class, 'editar'])->name('trabajos.editar');
+Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
+Route::get('/mis-trabajos', [JobController::class, 'trabajosPublicados'])->name('trabajos_publicados');
+
+// Eliminar trabajo
+Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('trabajos.eliminar');
+Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
