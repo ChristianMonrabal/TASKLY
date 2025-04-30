@@ -139,9 +139,15 @@ body {
         display: none;
     }
 
-    /* GESTIÓN DE VALORACIONES - Mostrar solo Puntuación y Acciones */
+    /* GESTIÓN DE COMPLETADOS - Mostrar solo Titulo y Acciones */
     .table-completados thead th:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(6)),
     .table-completados tbody td:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(6)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE LOGROS - Mostrar solo Nombre y Acciones */
+    .table-logros thead th:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(6)),
+    .table-logros tbody td:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(6)) {
         display: none;
     }
 }
