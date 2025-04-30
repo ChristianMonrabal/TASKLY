@@ -190,4 +190,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-
+// Función para confirmar la cancelación de la postulación
+function confirmarCancelacion() {
+  Swal.fire({
+      title: '¿Estás seguro?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'No, volver',
+  }).then((result) => {
+      if (result.isConfirmed) {
+          document.getElementById('cancelar-postulacion-form').submit();
+      }
+  });
+}

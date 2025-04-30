@@ -5,7 +5,6 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/trabajos_publicados.css') }}"/>
     <style>
-        /* Estilos específicos para el header en esta página */
         .main-header {
             width: calc(100% - 20px);
             left: 10px;
@@ -15,7 +14,12 @@
         
         /* Ajustes para el contenido principal */
         .main-content {
+<<<<<<< Updated upstream
             margin-top: var(--header-height);
+=======
+            margin-top: 0;
+            margin-top: 0;
+>>>>>>> Stashed changes
             padding-top: 30px;
         }
     </style>
@@ -32,12 +36,40 @@
                 @foreach ($trabajos as $trabajo)
                 <div class="trabajo-item">
                     <div class="card">
+<<<<<<< Updated upstream
                         @if($trabajo->imagenes->isNotEmpty())
                             <img src="{{ asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) }}" class="card-img-top" alt="{{ $trabajo->titulo }}">
                         @else
                             <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen">
                         @endif
                         <br>
+=======
+                        <div class="card-img-container">
+                            <div class="image-wrapper">
+                                @if($trabajo->imagenes->isNotEmpty())
+                                    <img src="{{ asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) }}" class="card-img-top" alt="{{ $trabajo->titulo }}"/>
+                                @else
+                                    <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="No hay imagen"/>
+                                @endif
+
+                                <div class="icon-buttons">
+                                    <a href="{{ route('trabajos.editar', $trabajo->id) }}" title="Editar" class="edit-btn icon-button">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    
+                                    <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+
+                                    <button title="Añadir fecha de encuentro" class="icon-button add-date-btn" data-trabajo-id="{{ $trabajo->id }}">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br/>
+>>>>>>> Stashed changes
                         <div class="card-body">
                             <h2 class="card-title">{{ $trabajo->titulo }}</h2>
                             <p class="card-text">{{ Str::limit($trabajo->descripcion, 100) }}</p>

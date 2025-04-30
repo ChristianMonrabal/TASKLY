@@ -45,7 +45,7 @@
                             <li>
                                 <a href="{{ url('trabajos_publicados') }}"
                                     class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}">
-                                    <i class="fas fa-project-diagram"></i> Mis Trabajos
+                                    <i class="fas fa-project-diagram"></i> Mis trabajos
                                 </a>
                             </li>
                             <li>
@@ -127,7 +127,7 @@
                             <div class="user-dropdown">
                                 <button class="dropdown-btn">
                                     <div class="user-avatar">
-                                        <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}"
+                                        <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'perfil_default.png')) }}"
                                             class="current-photo">
                                     </div>
                                     <span class="user-name">{{ Auth::user()->name }}</span>

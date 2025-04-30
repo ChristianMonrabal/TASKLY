@@ -17,7 +17,6 @@
 
         <div class="row">
             <div class="col-md-6">
-                <!-- Imagen del trabajo -->
                 @if($trabajo->imagenes->isNotEmpty())
                     <img src="{{ asset($trabajo->imagenes->first()->ruta_imagen) }}" class="img-fluid" alt="{{ $trabajo->titulo }}">
                 @else
