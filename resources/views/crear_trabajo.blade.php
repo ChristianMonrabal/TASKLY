@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Crear Trabajo') <!-- Título de la página -->
+@section('title', 'Crear Trabajo')
 
 @section('styles')
-  <link rel="stylesheet" href="{{ asset('css/crear_trabajo.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/crear_trabajo.css') }}"/>
 @endsection
 
 @section('content')
     <div class="container mt-2">
-        <h1 class="text-center">Crear Trabajo</h1>
+        <h1 class="text-center">Crear trabajo</h1>
         <form action="{{ route('trabajos.store') }}" id="mi-formulario" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group mb-3">

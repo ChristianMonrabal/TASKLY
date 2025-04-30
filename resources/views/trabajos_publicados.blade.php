@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <style>
-        /* Estilos específicos para el header en esta página */
         .main-header {
             width: calc(100% - 20px);
             left: 10px;
@@ -21,6 +20,7 @@
 
         /* Ajustes para el contenido principal */
         .main-content {
+            margin-top: 0;
             margin-top: 0;
             padding-top: 30px;
         }
@@ -98,15 +98,70 @@
             text-decoration: none;
             transition: all var(--transition);
         }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+
+        .card-img-container {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card-img-container .image-wrapper {
+            position: relative;
+        }
+
+        .icon-buttons {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .icon-buttons button,
+        .icon-buttons a {
+            background-color: rgba(221, 221, 221, 0.6);
+            border: none;
+            color: #EC6A6A;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        .icon-buttons i {
+            font-size: 16px;
+        }
+
+        .main-nav {
+            color: #ffffff !important;
+        }
+
+        .nav-link {
+            position: relative;
+            color: white;
+            font-weight: normal;
+            padding: 10px 5px;
+            text-decoration: none;
+            transition: all var(--transition);
+        }
     </style>
 @endsection
 
 @section('content')
     <div class="container-fluid py-5">
-        <div class="mb-4">
-            <h1 class="text-center">Mis Trabajos Publicados</h1>
-        </div>
-
         @if ($trabajos->count() > 0)
             <div class="trabajos-grid">
                 @foreach ($trabajos as $trabajo)
@@ -128,6 +183,11 @@
                                     <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
+
+                                    <button title="Añadir fecha de encuentro" class="icon-button add-date-btn" data-trabajo-id="{{ $trabajo->id }}">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -142,13 +202,13 @@
                             <div class="action-buttons">
                                 <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                 <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
-                                <br/>
+                                <br>
                                 <button class="action-btn add-date-btn" data-trabajo-id="{{ $trabajo->id }}">Añadir fecha de encuentro</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
+            @endforeach
             </div>
         @else
             <div class="alert alert-info">

@@ -22,7 +22,7 @@
             <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo">
             @else
             <div class="no-photo-placeholder">
-                <i class="fas fa-user" style="font-size: 60px;"></i>
+                <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo">
             </div>
             @endif
 

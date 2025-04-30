@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container">
-    <h1>Calendario</h1>
     <div class="calendar-container">
         <div class="calendar-header">
             <button id="prev" class="calendar-btn">&laquo;</button>
@@ -33,3 +32,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/calendario.js') }}"></script>
 @endsection
+<script>
+    const events = @json($eventos);
+</script>
