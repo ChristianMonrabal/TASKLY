@@ -127,7 +127,7 @@
                             <div class="user-dropdown">
                                 <button class="dropdown-btn">
                                     <div class="user-avatar">
-                                        <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}"
+                                        <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'perfil_default.png')) }}"
                                             class="current-photo">
                                     </div>
                                     <span class="user-name">{{ Auth::user()->name }}</span>
