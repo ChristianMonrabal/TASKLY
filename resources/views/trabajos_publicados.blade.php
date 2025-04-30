@@ -149,7 +149,6 @@
                     </div>
                 </div>
                 @endforeach
-                @endforeach
             </div>
         @else
             <div class="alert alert-info">
