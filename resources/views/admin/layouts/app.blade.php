@@ -30,6 +30,7 @@
                             <li><a href="{{ route('admin.trabajos.index') }}" class="nav-link"><i class="fas fa-briefcase"></i> Trabajos</a></li>
                             <li><a href="{{ route('admin.valoraciones.index') }}" class="nav-link"><i class="fas fa-star"></i> Valoraciones</a></li>
                             <li><a href="{{ route('admin.categorias.index') }}" class="nav-link"><i class="fas fa-layer-group"></i> Categorias</a></li>
+                            <li><a href="{{ route('admin.logros.index') }}" class="nav-link"><i class="fas fa-medal"></i> Logros</a></li>
                         </ul>
                     </nav>
                     <div class="user-actions">
@@ -48,6 +49,7 @@
                                 <a href="{{ route('admin.trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
                                 <a href="{{ route('admin.valoraciones.index') }}"><i class="fas fa-star"></i> Valoraciones</a>
                                 <a href="{{ route('admin.categorias.index') }}"><i class="fas fa-layer-group"></i> Categorias</a>
+                                <a href="{{ route('admin.logros.index') }}"><i class="fas fa-medal"></i> Logros</a>
                                 <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
