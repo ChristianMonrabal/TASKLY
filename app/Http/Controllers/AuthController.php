@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;               
+use App\Mail\WelcomeRegistered;       
 
 class AuthController extends Controller
 {
@@ -88,20 +90,24 @@ class AuthController extends Controller
         }
     
         $user = User::create([
-            'nombre' => $data['name'],
-            'apellidos' => $data['surname'],
-            'telefono' => $data['phone'],
+            'nombre'        => $data['name'],
+            'apellidos'     => $data['surname'],
+            'telefono'      => $data['phone'],
             'codigo_postal' => $data['postcode'],
-            'dni' => strtoupper($data['dni']),
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'foto_perfil' => 'perfil_default.jpg',
-            'rol_id' => 2,
+            'dni'           => strtoupper($data['dni']),
+            'email'         => $data['email'],
+            'password'      => Hash::make($data['password']),
+            'foto_perfil'   => 'perfil_default.jpg',
+            'rol_id'        => 2,
         ]);
-    
+
+        // Iniciamos sesión
         Auth::login($user);
         $request->session()->regenerate();
-    
+
+        // **Enviamos el correo de bienvenida**
+        Mail::to($user->email)->send(new WelcomeRegistered($user));
+
         return redirect()->route('profile');
     }
 }
