@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/postulaciones/{id}/aceptar', [PostulacionController::class, 'aceptar'])->name('postulaciones.aceptar');
     Route::post('/postulaciones/{id}/rechazar', [PostulacionController::class, 'rechazar'])->name('postulaciones.rechazar');
     Route::get('/trabajo/{id}/postulaciones', [PostulacionController::class, 'estadoPostulaciones'])->name('trabajo.postulaciones');
+    Route::get('/postulaciones', [PostulacionController::class, 'misPostulaciones'])->name('postulaciones.index');
 
     // Chat
     Route::controller(ChatController::class)->group(function () {

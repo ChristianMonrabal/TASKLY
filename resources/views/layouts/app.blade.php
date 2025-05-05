@@ -60,6 +60,12 @@
                                     <i class="fas fa-calendar-alt"></i> Calendario
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ url('/postulaciones') }}"
+                                    class="nav-link {{ request()->is('postulaciones') ? 'active' : '' }}">
+                                    <i class="fas fa-file-alt"></i> Mis postulaciones
+                                </a>
+                            </li>
                             @if(Auth::check() && Auth::user()->rol_id == 1)
                                 <li>
                                     <a href="{{ url('/admin/usuarios') }}"

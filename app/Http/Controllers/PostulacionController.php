@@ -147,4 +147,18 @@ class PostulacionController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Ver las postulaciones del usuario autenticado
+     * 
+     * @return \Illuminate\View\View
+     */
+    public function misPostulaciones()
+    {
+        $postulaciones = Postulacion::with(['trabajo', 'trabajo.cliente', 'estado'])
+            ->where('trabajador_id', Auth::id())
+            ->get();
+
+        return view('postulaciones', compact('postulaciones'));
+    }
 }
