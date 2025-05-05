@@ -155,7 +155,7 @@ class PostulacionController extends Controller
      */
     public function misPostulaciones()
     {
-        $postulaciones = Postulacion::with(['trabajo', 'trabajo.cliente', 'estado'])
+        $postulaciones = Postulacion::with(['trabajo.imagenes', 'trabajo.cliente', 'estado'])
             ->where('trabajador_id', Auth::id())
             ->get();
 
