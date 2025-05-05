@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Trabajo;
 use App\Models\Categoria;
 use App\Models\Postulacion;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TrabajoController extends Controller
 {
+<<<<<<< HEAD
 public function index()
 {
     $categorias = Categoria::all();
@@ -30,6 +32,17 @@ public function index()
 }
 
 
+=======
+
+    public function index()
+    {
+        // Obtener todas las categorías para los filtros
+        $categorias = Categoria::all();
+        $user = Auth::user();
+        return view('index', compact('categorias', 'user'));
+    }
+
+>>>>>>> julio
     public function filtrarPorCategoria($categoria_id)
     {
         $categorias = Categoria::all();
@@ -46,18 +59,33 @@ public function index()
         return view('index', compact('categorias', 'busqueda'));
     }
 
+<<<<<<< HEAD
+=======
+    // Método para obtener todos los trabajos en formato JSON (para fetch)
+>>>>>>> julio
     public function todos()
     {
         $trabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->get();
         return response()->json($trabajos);
     }
 
+<<<<<<< HEAD
     public function nuevos()
     {
         $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->take(5)->get();
         return response()->json($nuevosTrabajos);
     }
 
+=======
+    // Método para obtener los nuevos trabajos en formato JSON (para fetch)
+    public function nuevos()
+    {
+        $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->take(10)->get();
+        return response()->json($nuevosTrabajos);
+    }
+
+    // Método para obtener trabajos por categoría en formato JSON (para fetch)
+>>>>>>> julio
     public function categoriaJson($categoria_id)
     {
         $trabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
@@ -69,6 +97,12 @@ public function index()
         return response()->json($trabajos);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Buscar trabajos y devolver JSON
+     */
+>>>>>>> julio
     public function buscarJson(Request $request)
     {
         $busqueda = $request->input('busqueda');
@@ -77,6 +111,12 @@ public function index()
         return response()->json($trabajos);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Método auxiliar para buscar trabajos
+     */
+>>>>>>> julio
     private function buscarTrabajos($busqueda)
     {
         return Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
@@ -90,10 +130,21 @@ public function index()
             ->get();
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Filtrar trabajos con múltiples criterios y devolver JSON
+     * @deprecated Esta función está obsoleta. Usar filtrarSimple() en su lugar.
+     */
+>>>>>>> julio
     public function filtrar(Request $request)
     {
         $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones']);
 
+<<<<<<< HEAD
+=======
+        // Filtro de búsqueda por texto
+>>>>>>> julio
         if ($request->has('busqueda') && !empty($request->busqueda)) {
             $busqueda = $request->busqueda;
             $query->where(function ($q) use ($busqueda) {
@@ -105,12 +156,20 @@ public function index()
             });
         }
 
+<<<<<<< HEAD
+=======
+        // Filtro por categorías (múltiples)
+>>>>>>> julio
         if ($request->has('categorias') && is_array($request->categorias) && count($request->categorias) > 0) {
             $query->whereHas('categoriastipotrabajo', function ($q) use ($request) {
                 $q->whereIn('categoria_id', $request->categorias);
             });
         }
 
+<<<<<<< HEAD
+=======
+        // Filtro por precio
+>>>>>>> julio
         if ($request->has('precio') && !empty($request->precio) && $request->precio != 'todos') {
             $rangoPrecio = explode('-', $request->precio);
 
@@ -128,12 +187,20 @@ public function index()
             }
         }
 
+<<<<<<< HEAD
+=======
+        // Filtro por ubicación
+>>>>>>> julio
         if ($request->has('ubicacion') && !empty($request->ubicacion) && $request->ubicacion != 'todos') {
             if ($request->ubicacion == 'remoto') {
                 $query->where('es_remoto', true);
             }
         }
 
+<<<<<<< HEAD
+=======
+        // Ordenar resultados
+>>>>>>> julio
         if ($request->has('orden') && !empty($request->orden)) {
             switch ($request->orden) {
                 case 'precio-asc':
@@ -159,10 +226,20 @@ public function index()
         return response()->json($trabajos);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Método simplificado para filtrar trabajos solo por nombre y categoría
+     */
+>>>>>>> julio
     public function filtrarSimple(Request $request)
     {
         $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones']);
 
+<<<<<<< HEAD
+=======
+        // Filtro de búsqueda por texto (nombre/título)
+>>>>>>> julio
         if ($request->has('busqueda') && !empty($request->busqueda)) {
             $busqueda = $request->busqueda;
             $query->where(function ($q) use ($busqueda) {
@@ -171,23 +248,32 @@ public function index()
             });
         }
 
+<<<<<<< HEAD
+=======
+        // Filtro por categoría (una sola)
+>>>>>>> julio
         if ($request->has('categoria') && !empty($request->categoria) && $request->categoria !== 'todas') {
             $query->whereHas('categoriastipotrabajo', function ($q) use ($request) {
                 $q->where('categoria_id', $request->categoria);
             });
         }
 
+<<<<<<< HEAD
+=======
+        // Por defecto, ordenar por más recientes
+>>>>>>> julio
         $query->orderBy('created_at', 'desc');
 
         $trabajos = $query->get();
 
         return response()->json($trabajos);
     }
-
+    // Método para mostrar la vista de detalles de un trabajo
     public function mostrarDetalle($id)
     {
         $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones'])->findOrFail($id);
 
+        // Verificar si el usuario está autenticado y si ya se ha postulado
         $yaPostulado = false;
         if (Auth::check()) {
             $yaPostulado = Postulacion::where('trabajo_id', $id)
@@ -214,6 +300,7 @@ public function index()
 
             $trabajo = Trabajo::findOrFail($id);
 
+            // Verificar si el trabajo es de alta responsabilidad
             $isAlta = strtolower($trabajo->alta_responsabilidad) === 'sí';
 
             if ($isAlta) {
@@ -239,7 +326,7 @@ public function index()
                     'message' => 'Ya te has postulado para este trabajo'
                 ]);
             }
-
+            // Crear nueva postulación
             $postulacion = new Postulacion();
             $postulacion->trabajo_id = $id;
             $postulacion->trabajador_id = $usuario->id;
@@ -283,5 +370,24 @@ public function index()
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al cancelar la postulación: ' . $e->getMessage());
         }
+    }
+    
+    public function recomendados()
+    {
+        $trabajadorId = 2; // Reemplaza con el ID real del trabajador
+
+        $trabajador = User::findOrFail($trabajadorId);
+
+        $categoriaIds = $trabajador->habilidades()->pluck('categorias.id');
+
+        $trabajos = Trabajo::whereHas('categorias', function ($query) use ($categoriaIds) {
+            $query->whereIn('categorias.id', $categoriaIds);
+        })
+            ->with('categoriastipotrabajo')
+            ->distinct()
+            ->get();
+
+
+        print_r($trabajos);
     }
 }

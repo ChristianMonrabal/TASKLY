@@ -72,7 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
     Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
     Route::delete('/trabajos/{trabajo}/cancelar-postulacion', [TrabajoController::class, 'cancelarPostulacion'])->name('trabajos.cancelarPostulacion');
-
+    Route::get('/recomendado', [TrabajoController::class, 'recomendados'])->name('trabajos.recomendados');
     // Rutas para gestión de postulaciones/candidatos
     Route::post('/postulaciones/{id}/aceptar', [PostulacionController::class, 'aceptar'])->name('postulaciones.aceptar');
     Route::post('/postulaciones/{id}/rechazar', [PostulacionController::class, 'rechazar'])->name('postulaciones.rechazar');
