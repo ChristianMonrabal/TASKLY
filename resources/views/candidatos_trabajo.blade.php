@@ -21,6 +21,24 @@
     <div class="container py-5">
         <h1 class="text-center mb-4">Candidatos para el Trabajo: {{ $trabajo->titulo }}</h1>
 
+        @if(session('warning'))
+            <div class="alert alert-warning">
+                {{ session('warning') }}
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         @if($trabajo->postulaciones->count() > 0)
             <div class="candidates-grid">
                 @foreach ($trabajo->postulaciones as $postulacion)

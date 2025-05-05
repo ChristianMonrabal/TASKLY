@@ -16,11 +16,18 @@ class PaymentController extends Controller
 {
     public function show(Trabajo $trabajo)
     {
+        // Verificar si hay algún trabajador aceptado (estado_id = 10)
         $postulacion = Postulacion::where('trabajo_id', $trabajo->id)
             ->where('estado_id', 10)
-            ->firstOrFail();
+            ->first();
+            
+        // Si no hay trabajador aceptado, redirigir a la página de candidatos con mensaje
+        if (!$postulacion) {
+            return redirect()->route('trabajos.candidatos', $trabajo->id)
+                ->with('warning', 'Debes aceptar a un candidato antes de realizar el pago. Por favor, selecciona uno de los trabajadores postulados.');
+        }
+        
         $trabajadorId = $postulacion->trabajador_id;
-
         return view('payment', compact('trabajo', 'trabajadorId'));
     }
 
