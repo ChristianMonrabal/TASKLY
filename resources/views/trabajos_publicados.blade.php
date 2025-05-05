@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="{{ asset('js/sweet_alert_calendario.js') }}"></script>
+    <script src="{{ asset('js/eliminar_trabajo.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <style>
@@ -17,11 +18,14 @@
             position: fixed;
         }
 
+        /* Ajustes para el contenido principal */
         .main-content {
+            margin-top: 0;
             margin-top: 0;
             padding-top: 30px;
         }
 
+        /* Estilos para mantener el diseño original */
         .card-img-top {
             width: 100%;
             height: 200px;
@@ -45,6 +49,40 @@
             right: 8px;
             display: flex;
             gap: 6px;
+        }
+
+        .icon-buttons button {
+            background-color: #EC6A6A(0, 0, 0, 0.6);
+            border: none;
+            color: #EC6A6A;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .icon-buttons button:hover {
+            background-color: #EC6A6A(0, 0, 0, 0.8);
+        }
+
+        .icon-buttons i {
+            font-size: 16px;
+        }
+
+        .icon-button {
+            background-color: rgba(221, 221, 221, 0.6);
+            border: none;
+            color: #EC6A6A;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
         }
 
         .icon-buttons button,
@@ -85,6 +123,9 @@
 
 @section('content')
     <div class="container-fluid py-5">
+        <div class="mb-4">
+            <h1 class="text-center">Mis Trabajos Publicados</h1>
+        </div>
         @if ($trabajos->count() > 0)
             <div class="trabajos-grid">
                 @foreach ($trabajos as $trabajo)
@@ -99,11 +140,11 @@
                                 @endif
 
                                 <div class="icon-buttons">
-                                    <a href="#" title="Editar" class="edit-btn icon-button">
+                                    <a href="{{ route('trabajos.editar', $trabajo->id) }}" title="Editar" class="edit-btn icon-button">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     
-                                    <a href="#" title="Eliminar" class="icon-button">
+                                    <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
 
@@ -124,6 +165,8 @@
                             <div class="action-buttons">
                                 <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                 <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
+                                {{-- <a href="{{ route('pago.show', $trabajo->id) }}" class="action-btn">Pagar y finalizar</a> --}}
+                                <br>
                             </div>
                         </div>
                     </div>
@@ -138,5 +181,3 @@
     </div>
 @endsection
 
-
-<script src="{{ asset('js/sweet_alert_calendario.js') }}"></script>

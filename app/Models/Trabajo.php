@@ -26,6 +26,12 @@ class Trabajo extends Model
         return $this->belongsTo(Estado::class, 'estado_id');
     }
 
+    // Trabajo.php
+    public function categorias()
+    {
+        return $this->belongsToMany(Categoria::class, 'categorias_tipo_trabajo', 'trabajo_id', 'categoria_id');
+    }
+
     public function categoriastipotrabajo()
     {
         return $this->belongsToMany(Categoria::class, 'categorias_tipo_trabajo', 'trabajo_id', 'categoria_id');

@@ -113,11 +113,15 @@
                         <!-- Información del usuario -->
                         <div class="sidebar-card">
                             <h4 class="card-titulo">Publicado por {{ $trabajo->cliente->nombre }}</h4>
-                            <div class="usuario-info">
-                                <div class="usuario-avatar">
-                                    <img src="{{ asset('img/profile_images/perfil_default.png') }}"
-                                        alt="{{ $trabajo->cliente->foto_perfil ?? 'Usuario' }}">
-                                </div>
+                        <div class="usuario-info">
+                            <div class="usuario-avatar">
+                                <img src="{{ $trabajo->cliente->foto_perfil 
+                                            ? asset('img/profile_images/' . $trabajo->cliente->foto_perfil) 
+                                            : asset('img/profile_images/perfil_default.png') }}"
+                                    alt="Foto de {{ $trabajo->cliente->nombre }}">
+                            </div>
+                        </div>
+
                                 <div>
                                     <div class="usuario-nombre">{{ $trabajo->cliente->nombre ?? 'Usuario' }}</div>
                                     @php

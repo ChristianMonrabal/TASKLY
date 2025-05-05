@@ -12,13 +12,10 @@ class Categoria extends Model
     {
         return $this->belongsToMany(Trabajo::class, 'categoria_id');
     }
+
+    // Categoria.php
     public function trabajos()
     {
-        return $this->belongsToMany(
-            Trabajo::class,
-            'categorias_tipo_trabajo',
-            'categoria_id',
-            'trabajo_id'
-        );
+        return $this->belongsToMany(Trabajo::class, 'categorias_tipo_trabajo', 'categoria_id', 'trabajo_id');
     }
 }

@@ -86,7 +86,7 @@ class ProfileController extends Controller
                 file_put_contents($directory . '/' . $fileName, $imageData);
 
                 // No eliminar la imagen si es la predeterminada
-                $defaultPhoto = 'perfil_default.jpg';
+                $defaultPhoto = 'perfil_default.png';
                 if (
                     $user->foto_perfil &&
                     $user->foto_perfil !== $defaultPhoto &&

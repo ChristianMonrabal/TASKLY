@@ -94,11 +94,10 @@ class AuthController extends Controller
             'apellidos'     => $data['surname'],
             'telefono'      => $data['phone'],
             'codigo_postal' => $data['postcode'],
-            'dni'           => strtoupper($data['dni']),
-            'email'         => $data['email'],
-            'password'      => Hash::make($data['password']),
-            'foto_perfil'   => 'perfil_default.jpg',
-            'rol_id'        => 2,
+            'dni' => strtoupper($data['dni']),
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'rol_id' => 2,
         ]);
 
         // Iniciamos sesión
@@ -111,4 +110,3 @@ class AuthController extends Controller
         return redirect()->route('profile');
     }
 }
-
