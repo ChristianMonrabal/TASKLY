@@ -134,4 +134,5 @@ Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'mostrar'])->nam
 
 Route::get('/pago/{trabajo}', [PaymentController::class, 'show'])->name('pago.show');
 Route::post('/pago/intent', [PaymentController::class, 'createIntent'])->name('pago.intent');
+Route::post('/pago/update-status', [PaymentController::class, 'updatePaymentStatus'])->name('pago.update-status');
 Route::post('/stripe/webhook', [WebhookController::class, 'handle'])->name('stripe.webhook');

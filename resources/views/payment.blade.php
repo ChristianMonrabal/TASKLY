@@ -28,17 +28,36 @@
         #boton-pago {
             width: 100%;
         }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .trabajo-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
     </style>
 @endsection
 
 @section('content')
 <div class="container payment-container">
-    <h2 class="text-center mb-4">Pagar 10,00 €</h2>
+    <h2 class="text-center mb-4">Realizar Pago</h2>
+    
+    <div class="trabajo-info">
+        <h4>{{ $trabajo->titulo }}</h4>
+        <p><strong>Precio:</strong> {{ number_format($trabajo->precio, 2, ',', '.') }} €</p>
+    </div>
 
     <div id="card-element"><!-- Stripe Elements inserta el input --></div>
     <div id="card-errors" role="alert"></div>
 
-    <button id="boton-pago" class="btn btn-primary mt-4">Pagar</button>
+    <button id="boton-pago" class="btn btn-primary mt-4">Pagar {{ number_format($trabajo->precio, 2, ',', '.') }} €</button>
+    <div class="loading" id="loading">
+        <span>Procesando pago...</span>
+    </div>
 </div>
 
 <script>
@@ -64,28 +83,53 @@
             displayError.textContent = event.error ? event.error.message : '';
         });
 
-        document.getElementById('boton-pago').addEventListener('click', async () => {
-            // Llama a tu ruta para crear el PaymentIntent
-            const response = await fetch("{{ url('/pago/intent') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ amount: 1000 })
-            });
-            const { clientSecret } = await response.json();
+        const botonPago = document.getElementById('boton-pago');
+        const loading = document.getElementById('loading');
 
-            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: { card: card }
-            });
+        botonPago.addEventListener('click', async () => {
+            // Deshabilitar botón y mostrar indicador de carga
+            botonPago.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                // Llama a tu ruta para crear el PaymentIntent
+                const response = await fetch("{{ url('/pago/intent') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        trabajo_id: {{ $trabajo->id }},
+                        trabajador_id: {{ $trabajadorId }}
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error al crear la intención de pago');
+                }
+                
+                const { clientSecret } = await response.json();
 
-            if (error) {
-                document.getElementById('card-errors').textContent = error.message;
-            } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-                alert('¡Pago realizado con éxito! ID: ' + paymentIntent.id);
-                // Opcional: redirigir o actualizar UI
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: { card: card }
+                });
+
+                if (error) {
+                    document.getElementById('card-errors').textContent = error.message;
+                } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                    // Redirigir a una página de confirmación
+                    window.location.href = "{{ url('/trabajos_publicados') }}?pago_completado=true";
+                }
+            } catch (err) {
+                document.getElementById('card-errors').textContent = err.message;
+            } finally {
+                // Habilitar botón y ocultar indicador de carga
+                botonPago.disabled = false;
+                loading.style.display = 'none';
             }
         });
     });
 </script>
+@endsection
