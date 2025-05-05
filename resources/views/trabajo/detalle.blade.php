@@ -44,7 +44,7 @@
 
             <!-- Información abajo -->
             <div class="info-container">
-                <a href="{{ route('trabajos.index') }}" class="volver-btn"><i class="fas fa-arrow-left"></i> Volver</a>
+                <a href="{{ url()->previous() }}" class="volver-btn"><i class="fas fa-arrow-left"></i> Volver</a>
 
                 <h1 class="trabajo-titulo">{{ $trabajo->titulo }}</h1>
 

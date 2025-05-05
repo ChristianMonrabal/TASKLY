@@ -49,6 +49,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ url('/postulaciones') }}"
+                                    class="nav-link {{ request()->is('postulaciones') ? 'active' : '' }}">
+                                    <i class="fas fa-file-alt"></i> Mis postulaciones
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('vista.chat') }}"
                                     class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}">
                                     <i class="fas fa-envelope"></i> Mensajes
@@ -211,7 +217,7 @@
                         <div class="footer-column">
                             <h3>Acerca de</h3>
                             <ul>
-                                <li><a href="#">Sobre Nosotros</a></li>
+                                <li><a href="/footer/sobre_nosotros">Sobre Nosotros</a></li>
                                 <li><a href="#">Cómo Funciona</a></li>
                                 <li><a href="#">Contacto</a></li>
                             </ul>
