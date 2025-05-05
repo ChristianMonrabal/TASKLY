@@ -85,6 +85,26 @@
             height: 32px;
         }
 
+        .icon-buttons button,
+        .icon-buttons a {
+            background-color: rgba(221, 221, 221, 0.6);
+            border: none;
+            color: #EC6A6A;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        .icon-buttons i {
+            font-size: 16px;
+        }
 
         .main-nav {
             color: #ffffff !important;
@@ -106,7 +126,6 @@
         <div class="mb-4">
             <h1 class="text-center">Mis Trabajos Publicados</h1>
         </div>
-
         @if ($trabajos->count() > 0)
             <div class="trabajos-grid">
                 @foreach ($trabajos as $trabajo)
@@ -128,6 +147,10 @@
                                     <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
+
+                                    <button title="Añadir fecha de encuentro" class="icon-button add-date-btn" data-trabajo-id="{{ $trabajo->id }}">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -142,13 +165,13 @@
                             <div class="action-buttons">
                                 <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                 <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
-                                <br/>
+                                <a href="{{ route('pago.show', $trabajo->id) }}" class="action-btn">Pagar y finalizar</a>
+                                <br>
                                 <button class="action-btn add-date-btn" data-trabajo-id="{{ $trabajo->id }}">Añadir fecha de encuentro</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
                 @endforeach
             </div>
         @else
