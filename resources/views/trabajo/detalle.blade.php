@@ -125,7 +125,10 @@
                                 <div>
                                     <div class="usuario-nombre">{{ $trabajo->cliente->nombre ?? 'Usuario' }}</div>
                                     @php
-                                        $totalValoraciones = $trabajo->cliente ? $trabajo->valoraciones->count() : 0;
+                                        $totalValoraciones = 0;
+                                        if ($trabajo->cliente && isset($trabajo->valoraciones) && $trabajo->valoraciones !== null) {
+                                            $totalValoraciones = $trabajo->valoraciones->count();
+                                        }
                                     @endphp
                                     <div class="usuario-valoraciones">
                                         <i class="fas fa-star"></i>
