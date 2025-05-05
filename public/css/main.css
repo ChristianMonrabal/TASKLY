@@ -119,6 +119,7 @@ a:hover {
 .btn-primary {
   background-color: var(--primary);
   color: white;
+  border: 1px solid white;
 }
 
 /* Botón "Guardar Cambios" */
