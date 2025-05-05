@@ -5,9 +5,12 @@
 
 // Variables para almacenar referencias a elementos DOM
 let cardScrollNuevos;
+let cardScrollCercanos;
 let gridTrabajos;
 let btnLeftNuevos;
 let btnRightNuevos;
+let btnLeftCercanos;
+let btnRightCercanos;
 let inputBusqueda;
 let formularioBusqueda;
 let aplicarFiltrosBtn;
@@ -22,28 +25,56 @@ let filtrosActivos = {
   orden: 'reciente'
 };
 
+// Función para actualizar botones de scroll
+function actualizarBotonesScroll(container, btnLeft, btnRight) {
+  if (!container || !btnLeft || !btnRight) return;
+
+  // Mostrar/ocultar botón izquierdo
+  if (container.scrollLeft <= 10) {
+    btnLeft.style.opacity = '0.5';
+    btnLeft.style.cursor = 'default';
+    btnLeft.disabled = true;
+  } else {
+    btnLeft.style.opacity = '1';
+    btnLeft.style.cursor = 'pointer';
+    btnLeft.disabled = false;
+  }
+
+  // Mostrar/ocultar botón derecho
+  if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+    btnRight.style.opacity = '0.5';
+    btnRight.style.cursor = 'default';
+    btnRight.disabled = true;
+  } else {
+    btnRight.style.opacity = '1';
+    btnRight.style.cursor = 'pointer';
+    btnRight.disabled = false;
+  }
+}
+
 // Función que se ejecuta cuando el DOM está completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Inicializando carga de trabajos...');
   
   // Obtener referencias a elementos DOM
   cardScrollNuevos = document.getElementById('cardScrollNuevos');
+  cardScrollCercanos = document.getElementById('cardScrollCercanos');
   gridTrabajos = document.getElementById('gridTrabajos');
   btnLeftNuevos = document.getElementById('btn-left-nuevos');
   btnRightNuevos = document.getElementById('btn-right-nuevos');
+  btnLeftCercanos = document.getElementById('btn-left-cercanos');
+  btnRightCercanos = document.getElementById('btn-right-cercanos');
   inputBusqueda = document.getElementById('inputBusqueda');
   formularioBusqueda = document.getElementById('formularioBusqueda');
   aplicarFiltrosBtn = document.getElementById('aplicarFiltrosBtn');
   limpiarFiltrosBtn = document.getElementById('limpiarFiltrosBtn');
   filtroDropdowns = document.querySelectorAll('.filtro-dropdown');
   
-  // Verificar que los elementos necesarios estén presentes en el DOM
+  // Configurar eventos para el carrusel de nuevos trabajos
   if (cardScrollNuevos && btnLeftNuevos && btnRightNuevos) {
     console.log('Elementos para el carrusel de nuevos trabajos encontrados');
     
-    // Configurar eventos para los botones de scroll
     btnLeftNuevos.addEventListener('click', function() {
-      // Calcular la distancia de scroll basada en el ancho visible
       const scrollDistance = Math.min(cardScrollNuevos.clientWidth * 0.8, 800);
       cardScrollNuevos.scrollBy({
         left: -scrollDistance,
@@ -52,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     btnRightNuevos.addEventListener('click', function() {
-      // Calcular la distancia de scroll basada en el ancho visible
       const scrollDistance = Math.min(cardScrollNuevos.clientWidth * 0.8, 800);
       cardScrollNuevos.scrollBy({
         left: scrollDistance,
@@ -60,18 +90,49 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
     
-    // Mostrar/ocultar botones de scroll según sea necesario
-    actualizarBotonesScroll();
-    
-    // Actualizar estado de botones al cargar y al hacer scroll
-    cardScrollNuevos.addEventListener('scroll', actualizarBotonesScroll);
-    window.addEventListener('resize', actualizarBotonesScroll);
-    
-    // Cargar nuevos trabajos al iniciar
-    cargarNuevosTrabajos();
-  } else {
-    console.log('No se encontraron todos los elementos para el carrusel de nuevos trabajos');
+    // Actualizar botones al cargar y al hacer scroll
+    actualizarBotonesScroll(cardScrollNuevos, btnLeftNuevos, btnRightNuevos);
+    cardScrollNuevos.addEventListener('scroll', () => {
+      actualizarBotonesScroll(cardScrollNuevos, btnLeftNuevos, btnRightNuevos);
+    });
   }
+  
+  // Configurar eventos para el carrusel de trabajos cercanos (solo si el usuario está autenticado)
+  if (cardScrollCercanos && btnLeftCercanos && btnRightCercanos) {
+    console.log('Elementos para el carrusel de trabajos cercanos encontrados');
+    
+    btnLeftCercanos.addEventListener('click', function() {
+      const scrollDistance = Math.min(cardScrollCercanos.clientWidth * 0.8, 800);
+      cardScrollCercanos.scrollBy({
+        left: -scrollDistance,
+        behavior: 'smooth'
+      });
+    });
+    
+    btnRightCercanos.addEventListener('click', function() {
+      const scrollDistance = Math.min(cardScrollCercanos.clientWidth * 0.8, 800);
+      cardScrollCercanos.scrollBy({
+        left: scrollDistance,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Actualizar botones al cargar y al hacer scroll
+    actualizarBotonesScroll(cardScrollCercanos, btnLeftCercanos, btnRightCercanos);
+    cardScrollCercanos.addEventListener('scroll', () => {
+      actualizarBotonesScroll(cardScrollCercanos, btnLeftCercanos, btnRightCercanos);
+    });
+  }
+  
+  // Actualizar botones al cambiar el tamaño de la ventana
+  window.addEventListener('resize', function() {
+    if (cardScrollNuevos && btnLeftNuevos && btnRightNuevos) {
+      actualizarBotonesScroll(cardScrollNuevos, btnLeftNuevos, btnRightNuevos);
+    }
+    if (cardScrollCercanos && btnLeftCercanos && btnRightCercanos) {
+      actualizarBotonesScroll(cardScrollCercanos, btnLeftCercanos, btnRightCercanos);
+    }
+  });
   
   // Configurar eventos para la búsqueda si los elementos existen
   if (formularioBusqueda && inputBusqueda) {
@@ -250,3 +311,16 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarTodosTrabajos();
   }
 });
+
+// Función para generar estrellas de valoración
+export function generarEstrellas(valoracion) {
+    if (!valoracion) return 'N/A';
+    
+    const estrellasLlenas = Math.floor(valoracion);
+    const mediaEstrella = valoracion % 1 >= 0.5 ? 1 : 0;
+    const estrellasVacias = 5 - estrellasLlenas - mediaEstrella;
+    
+    return '★'.repeat(estrellasLlenas) + 
+           (mediaEstrella ? '½' : '') + 
+           '☆'.repeat(estrellasVacias);
+}

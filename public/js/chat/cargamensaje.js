@@ -32,6 +32,7 @@ function cargamensaje(postulacionId) {
         })
         .then(function (data) {
             cargachat(postulacionId)
+            infotrabajo = document.getElementById("infotrabajo" + postulacionId).textContent;
             let contenidouser = "";
             infouser.innerHTML = "";
             data.user.forEach((dato) => {
@@ -42,7 +43,7 @@ function cargamensaje(postulacionId) {
                 contenidouser += '  <div class="chat-user-info">';
                 contenidouser += "     <h3>" + dato.nombre + " " + dato.apellidos + ' <span class="chat-indicator"></span></h3>';
                 contenidouser += "     <p>" + dato.descripcion + "</p>";
-                contenidouser += '     <div class="chat-context">Proyecto: ' + dato.descripcion + "</div>";
+                contenidouser += '     <div class="chat-context">Proyecto: ' + infotrabajo + "</div>";
                 contenidouser += "  </div>";
                 contenidouser += "</div>";
                 contenidouser += '<div class="chat-actions">';

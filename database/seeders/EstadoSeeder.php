@@ -30,8 +30,6 @@ class EstadoSeeder extends Seeder
             'tipo_estado' => 'trabajos',
         ]);
 
-
-
         Estado::create([
             'nombre' => 'Pendiente',
             'tipo_estado' => 'pagos',

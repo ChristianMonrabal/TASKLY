@@ -19,13 +19,18 @@ class AdminJobController extends Controller
         if (Auth::user()->rol_id != 1) {
             return redirect()->route('trabajos.index');
         }
-        // Se cargan las relaciones cliente y estado para mostrar la información
-        $trabajos = Trabajo::with(['cliente', 'estado'])->get();
+
+        $trabajos = Trabajo::with(['cliente', 'estado'])
+            ->whereHas('estado', function($q) {
+                $q->whereNotIn('nombre', ['Completado']);
+            })
+            ->get();
+
         return view('Admin.trabajos.index', compact('trabajos'));
     }
 
     /**
-     * Muestra los detalles de un trabajo (para cargar datos via AJAX).
+     * Muestra los detalles de un trabajo (para AJAX).
      */
     public function show(Trabajo $trabajo)
     {
@@ -33,20 +38,16 @@ class AdminJobController extends Controller
     }
 
     /**
-     * Muestra el formulario para editar un trabajo.
-     * (En este caso se utilizará un modal; se pasa la información necesaria para cargar select de estados)
+     * Formulario de edición (modal).
      */
     public function edit(Trabajo $trabajo)
     {
-        // Obtenemos los estados disponibles para actualizar el campo estado_id.
         $estados = Estado::all();
         return view('Admin.trabajos.edit', compact('trabajo', 'estados'));
     }
 
     /**
-     * Actualiza la información de un trabajo.
-     * Se permite editar: titulo, descripcion, precio, direccion y estado_id.
-     * NO se permite modificar el cliente (cliente_id).
+     * Actualiza un trabajo.
      */
     public function update(Request $request, Trabajo $trabajo)
     {
@@ -56,7 +57,6 @@ class AdminJobController extends Controller
             'precio'      => 'required|numeric',
             'direccion'   => 'required|string|max:255',
             'estado_id'   => 'required|exists:estados,id',
-            // Se excluye 'cliente_id'
         ]);
 
         $trabajo->update($validated);
@@ -69,15 +69,19 @@ class AdminJobController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.trabajos.index')->with('success', 'Trabajo actualizado correctamente.');
+        return redirect()->route('admin.trabajos.index')
+                         ->with('success', 'Trabajo actualizado correctamente.');
     }
 
     /**
-     * Devuelve los trabajos (con filtro por cliente/estado) en JSON.
+     * JSON de trabajos (filtros).
      */
     public function apiIndex(Request $request)
     {
-        $query = Trabajo::with(['cliente', 'estado']);
+        $query = Trabajo::with(['cliente', 'estado'])
+            ->whereHas('estado', function($q) {
+                $q->whereNotIn('nombre', ['Finalizado', 'Completado']);
+            });
 
         if ($request->filled('cliente')) {
             $query->whereHas('cliente', fn($q) =>
@@ -94,7 +98,7 @@ class AdminJobController extends Controller
     }
 
     /**
-     * Devuelve los estados de tipo "trabajos" en JSON.
+     * JSON de estados para trabajos.
      */
     public function apiEstadosTrabajo()
     {
@@ -103,70 +107,114 @@ class AdminJobController extends Controller
         );
     }
 
-
     /**
-     * Elimina un trabajo y todas sus relaciones usando transacciones.
+     * Elimina un trabajo (solo si NO está finalizado/completado).
      */
     public function destroy(Trabajo $trabajo)
     {
+        // No permitir borrado si el estado es Finalizado o Completado
+        if ($trabajo->estado && in_array($trabajo->estado->nombre, ['Finalizado', 'Completado'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes borrar un trabajo que ya está completado.'
+            ], 400);
+        }
+
         try {
-            // Iniciar transacción para garantizar que todas las operaciones se completen o ninguna
             DB::beginTransaction();
-            
-            // Desvincular la relación many-to-many con categorías (tabla pivot "categorias_tipo_trabajo")
-            if(method_exists($trabajo, 'categoriastipotrabajo')) {
+
+            if (method_exists($trabajo, 'categoriastipotrabajo')) {
                 $trabajo->categoriastipotrabajo()->detach();
             }
-            
-            // Eliminar los chats asociados a este trabajo
-            if(method_exists($trabajo, 'chat') && $trabajo->chat()->exists()){
+            if (method_exists($trabajo, 'chat') && $trabajo->chat()->exists()) {
                 $trabajo->chat()->delete();
             }
-            
-            // Eliminar las postulaciones asociadas al trabajo
-            if(method_exists($trabajo, 'postulaciones') && $trabajo->postulaciones()->exists()){
+            if (method_exists($trabajo, 'postulaciones') && $trabajo->postulaciones()->exists()) {
                 $trabajo->postulaciones()->delete();
             }
-            
-            // Eliminar las imágenes asociadas al trabajo, si existen
-            if(method_exists($trabajo, 'imagenes') && $trabajo->imagenes()->exists()){
+            if (method_exists($trabajo, 'imagenes') && $trabajo->imagenes()->exists()) {
                 $trabajo->imagenes()->delete();
             }
-            
-            // Eliminar los pagos asociados al trabajo, si existen
-            if(method_exists($trabajo, 'pagos') && $trabajo->pagos()->exists()){
+            if (method_exists($trabajo, 'pagos') && $trabajo->pagos()->exists()) {
                 $trabajo->pagos()->delete();
             }
-            
-            // Eliminar las valoraciones asociadas al trabajo, si existen
-            if(method_exists($trabajo, 'valoraciones') && $trabajo->valoraciones()->exists()){
+            if (method_exists($trabajo, 'valoraciones') && $trabajo->valoraciones()->exists()) {
                 $trabajo->valoraciones()->delete();
             }
-            
-            // Finalmente, eliminar el trabajo
+
             $trabajo->delete();
-            
-            // Si todo salió bien, confirmar la transacción
+
             DB::commit();
-    
-            if (request()->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Trabajo eliminado correctamente.'
-                ]);
-            }
-            return redirect()->route('admin.trabajos.index')->with('success', 'Trabajo eliminado correctamente.');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Trabajo eliminado correctamente.'
+            ]);
         } catch (\Exception $e) {
-            // Si algo salió mal, revertir todos los cambios
             DB::rollBack();
-            
-            if (request()->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al eliminar el trabajo: ' . $e->getMessage()
-                ], 500);
-            }
-            return redirect()->back()->with('error', 'Error al eliminar el trabajo: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el trabajo: ' . $e->getMessage()
+            ], 500);
         }
     }
+
+    /**
+     * Historial: lista de trabajos finalizados/completados.
+     */
+    public function historial()
+    {
+        if (Auth::user()->rol_id != 1) {
+            return redirect()->route('trabajos.index');
+        }
+
+        $trabajos = Trabajo::with(['cliente', 'estado'])
+            ->whereHas('estado', fn($q) =>
+                $q->whereIn('nombre', ['Finalizado', 'Completado'])
+            )
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return view('Admin.trabajos.historial', compact('trabajos'));
+    }
+
+    /**
+     * Muestra la vista de trabajos completados con filtros.
+     */
+    public function completadosIndex()
+    {
+        if (Auth::user()->rol_id != 1) {
+            return redirect()->route('trabajos.index');
+        }
+        return view('Admin.trabajos.completados');
+    }
+
+/**
+ * Devuelve JSON de trabajos cuyo estado sea "Finalizado" o "Completado",
+ * con filtros opcionales por cliente y por fecha de última actualización.
+ */
+public function apiCompletados(Request $request)
+{
+    $query = Trabajo::with(['cliente', 'estado'])
+        ->whereHas('estado', fn($q) =>
+            $q->whereIn('nombre', ['Finalizado','Completado'])
+        );
+
+    // Filtro por cliente (nombre)
+    if ($request->filled('cliente')) {
+        $query->whereHas('cliente', function($q) use ($request) {
+            $q->where('nombre', 'like', "%{$request->cliente}%")
+              ->orWhere('apellidos', 'like', "%{$request->cliente}%");
+        });
+    }
+
+    // Filtro por fecha (updated_at)
+    if ($request->filled('fecha')) {
+        // Suponiendo que llega en formato YYYY-MM-DD
+        $query->whereDate('updated_at', $request->fecha);
+    }
+
+    $completados = $query->orderBy('updated_at','desc')->get();
+    return response()->json($completados);
+}
 }

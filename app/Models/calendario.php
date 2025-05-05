@@ -11,6 +11,10 @@ class calendario extends Model
     protected $fillable = [
         'titulo',
         'descripcion',
+        'trabajo',
+        'cliente',
+        'trabajador',
+        'fecha',
     ];
 
     public function trabajo()

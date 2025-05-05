@@ -24,6 +24,8 @@ class UsuarioSeeder extends Seeder
             'rol_id' => 1,
         ]);
 
+        // cliente
+
         User::create([
             'nombre' => 'Christian',
             'apellidos' => 'Monrabal Donis',
@@ -33,7 +35,7 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Descripción de Christian',
+            'descripcion' => 'Apasionado por la tecnología y siempre dispuesto a echar una mano.',
             'dni' => '25482103N',
             'rol_id' => 2,
         ]);
@@ -47,7 +49,7 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Descripción de Alex',
+            'descripcion' => 'Soy Alex, me encanta resolver problemas prácticos y ayudar a los demás.',
             'dni' => '96328481L',
             'rol_id' => 2,
         ]);
@@ -61,7 +63,7 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Descripción de Daniel',
+            'descripcion' => 'Técnico de confianza. Me especializo en arreglos del hogar y mantenimiento.',
             'dni' => '52980798E',
             'rol_id' => 2,
         ]);
@@ -75,7 +77,7 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Descripción de Juan',
+            'descripcion' => 'Persona comprometida, puntual y con ganas de ayudarte con tus tareas.',
             'dni' => '11201597E',
             'rol_id' => 2,
         ]);
@@ -89,8 +91,22 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Descripción de Julio',
+            'descripcion' => 'Con experiencia en múltiples áreas, siempre listo para trabajar.',
             'dni' => '27394859L',
+            'rol_id' => 2,
+        ]);
+
+        User::create([
+            'nombre' => 'Pablo',
+            'apellidos' => 'González Márquez',
+            'email' => 'pablo@taskly.com',
+            'telefono' => '612345678',
+            'codigo_postal' => '08001',
+            'password' => bcrypt('pablo1234'),
+            'fecha_nacimiento' => '1995-05-15',
+            'foto_perfil' => 'perfil_default.png',
+            'descripcion' => 'Hola, soy Pablo y me encanta ayudar con tareas del hogar.',
+            'dni' => '50133963N',
             'rol_id' => 2,
         ]);
     }

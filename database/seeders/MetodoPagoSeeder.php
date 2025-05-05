@@ -12,10 +12,16 @@ class MetodoPagoSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['Tarjeta de crédito', 'PayPal', 'Transferencia bancaria', 'Efectivo', 'Bizum'];
+        $metodospagos = [
+            'Tarjeta de crédito',
+            'PayPal',
+            'Transferencia bancaria',
+            'Efectivo',
+            'Bizum'
+        ];
 
-        foreach ($roles as $rol) {
-            MetodoPago::create(['nombre' => $rol]);
+        foreach ($metodospagos as $metodopago) {
+            MetodoPago::create(['nombre' => $metodopago]);
         }
     }
 }

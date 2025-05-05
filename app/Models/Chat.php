@@ -8,8 +8,9 @@ class Chat extends Model
 {
     protected $fillable = [
         'trabajo_id',
-        'trabajador_id',
-        'mensaje',
+        'emisor',
+        'receptor',
+        'contenido',
     ];
 
     public function trabajo()

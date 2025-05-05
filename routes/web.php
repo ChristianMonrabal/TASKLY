@@ -19,6 +19,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WebhookController;
+use App\Http\Controllers\Admin\LogroController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -70,6 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/trabajos/crear', [JobController::class, 'crear'])->name('trabajos.create');
     Route::get('/detalles_trabajo/{id}', [JobController::class, 'show'])->name('trabajos.detalles');
     Route::get('/candidatos_trabajo/{id}', [JobController::class, 'candidatos'])->name('trabajos.candidatos');
+    Route::delete('/trabajos/{trabajo}/cancelar-postulacion', [TrabajoController::class, 'cancelarPostulacion'])->name('trabajos.cancelarPostulacion');
 
     // Rutas para gestión de postulaciones/candidatos
     Route::post('/postulaciones/{id}/aceptar', [PostulacionController::class, 'aceptar'])->name('postulaciones.aceptar');
@@ -91,15 +93,35 @@ Route::middleware('auth')->group(function () {
         return redirect('/');
     })->name('logout');
 
-    // Rutas de administración
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')
+    ->name('admin.')
+    ->middleware('auth')
+    ->group(function () {
+        
+        // listado/­vista de completados
+        Route::get('trabajos/completados', [AdminJobController::class, 'completadosIndex'])
+             ->name('trabajos.completados');
+
+        // 2) Endpoint JSON para fetch + filtros
+        Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])
+            ->name('trabajos.completados.json');
+
+        Route::resource('logros', LogroController::class);
+        // resto de recursos
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('trabajos', AdminJobController::class);
-        Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
+        Route::resource('valoraciones', ValoracionController::class)
+             ->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
-    });
+        Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
+             ->name('categorias.toggleVisible');
+});
+
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+    Route::get('/calendario/fecha/{trabajoId}', [CalendarioController::class, 'obtenerFecha']);
+    Route::post('/calendario/insertar', [CalendarioController::class, 'insertar']);
+    Route::post('/calendario/actualizar', [CalendarioController::class, 'actualizar']);
 
     // Rutas API Admin
     // —— API para el CRUD Admin ——
@@ -118,9 +140,16 @@ Route::middleware('auth')->group(function () {
     Route::get('api/categorias',    [CategoriaController::class, 'apiIndex']);
     Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
 
+    // Logros:
+    Route::get('api/logros',      [LogroController::class, 'apiIndex']);
+    Route::get('api/logros/{logro}', [LogroController::class, 'show']);
+
     Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+
+Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
+     ->name('admin.categorias.toggleVisible');
 
 Route::get('/footer/sobre_nosotros', function () {
     return view('/footer/sobre_nosotros');
@@ -130,9 +159,17 @@ Route::get('/footer/sobre_nosotros', function () {
 Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'perfilPorNombre'])->name('perfil.usuario');
 Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'mostrar'])->name('perfil.usuario');
 
-
-
+// Rutas de pago
 Route::get('/pago/{trabajo}', [PaymentController::class, 'show'])->name('pago.show');
 Route::post('/pago/intent', [PaymentController::class, 'createIntent'])->name('pago.intent');
 Route::post('/pago/update-status', [PaymentController::class, 'updatePaymentStatus'])->name('pago.update-status');
 Route::post('/stripe/webhook', [WebhookController::class, 'handle'])->name('stripe.webhook');
+
+// Editar trabajo
+Route::get('/trabajos/editar/{id}', [JobController::class, 'editar'])->name('trabajos.editar');
+Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
+Route::get('/mis-trabajos', [JobController::class, 'trabajosPublicados'])->name('trabajos_publicados');
+
+// Eliminar trabajo
+Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('trabajos.eliminar');
+Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');

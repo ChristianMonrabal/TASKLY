@@ -7,6 +7,7 @@ use App\Models\Postulacion;
 use App\Models\Trabajo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Chat;
 
 class PostulacionController extends Controller
 {
@@ -16,14 +17,16 @@ class PostulacionController extends Controller
      * @param int $postulacionId El ID de la postulación a aceptar
      * @return \Illuminate\Http\JsonResponse
      */
+
     public function aceptar($postulacionId)
     {
         try {
             DB::beginTransaction();
-            
+
+            // Obtener la postulación y el trabajo
             $postulacion = Postulacion::findOrFail($postulacionId);
             $trabajo = $postulacion->trabajo;
-            
+
             // Verificar que el usuario autenticado es el dueño del trabajo
             if (Auth::id() != $trabajo->cliente_id) {
                 return response()->json([
@@ -31,29 +34,37 @@ class PostulacionController extends Controller
                     'message' => 'No estás autorizado para realizar esta acción'
                 ], 403);
             }
-            
-            // Actualizar el estado de la postulación a "aceptado"
-            // Segln el seeder, el ID 10 corresponde al estado "Aceptada" para postulaciones
+
+            // Actualizar el estado de la postulación a "aceptada"
             $estadoAceptadoId = 10;
             $postulacion->estado_id = $estadoAceptadoId;
             $postulacion->save();
-            
-            // Opcional: rechazar automáticamente las demás postulaciones
-            // Segln el seeder, el ID 11 corresponde al estado "Rechazada" para postulaciones
+
+            // Rechazar automáticamente las demás postulaciones
             $estadoRechazadoId = 11;
             $trabajo->postulaciones()
                 ->where('id', '!=', $postulacionId)
                 ->update(['estado_id' => $estadoRechazadoId]);
-            
+
+            // Eliminar los chats de los demás postulantes
+            Chat::where('trabajo_id', $trabajo->id)->delete();
+            // Crear un chat vacío entre el cliente y el postulante aceptado
+            Chat::create([
+                'trabajo_id' => $trabajo->id,
+                'emisor' => $trabajo->cliente_id,  // El cliente es el emisor
+                'receptor' => $postulacion->trabajador_id,  // El postulante aceptado es el receptor
+                'contenido' => 'Hola, gracias por aplicar al trabajo, cualquier duda preguntame! ',  // Chat vacío
+            ]);
+
             // Opcional: actualizar el estado del trabajo a "asignado"
             $trabajo->estado_id = $estadoAceptadoId;
             $trabajo->save();
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
-                'message' => 'Candidato aceptado correctamente'
+                'message' => 'Candidato aceptado correctamente y chat creado'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -63,7 +74,7 @@ class PostulacionController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Rechazar un candidato para un trabajo
      * 
@@ -75,7 +86,7 @@ class PostulacionController extends Controller
         try {
             $postulacion = Postulacion::findOrFail($postulacionId);
             $trabajo = $postulacion->trabajo;
-            
+
             // Verificar que el usuario autenticado es el dueño del trabajo
             if (Auth::id() != $trabajo->cliente_id) {
                 return response()->json([
@@ -83,13 +94,13 @@ class PostulacionController extends Controller
                     'message' => 'No estás autorizado para realizar esta acción'
                 ], 403);
             }
-            
+
             // Actualizar el estado de la postulación a "rechazado"
             // Segln el seeder, el ID 11 corresponde al estado "Rechazada" para postulaciones
             $estadoRechazadoId = 11;
             $postulacion->estado_id = $estadoRechazadoId;
             $postulacion->save();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Candidato rechazado correctamente'
@@ -101,7 +112,7 @@ class PostulacionController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Ver el estado de todas las postulaciones de un trabajo
      * 
@@ -112,7 +123,7 @@ class PostulacionController extends Controller
     {
         try {
             $trabajo = Trabajo::findOrFail($trabajoId);
-            
+
             // Verificar que el usuario autenticado es el dueño del trabajo
             if (Auth::id() != $trabajo->cliente_id) {
                 return response()->json([
@@ -120,11 +131,11 @@ class PostulacionController extends Controller
                     'message' => 'No estás autorizado para realizar esta acción'
                 ], 403);
             }
-            
+
             $postulaciones = $trabajo->postulaciones()
                 ->with('trabajador')
                 ->get();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $postulaciones
