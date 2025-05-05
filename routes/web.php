@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\Admin\LogroController;
+use App\Http\Controllers\ValoracionesController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -99,7 +100,7 @@ Route::middleware('auth')->group(function () {
         
         // listado/­vista de completados
         Route::get('trabajos/completados', [AdminJobController::class, 'completadosIndex'])
-             ->name('trabajos.completados');
+            ->name('trabajos.completados');
 
         // 2) Endpoint JSON para fetch + filtros
         Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])
@@ -110,10 +111,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('trabajos', AdminJobController::class);
         Route::resource('valoraciones', ValoracionController::class)
-             ->parameters(['valoraciones' => 'valoracion']);
+            ->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
         Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
-             ->name('categorias.toggleVisible');
+            ->name('categorias.toggleVisible');
 });
 
     // Calendario
@@ -121,6 +122,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/calendario/fecha/{trabajoId}', [CalendarioController::class, 'obtenerFecha']);
     Route::post('/calendario/insertar', [CalendarioController::class, 'insertar']);
     Route::post('/calendario/actualizar', [CalendarioController::class, 'actualizar']);
+
+    // Valoraciones
+    Route::get('/valoraciones', [ValoracionesController::class, 'index'])->name('valoraciones.valoraciones');
+    Route::post('/valoraciones/guardar', [ValoracionesController::class, 'store'])->name('valoraciones.store');
 
     // Rutas API Admin
     // —— API para el CRUD Admin ——
@@ -148,7 +153,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
-     ->name('admin.categorias.toggleVisible');
+    ->name('admin.categorias.toggleVisible');
 
 Route::get('/footer/sobre_nosotros', function () {
     return view('/footer/sobre_nosotros');
