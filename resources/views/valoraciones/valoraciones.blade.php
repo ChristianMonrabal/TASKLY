@@ -53,7 +53,6 @@
                 </div>
                 <span id="image-error" class="error-message">Debes añadir al menos una imagen.</span>
             </div>
-            
             <button class="btn color w-100">Finalizar trabajo</button>
         </div>
     </div>

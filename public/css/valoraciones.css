@@ -101,6 +101,27 @@ input[type="file"] {
     display: none;
 }
 
+.color {
+    background-color: #EC6A6A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.color:hover {
+    background-color: #d95c5c;
+    color: white;
+}
+
+.color:focus {
+    background-color: #EC6A6A;
+    color: white;
+}
+
+
 @media (max-width: 767px) {
     .image-upload {
         margin: 0 auto;
