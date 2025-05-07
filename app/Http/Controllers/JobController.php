@@ -124,79 +124,83 @@ class JobController extends Controller
     }
     
     public function actualizar(Request $request)
-    {
-        if ($request->has('categorias') && is_string($request->categorias)) {
-            $request->merge([
-                'categorias' => explode(',', $request->categorias)
-            ]);
-        }
-    
-        $request->validate([
-            'trabajo_id' => 'required|exists:trabajos,id',
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'precio' => 'required|numeric',
-            'direccion' => 'required|string|max:255',
-            'alta_responsabilidad' => 'required|in:Sí,No',
-            'categorias' => 'required|array',
-            'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'imagenes_anteriores' => 'nullable|array',
+{
+    if ($request->has('categorias') && is_string($request->categorias)) {
+        $request->merge([
+            'categorias' => explode(',', $request->categorias)
         ]);
+    }
+
+    $request->validate([
+        'trabajo_id' => 'required|exists:trabajos,id',
+        'titulo' => 'required|string|max:255',
+        'descripcion' => 'required|string',
+        'precio' => 'required|numeric|min:1|max:1000',
+        'direccion' => 'required|string|max:255|digits:5',
+        'alta_responsabilidad' => 'required|in:Sí,No',
+        'categorias' => 'required|array',
+        'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'imagenes_anteriores' => 'nullable|array',
+    ], [
+        'titulo.required' => 'Este campo es obligatorio',
+        'descripcion.required' => 'Este campo es obligatorio',
+        'precio.required' => 'Este campo es obligatorio',
+        'precio.min' => 'El precio mínimo permitido es 1€',
+        'precio.max' => 'El precio máximo permitido es de 1000€',
+        'direccion.required' => 'Este campo es obligatorio',
+        'alta_responsabilidad.required' => 'Este campo es obligatorio',
+        'categorias.required' => 'Este campo es obligatorio',
+    ]);
     
-        $trabajo = Trabajo::with('imagenes')->findOrFail($request->trabajo_id);
-    
-        $trabajo->update([
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-            'precio' => $request->precio,
-            'direccion' => $request->direccion,
-            'alta_responsabilidad' => $request->alta_responsabilidad,
+    $trabajo = Trabajo::with('imagenes')->findOrFail($request->trabajo_id);
+
+    $trabajo->update([
+        'titulo' => $request->titulo,
+        'descripcion' => $request->descripcion,
+        'precio' => $request->precio,
+        'direccion' => $request->direccion,
+        'alta_responsabilidad' => $request->alta_responsabilidad,
+    ]);
+
+    CategoriaTipoTrabajo::where('trabajo_id', $trabajo->id)->delete();
+    foreach ($request->categorias as $categoriaId) {
+        CategoriaTipoTrabajo::create([
+            'trabajo_id' => $trabajo->id,
+            'categoria_id' => $categoriaId,
         ]);
-    
-        // Actualizar categorías
-        CategoriaTipoTrabajo::where('trabajo_id', $trabajo->id)->delete();
-        foreach ($request->categorias as $categoriaId) {
-            CategoriaTipoTrabajo::create([
-                'trabajo_id' => $trabajo->id,
-                'categoria_id' => $categoriaId,
-            ]);
-        }
-    
-        // Procesar nuevas imágenes
-        if ($request->hasFile('imagenes_nuevas')) {
-            $imagenes = $request->file('imagenes_nuevas');
-            foreach ($imagenes as $index => $imagen) {
-                if ($imagen) {
-                    // Reemplazar imagen existente si hay una en esa posición
-                    $imagenAnt = $trabajo->imagenes[$index] ?? null;
-    
-                    if ($imagenAnt) {
-                        // Borrar archivo anterior
-                        $rutaAnterior = public_path('img/trabajos/' . $imagenAnt->ruta_imagen);
-                        if (file_exists($rutaAnterior)) {
-                            unlink($rutaAnterior);
-                        }
-                        // Reemplazar en BD
-                        $filename = time() . '_' . $imagen->getClientOriginalName();
-                        $imagen->move(public_path('img/trabajos'), $filename);
-                        $imagenAnt->ruta_imagen = $filename;
-                        $imagenAnt->save();
-                    } else {
-                        // Agregar una nueva imagen
-                        $filename = time() . '_' . $imagen->getClientOriginalName();
-                        $imagen->move(public_path('img/trabajos'), $filename);
-                        ImgTrabajo::create([
-                            'ruta_imagen' => $filename,
-                            'trabajo_id' => $trabajo->id,
-                            'descripcion' => '',
-                        ]);
+    }
+
+    if ($request->hasFile('imagenes_nuevas')) {
+        $imagenes = $request->file('imagenes_nuevas');
+        foreach ($imagenes as $index => $imagen) {
+            if ($imagen) {
+                $imagenAnt = $trabajo->imagenes[$index] ?? null;
+
+                if ($imagenAnt) {
+                    $rutaAnterior = public_path('img/trabajos/' . $imagenAnt->ruta_imagen);
+                    if (file_exists($rutaAnterior)) {
+                        unlink($rutaAnterior);
                     }
+                    $filename = time() . '_' . $imagen->getClientOriginalName();
+                    $imagen->move(public_path('img/trabajos'), $filename);
+                    $imagenAnt->ruta_imagen = $filename;
+                    $imagenAnt->save();
+                } else {
+                    $filename = time() . '_' . $imagen->getClientOriginalName();
+                    $imagen->move(public_path('img/trabajos'), $filename);
+                    ImgTrabajo::create([
+                        'ruta_imagen' => $filename,
+                        'trabajo_id' => $trabajo->id,
+                        'descripcion' => '',
+                    ]);
                 }
             }
         }
-    
-        return redirect()->route('trabajos.publicados')->with('success', 'Trabajo actualizado correctamente.');
     }
+
+    return redirect()->route('trabajos.publicados')->with('success', 'Trabajo actualizado correctamente.');
+}
+
                     
     public function eliminar($id)
     {
