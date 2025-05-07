@@ -3,7 +3,7 @@
 @section('title', 'Editar Trabajo - TASKLY')
 
 @section('styles')
-  <link rel="stylesheet" href="{{ asset('css/editar_trabajo.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/editar_trabajo.css') }}"/>
 @endsection
 @section('script')
     <script src="{{ asset('js/editar_trabajo.js') }}"></script>
@@ -15,7 +15,7 @@
 
     <form action="{{ route('trabajos.actualizar', $trabajo->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT') <!-- Esto indica que la solicitud es una actualización -->
+        @method('PUT')
 
         <input type="hidden" name="trabajo_id" value="{{ $trabajo->id }}">
 

@@ -2,37 +2,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("mi-formulario");
     const errorMessages = document.querySelectorAll(".error-message");
 
+    const titulo = document.getElementById("titulo");
+    const descripcion = document.getElementById("descripcion");
+    const precio = document.getElementById("precio");
+    const direccion = document.getElementById("direccion");
+
     form.addEventListener("submit", function (e) {
-        console.log("Intentando enviar el formulario...");
         let isValid = true;
+        errorMessages.forEach(msg => msg.style.display = "none");
 
-        // Limpiar mensajes de error previos
-        errorMessages.forEach(msg => {
-            msg.style.display = "none";
-        });
-
-        // Validar campos de texto
-        const titulo = document.getElementById("titulo");
         if (titulo.value.trim() === "") {
             showError(titulo, "Este campo es obligatorio.");
             isValid = false;
         }
 
-        const descripcion = document.getElementById("descripcion");
         if (descripcion.value.trim() === "") {
             showError(descripcion, "Este campo es obligatorio.");
             isValid = false;
         }
 
-        const precio = document.getElementById("precio");
         if (precio.value.trim() === "") {
             showError(precio, "Este campo es obligatorio.");
             isValid = false;
         }
 
-        const direccion = document.getElementById("direccion");
         const direccionValor = direccion.value.trim();
-        
         if (direccionValor === "") {
             showError(direccion, "Este campo es obligatorio.");
             isValid = false;
@@ -41,17 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
             isValid = false;
         }
 
-        // Validar selección de categorías
         const categoriasInput = document.getElementById("categorias");
         const categoriasValor = categoriasInput.value.trim();
         const tagContainer = document.getElementById("tag-container");
-        
+
         if (categoriasValor === "") {
             showError(tagContainer, "Selecciona al menos una categoría.");
             isValid = false;
         }
-        
-        // Validar al menos una imagen
+
         const imagenes = [
             document.getElementById("imagen1"),
             document.getElementById("imagen2"),
@@ -59,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("imagen4"),
             document.getElementById("imagen5")
         ];
-
         const algunaImagenSeleccionada = imagenes.some(input => input.files.length > 0);
         const imageError = document.getElementById("image-error");
 
@@ -70,26 +61,53 @@ document.addEventListener("DOMContentLoaded", () => {
             imageError.style.display = "none";
         }
 
-        if (!isValid) {
-            console.log("Formulario inválido. Previniendo envío.");
-            e.preventDefault(); // ⛔ Evita el envío del formulario
-        } else {
-            console.log("Formulario válido. Enviando...");
-        }
+        if (!isValid) e.preventDefault();
     });
 
     function showError(inputElement, message) {
-        // Busca el contenedor más cercano con la clase form-group
         const formGroup = inputElement.closest('.form-group');
         const errorSpan = formGroup.querySelector(".error-message");
-    
         if (errorSpan) {
             errorSpan.textContent = message;
             errorSpan.style.display = "block";
         }
     }
+
+    function clearError(inputElement) {
+        const formGroup = inputElement.closest('.form-group');
+        const errorSpan = formGroup.querySelector(".error-message");
+        if (errorSpan) {
+            errorSpan.style.display = "none";
+            errorSpan.textContent = "";
+        }
+    }
+
+    // Validaciones individuales al perder el foco
+    titulo.addEventListener("blur", () => {
+        titulo.value.trim() === "" ? showError(titulo, "Este campo es obligatorio.") : clearError(titulo);
+    });
+
+    descripcion.addEventListener("blur", () => {
+        descripcion.value.trim() === "" ? showError(descripcion, "Este campo es obligatorio.") : clearError(descripcion);
+    });
+
+    precio.addEventListener("blur", () => {
+        precio.value.trim() === "" ? showError(precio, "Este campo es obligatorio.") : clearError(precio);
+    });
+
+    direccion.addEventListener("blur", () => {
+        const val = direccion.value.trim();
+        if (val === "") {
+            showError(direccion, "Este campo es obligatorio.");
+        } else if (!/^\d{5}$/.test(val)) {
+            showError(direccion, "Debe contener 5 dígitos.");
+        } else {
+            clearError(direccion);
+        }
+    });
 });
 
+// Selección de categorías (sin cambios)
 document.addEventListener("DOMContentLoaded", function () {
     const tagContainer = document.getElementById("tag-container");
     const categoriasInput = document.getElementById("categorias");
