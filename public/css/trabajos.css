@@ -450,6 +450,23 @@
   border: 1px solid var(--border);
 }
 
+/* Botones de categoría */
+.categoria-btn {
+  background-color: var(--primary);
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 35px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  text-align: center;
+}
+
+.categoria-btn:hover {
+  background-color: var(--primary-light);
+}
+
 /* Responsivo */
 @media (max-width: 1024px) {
   .grid-trabajos {
@@ -519,3 +536,4 @@ html, body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
 }
+
