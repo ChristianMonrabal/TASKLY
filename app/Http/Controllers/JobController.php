@@ -229,5 +229,4 @@ public function store(Request $request)
         // Redirigir a la página de trabajos publicados con un mensaje de éxito
         return redirect()->route('trabajos.publicados')->with('success', 'Trabajo eliminado correctamente.');
     }
-                            
 }
