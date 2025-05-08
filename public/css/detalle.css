@@ -1,112 +1,121 @@
 /* Estilos para la vista de detalle de trabajo */
 
+/* Contenedor principal con dos columnas */
+.detalle-layout {
+  display: grid;
+  grid-template-columns: 50% 50%; /* Dos columnas iguales: 50% cada una */
+  gap: 20px; /* Espaciado entre las columnas */
+  align-items: stretch; /* Asegura que ambos bloques tengan la misma altura */
+  width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+  margin: 0 auto; /* Centra el contenedor si es necesario */
+  box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+}
+
+/* Galería de imágenes */
+.galeria-imagenes {
+  display: flex;
+  align-items: center; /* Centra las imágenes verticalmente */
+  justify-content: center; /* Centra las imágenes horizontalmente */
+  background-color: #f8f9fa;
+  border: 1px solid var(--primary-light);
+  padding: 15px;
+  box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+  height: 100%; /* Asegura que el bloque ocupe toda la altura disponible */
+}
+
+/* Imagen principal grande */
+.imagen-principal img {
+  width: 100%; /* La imagen ocupará todo el ancho del contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+  display: block; /* Elimina espacios blancos alrededor de la imagen */
+  object-fit: cover; /* Ajusta la imagen para que se recorte si es necesario */
+  border-radius: 5px; /* Opcional: bordes redondeados */
+}
+
+/* Contenedor de información */
 .trabajo-detalle-container {
-  max-width: 1100px;
-  margin: 20px auto 40px;
+  width: 100%; /* Asegura que ocupe todo el ancho de su columna */
   background-color: white;
   border: 1px solid var(--primary);
   box-shadow: 0 5px 15px rgba(236, 106, 106, 0.15);
+  padding: 20px;
+  box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+  margin: 0; /* Elimina márgenes adicionales */
 }
 
-.galeria-imagenes {
-  position: relative;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid var(--primary-light);
-}
-
-.imagen-principal {
-  height: 400px;
-  width: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.imagen-principal img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: all 0.3s ease;
-}
-
-.galeria-miniaturas {
-  padding: 15px;
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  background-color: white;
-  border-top: 1px solid var(--primary-light);
-}
-
-.miniatura {
-  flex: 0 0 80px;
-  height: 60px;
-  overflow: hidden;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.miniatura:hover, .miniatura.active {
-  opacity: 1;
-  border-color: var(--primary);
-}
-
-.miniatura img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+/* Información del trabajo */
 .info-container {
-  padding: 25px;
+  width: 100%; /* Asegura que ocupe todo el ancho del bloque derecho */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaciado entre secciones */
 }
 
-.volver-btn {
-  display: inline-flex;
-  align-items: center;
-  color: var(--text-muted);
-  margin-bottom: 20px;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.volver-btn:hover {
-  color: var(--primary);
-}
-
-.volver-btn i {
-  margin-right: 8px;
-}
-
+/* Título del trabajo */
 .trabajo-titulo {
   font-size: 28px;
   color: var(--text);
   margin-bottom: 15px;
   font-weight: 700;
+  text-align: left;
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
-  margin-top: 20px;
+/* Meta información */
+.meta-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
 }
 
-.info-col {
-  min-width: 0;
+.meta-item {
+  display: flex;
+  align-items: center;
+  color: var(--text);
+  background-color: white;
+  padding: 8px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
 }
 
+.meta-item i {
+  color: var(--primary);
+  margin-right: 8px;
+}
+
+/* Descripción */
+.descripcion {
+  margin-left: 15px;
+}
+
+/* Habilidades requeridas */
+.habilidades-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.habilidad-tag {
+  background-color: rgba(236, 106, 106, 0.1);
+  color: var(--primary);
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid var(--primary-light);
+  border-radius: 5px;
+}
+
+/* Información del usuario */
 .usuario-info {
   display: flex;
   align-items: center;
   background-color: #f8f9fa;
   padding: 15px;
   border: 1px solid #e9ecef;
-  margin-bottom: 25px;
+  border-radius: 5px;
 }
 
 .usuario-avatar {
@@ -143,87 +152,7 @@
   margin-right: 5px;
 }
 
-.meta-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 25px;
-  background-color: #f8f9fa;
-  padding: 15px;
-  border: 1px solid #e9ecef;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  color: var(--text);
-  background-color: white;
-  padding: 8px 12px;
-  border: 1px solid #e9ecef;
-}
-
-.meta-item i {
-  color: var(--primary);
-  margin-right: 8px;
-}
-
-.seccion-detalle {
-  margin-bottom: 30px;
-}
-
-.seccion-titulo {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--text);
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--primary-light);
-  display: flex;
-  align-items: center;
-}
-
-.seccion-titulo i {
-  margin-right: 8px;
-  color: var(--primary);
-}
-
-.habilidades-lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.habilidad-tag {
-  background-color: rgba(236, 106, 106, 0.1);
-  color: var(--primary);
-  padding: 5px 10px;
-  font-size: 14px;
-  border: 1px solid var(--primary-light);
-}
-
-.descripcion {
-  color: var(--text);
-  line-height: 1.6;
-  white-space: pre-line;
-}
-
-.sidebar-card {
-  background-color: white;
-  border: 1px solid var(--primary-light);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.card-titulo {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: var(--text);
-  border-bottom: 1px solid var(--primary-light);
-  padding-bottom: 10px;
-}
-
+/* Botones de acción */
 .botones-accion {
   display: flex;
   flex-direction: row;
@@ -231,14 +160,9 @@
   margin-top: 15px;
 }
 
-/* Estilos para los botones de acción */
 .boton-wrapper {
   flex: 1;
   display: flex;
-}
-
-.postular-form {
-  width: 100%;
 }
 
 .btn {
@@ -251,49 +175,89 @@
   text-align: center;
   box-sizing: border-box;
   border-radius: var(--radius);
-  cursor: pointer;
-  transition: all var(--transition);
-  text-decoration: none;
-  
-}
-
-.btn i {
-  margin-right: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
 }
 
 .btn-postular, .btn-chat {
   background-color: var(--primary);
   color: white;
-  width: 100%;
 }
 
 .btn-postular:hover, .btn-chat:hover {
   background-color: #d85a5a;
   color: white;
+}
+
+/* Contenedor del slider */
+.slider {
+  position: relative;
+  overflow: hidden; /* Oculta las imágenes que están fuera del área visible */
   width: 100%;
+  height: auto;
 }
 
-/* Estilo para el botón cuando ya está postulado */
-.btn-postulado {
-  background-color: #6c757d;
-  color: white;
-  cursor: not-allowed;
-  opacity: 0.8;
-  border: 2px solid #5a6268;
-  font-size: 15px;
+/* Wrapper para las imágenes */
+.slider-wrapper {
+  display: flex;
+  transition: transform 0.3s ease-in-out; /* Animación suave al cambiar de imagen */
+  height: 100%; /* Asegura que el slider ocupe toda la altura del bloque */
 }
 
-.btn-postulado i {
-  color: #a3d39c;
-  font-size: 15px;
+/* Cada imagen del slider */
+.slider-item {
+  min-width: 100%; /* Cada imagen ocupa el 100% del ancho del slider */
+  height: 100%; /* Asegura que cada imagen ocupe toda la altura del bloque */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center; /* Centra la imagen verticalmente */
+  justify-content: center; /* Centra la imagen horizontalmente */
+  overflow: hidden; /* Oculta las partes de la imagen que sobresalen */
 }
 
+/* Imágenes dentro del slider */
+.slider-item img {
+  max-width: 100%; /* La imagen no excederá el ancho del contenedor */
+  max-height: 100%; /* La imagen no excederá la altura del contenedor */
+  object-fit: contain; /* Ajusta la imagen para que se vea completa */
+  display: block;
+}
+
+/* Botones de navegación */
+.slider-prev,
+.slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none; /* Elimina el fondo del botón */
+  color: var(--primary); /* Cambia el color de la flecha */
+  border: none; /* Elimina el borde del botón */
+  padding: 0; /* Elimina el padding */
+  cursor: pointer;
+  z-index: 10;
+  font-size: 24px; /* Tamaño de la flecha */
+}
+
+.slider-prev {
+  left: 10px;
+}
+
+.slider-next {
+  right: 10px;
+}
+
+.slider-prev:hover,
+.slider-next:hover {
+  color: #d85a5a; /* Cambia el color de la flecha al pasar el cursor */
+}
+
+/* Responsividad */
 @media (max-width: 768px) {
-  .info-grid {
-    grid-template-columns: 1fr;
+  .detalle-layout {
+    grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
   }
-  
-  .imagen-principal {
-    height: 300px;
+
+  .galeria-imagenes {
+    margin-bottom: 20px;
   }
 }
