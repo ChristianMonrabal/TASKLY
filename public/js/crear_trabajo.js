@@ -21,8 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
             isValid = false;
         }
 
-        if (precio.value.trim() === "") {
+        const precioValor = precio.value.trim();
+        if (precioValor === "") {
             showError(precio, "Este campo es obligatorio.");
+            isValid = false;
+        } else if (isNaN(precioValor) || Number(precioValor) < 1 || Number(precioValor) > 1000) {
+            showError(precio, "Debe ser un número entre 1 y 1000.");
             isValid = false;
         }
 
@@ -31,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             showError(direccion, "Este campo es obligatorio.");
             isValid = false;
         } else if (!/^\d{5}$/.test(direccionValor)) {
-            showError(direccion, "Debe contener 5 dígitos.");
+            showError(direccion, "El código postal debe contener 5 dígitos.");
             isValid = false;
         }
 
@@ -82,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Validaciones individuales al perder el foco
     titulo.addEventListener("blur", () => {
         titulo.value.trim() === "" ? showError(titulo, "Este campo es obligatorio.") : clearError(titulo);
     });
@@ -92,7 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     precio.addEventListener("blur", () => {
-        precio.value.trim() === "" ? showError(precio, "Este campo es obligatorio.") : clearError(precio);
+        const valor = precio.value.trim();
+        if (valor === "") {
+            showError(precio, "Este campo es obligatorio.");
+        } else if (isNaN(valor) || Number(valor) < 1 || Number(valor) > 1000) {
+            showError(precio, "Debe ser un número entre 1 y 1000.");
+        } else {
+            clearError(precio);
+        }
     });
 
     direccion.addEventListener("blur", () => {
@@ -100,14 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (val === "") {
             showError(direccion, "Este campo es obligatorio.");
         } else if (!/^\d{5}$/.test(val)) {
-            showError(direccion, "Debe contener 5 dígitos.");
+            showError(direccion, "El codigo postal es de 5 digitos.");
         } else {
             clearError(direccion);
         }
     });
 });
 
-// Selección de categorías (sin cambios)
 document.addEventListener("DOMContentLoaded", function () {
     const tagContainer = document.getElementById("tag-container");
     const categoriasInput = document.getElementById("categorias");

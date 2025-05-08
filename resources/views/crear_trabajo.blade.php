@@ -74,7 +74,15 @@
             </div>
             <span id="image-error" class="error-message" style="color: red; display: none;">Debes añadir al menos una imagen.</span>
         </div>
-
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <br>
         <div class="form-group text-center">
             <button type="submit" class="btn btn-success">Crear</button>
