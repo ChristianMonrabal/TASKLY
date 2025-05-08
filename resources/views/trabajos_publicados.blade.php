@@ -27,6 +27,10 @@
                                 @endif
 
                                 <div class="icon-buttons">
+                                    <button title="Añadir fecha de encuentro" class="icon-button add-date-btn" data-trabajo-id="{{ $trabajo->id }}">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </button>
+
                                     <a href="{{ route('trabajos.editar', $trabajo->id) }}" title="Editar" class="edit-btn icon-button">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -34,10 +38,6 @@
                                     <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
-
-                                    <button title="Añadir fecha de encuentro" class="icon-button add-date-btn" data-trabajo-id="{{ $trabajo->id }}">
-                                        <i class="fas fa-calendar-plus"></i>
-                                    </button>
                                 </div>
                             </div>
                         </div>
