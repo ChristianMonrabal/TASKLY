@@ -61,8 +61,8 @@
                 @endforeach
             </div>
         @else
-            <div class="alert alert-info">
-                No has publicado ningún trabajo todavía.
+            <div class="alert">
+                <p>No has publicado ningún trabajo.</p>
             </div>
         @endif
     </div>

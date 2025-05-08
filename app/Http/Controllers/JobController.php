@@ -11,6 +11,8 @@ use App\Models\Estado;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class JobController extends Controller
 {
@@ -212,21 +214,29 @@ public function store(Request $request)
 }
 
                     
-    public function eliminar($id)
-    {
-        // Buscar el trabajo por ID
+public function eliminar($id)
+{
+    DB::beginTransaction();
+
+    try {
         $trabajo = Trabajo::findOrFail($id);
-    
-        // Eliminar las relaciones en la tabla pivote 'categorias_tipo_trabajo'
-        $trabajo->categoriastipotrabajo()->detach();
-    
-        // Eliminar las imágenes asociadas al trabajo
+
+        DB::table('postulaciones')->where('trabajo_id', $trabajo->id)->delete();
+        DB::table('calendario')->where('trabajo', $trabajo->id)->delete();
+        DB::table('chats')->where('trabajo_id', $trabajo->id)->delete();
+
         $trabajo->imagenes()->delete();
-    
-        // Eliminar el trabajo
+
+        DB::table('categorias_tipo_trabajo')->where('trabajo_id', $trabajo->id)->delete();
+
         $trabajo->delete();
-    
-        // Redirigir a la página de trabajos publicados con un mensaje de éxito
+
+        DB::commit();
         return redirect()->route('trabajos.publicados')->with('success', 'Trabajo eliminado correctamente.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error al eliminar trabajo ID '.$id.': '.$e->getMessage());
+        return redirect()->route('trabajos.publicados')->with('error', 'Error al eliminar el trabajo: '.$e);
     }
+}
 }
