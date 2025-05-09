@@ -19,30 +19,14 @@
                 <div class="info-grid">
                     <div class="info-col content-col">
                         <div class="seccion-detalle">
-                            <h3 class="seccion-titulo"><i class="fas fa-align-left"></i> Descripción del proyecto</h3>
+                            <h3 class="seccion-titulo"><i class="fas fa-align-left"></i> Descripción</h3>
                             <div class="descripcion">
                                 {{ $trabajo->descripcion }}
                             </div>
                         </div>
 
-                        @if ($trabajo->imagenes && $trabajo->imagenes->count() > 0)
-                            <div class="seccion-detalle">
-                                <h3 class="seccion-titulo"><i class="fas fa-images"></i> Imágenes del proyecto</h3>
-                                <div class="galeria-miniaturas">
-                                    @foreach ($trabajo->imagenes as $index => $imagen)
-                                        <div class="miniatura"
-                                            onclick="abrirModalImagen('{{ asset('img/trabajos/' . $imagen->ruta_imagen) }}', {{ $index }})"
-                                            data-index="{{ $index }}">
-                                            <img src="{{ asset('img/trabajos/' . $imagen->ruta_imagen) }}"
-                                                alt="{{ $trabajo->titulo }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-
                         <div class="seccion-detalle">
-                            <h3 class="seccion-titulo"><i class="fas fa-info-circle"></i> Información del trabajo</h3>
+                            <h3 class="seccion-titulo"><i class="fas fa-info-circle"></i> Información</h3>
                             <div class="meta-info">
                                 <div class="meta-item">
                                     <i class="fas fa-calendar"></i>
@@ -87,6 +71,22 @@
                                 <div class="habilidades-lista">
                                     @foreach ($trabajo->habilidades as $habilidad)
                                         <span class="habilidad-tag">{{ $habilidad->nombre }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($trabajo->imagenes && $trabajo->imagenes->count() > 0)
+                            <div class="seccion-detalle">
+                                <h3 class="seccion-titulo"><i class="fas fa-images"></i> Imágenes</h3>
+                                <div class="galeria-miniaturas">
+                                    @foreach ($trabajo->imagenes as $index => $imagen)
+                                        <div class="miniatura"
+                                            onclick="abrirModalImagen('{{ asset('img/trabajos/' . $imagen->ruta_imagen) }}', {{ $index }})"
+                                            data-index="{{ $index }}">
+                                            <img src="{{ asset('img/trabajos/' . $imagen->ruta_imagen) }}"
+                                                alt="{{ $trabajo->titulo }}">
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
