@@ -1,11 +1,6 @@
-/* Estilos para la vista de detalle de trabajo */
-
 .trabajo-detalle-container {
   max-width: 1100px;
-  margin: 20px auto 40px;
   background-color: white;
-  border: 1px solid var(--primary);
-  box-shadow: 0 5px 15px rgba(236, 106, 106, 0.15);
 }
 
 .galeria-imagenes {
@@ -37,7 +32,6 @@
   gap: 10px;
   overflow-x: auto;
   background-color: white;
-  border-top: 1px solid var(--primary-light);
 }
 
 .miniatura {
@@ -50,7 +44,8 @@
   border: 2px solid transparent;
 }
 
-.miniatura:hover, .miniatura.active {
+.miniatura:hover,
+.miniatura.active {
   opacity: 1;
   border-color: var(--primary);
 }
@@ -107,6 +102,7 @@
   padding: 15px;
   border: 1px solid #e9ecef;
   margin-bottom: 25px;
+  margin-top: 65px;
 }
 
 .usuario-avatar {
@@ -231,7 +227,6 @@
   margin-top: 15px;
 }
 
-/* Estilos para los botones de acción */
 .boton-wrapper {
   flex: 1;
   display: flex;
@@ -251,29 +246,28 @@
   text-align: center;
   box-sizing: border-box;
   border-radius: var(--radius);
-  cursor: pointer;
   transition: all var(--transition);
   text-decoration: none;
-  
 }
 
 .btn i {
   margin-right: 8px;
 }
 
-.btn-postular, .btn-chat {
+.btn-postular,
+.btn-chat {
   background-color: var(--primary);
   color: white;
   width: 100%;
 }
 
-.btn-postular:hover, .btn-chat:hover {
+.btn-postular:hover,
+.btn-chat:hover {
   background-color: #d85a5a;
   color: white;
   width: 100%;
 }
 
-/* Estilo para el botón cuando ya está postulado */
 .btn-postulado {
   background-color: #6c757d;
   color: white;
@@ -288,11 +282,81 @@
   font-size: 15px;
 }
 
+.imagen-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding: 0;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.imagen-modal img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #000;
+}
+
+.imagen-modal .cerrar {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.imagen-modal .cerrar:hover {
+  color: #EC6A6A;
+}
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  font-size: 2.5rem;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+
+
+.modal-nav.prev {
+  left: 20px;
+}
+
+.modal-nav.next {
+  right: 20px;
+}
+
+.contador-imagen {
+  position: absolute;
+  bottom: 30px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
 @media (max-width: 768px) {
   .info-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .imagen-principal {
     height: 300px;
   }
