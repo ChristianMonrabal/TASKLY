@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Notificacion extends Model
 {
@@ -10,14 +10,18 @@ class Notificacion extends Model
     
     protected $fillable = [
         'usuario_id',
-        'titulo',
         'mensaje',
-        'leida',
-        'fecha_envio'
+        'leido',           // <- aquí
+        'fecha_creacion',  // <- aquí
     ];
     
+    protected $casts = [
+        'leido'          => 'boolean',
+        'fecha_creacion' => 'datetime',
+    ];
+
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 }
