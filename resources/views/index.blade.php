@@ -76,12 +76,17 @@
       </div>
       
       <div class="category-box">
-        <select id="selectCategoria" class="category-select">
-          <option value="todas">Todas las categorías</option>
-          @foreach($categorias as $categoria)
-            <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-          @endforeach
-        </select>
+        <div class="category-dropdown">
+            <div class="dropdown-header" id="dropdownHeader">Selecciona categorías</div>
+            <div class="dropdown-options" id="dropdownOptions">
+                @foreach($categorias as $categoria)
+                    <label class="dropdown-option">
+                        <input type="checkbox" class="categoria-checkbox" value="{{ $categoria->id }}">
+                        {{ $categoria->nombre }}
+                    </label>
+                @endforeach
+            </div>
+        </div>
       </div>
       
       <button id="clearFilters" class="clear-btn">

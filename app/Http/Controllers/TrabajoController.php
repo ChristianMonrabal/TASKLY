@@ -163,6 +163,7 @@ public function index()
     {
         $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones']);
 
+        // Filtrar por búsqueda (nombre o descripción)
         if ($request->has('busqueda') && !empty($request->busqueda)) {
             $busqueda = $request->busqueda;
             $query->where(function ($q) use ($busqueda) {
@@ -171,9 +172,11 @@ public function index()
             });
         }
 
-        if ($request->has('categoria') && !empty($request->categoria) && $request->categoria !== 'todas') {
-            $query->whereHas('categoriastipotrabajo', function ($q) use ($request) {
-                $q->where('categoria_id', $request->categoria);
+        // Filtrar por categorías
+        if ($request->has('categorias') && !empty($request->categorias)) {
+            $categorias = explode(',', $request->categorias);
+            $query->whereHas('categoriastipotrabajo', function ($q) use ($categorias) {
+                $q->whereIn('categoria_id', $categorias);
             });
         }
 

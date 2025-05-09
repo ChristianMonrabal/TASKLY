@@ -3,65 +3,74 @@
  * Only handles filtering by name and category
  */
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Get references to filter elements
-    const inputBusqueda = document.getElementById('inputBusqueda');
-    const selectCategoria = document.getElementById('selectCategoria');
-    const clearFiltersBtn = document.getElementById('clearFilters');
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdownHeader = document.getElementById('dropdownHeader');
+    const dropdownOptions = document.getElementById('dropdownOptions');
+    const categoriaCheckboxes = document.querySelectorAll('.categoria-checkbox');
     const gridTrabajos = document.getElementById('gridTrabajos');
-    
-    // Initialize filters
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const inputBusqueda = document.getElementById('inputBusqueda');
+
+    // Inicializar filtros
     let filtros = {
         busqueda: '',
-        categoria: 'todas'
+        categorias: []
     };
-    
-    // Add event listeners
-    inputBusqueda.addEventListener('input', debounce(function() {
+
+    // Mostrar/ocultar las opciones al hacer clic en el encabezado
+    dropdownHeader.addEventListener('click', function () {
+        dropdownOptions.style.display = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Manejar selección de categorías
+    categoriaCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const value = this.value;
+
+            if (this.checked) {
+                filtros.categorias.push(value);
+            } else {
+                filtros.categorias = filtros.categorias.filter(categoria => categoria !== value);
+            }
+
+            aplicarFiltros();
+        });
+    });
+
+    // Manejar búsqueda por nombre o descripción
+    inputBusqueda.addEventListener('input', debounce(function () {
         filtros.busqueda = this.value.trim();
         aplicarFiltros();
-    }, 500));
-    
-    selectCategoria.addEventListener('change', function() {
-        filtros.categoria = this.value;
-        aplicarFiltros();
-    });
-    
-    // Clear filters button functionality
-    clearFiltersBtn.addEventListener('click', function() {
-        // Reset the input fields
+    }, 300));
+
+    // Botón para borrar filtros
+    clearFiltersBtn.addEventListener('click', function () {
+        filtros.busqueda = '';
+        filtros.categorias = [];
         inputBusqueda.value = '';
-        selectCategoria.value = 'todas';
-        
-        // Reset the filters object
-        filtros = {
-            busqueda: '',
-            categoria: 'todas'
-        };
-        
-        // Apply the cleared filters to refresh the results
+        categoriaCheckboxes.forEach(checkbox => checkbox.checked = false);
         aplicarFiltros();
     });
-    
-    // Function to apply filters
+
+    // Función para aplicar los filtros
     function aplicarFiltros() {
         gridTrabajos.innerHTML = '<div class="loading">Buscando trabajos...</div>';
-        
-        // Build URL with query params
+
+        // Construir la URL con los parámetros de los filtros
         let url = '/trabajos/filtrar-simple?';
         let params = [];
-        
+
         if (filtros.busqueda) {
             params.push('busqueda=' + encodeURIComponent(filtros.busqueda));
         }
-        
-        if (filtros.categoria && filtros.categoria !== 'todas') {
-            params.push('categoria=' + encodeURIComponent(filtros.categoria));
+
+        if (filtros.categorias.length > 0) {
+            params.push('categorias=' + encodeURIComponent(filtros.categorias.join(',')));
         }
-        
+
         url += params.join('&');
-        
-        // Fetch filtered results
+
+        // Realizar la solicitud para obtener los trabajos filtrados
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -77,14 +86,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 gridTrabajos.innerHTML = '<div class="no-trabajos">Error al buscar trabajos. Intenta de nuevo.</div>';
             });
     }
-    
-    // Load all jobs initially
+
+    // Cerrar el desplegable si se hace clic fuera de él
+    document.addEventListener('click', function (e) {
+        if (!dropdownHeader.contains(e.target) && !dropdownOptions.contains(e.target)) {
+            dropdownOptions.style.display = 'none';
+        }
+    });
+
+    // Cargar todos los trabajos inicialmente
     aplicarFiltros();
-    
-    // Debounce function to prevent excessive API calls
+
+    // Función de debounce para evitar múltiples solicitudes
     function debounce(func, wait) {
         let timeout;
-        return function() {
+        return function () {
             const context = this;
             const args = arguments;
             clearTimeout(timeout);
