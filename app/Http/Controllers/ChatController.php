@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Chat;
 use App\Models\User;
 use App\Models\Postulacion;
-
+use App\Models\Notificacion;
+use App\Events\NewNotificacion;
+use Illuminate\Support\Facades\Log;
 
 
 class ChatController extends Controller
@@ -87,12 +89,34 @@ class ChatController extends Controller
         $trabajo = $request->input('trabajo');
         $trabajador = $request->input('trabajador');
         $mensaje = $request->input('mensaje');
-
+    
+       // Guardar el mensaje en la base de datos
         $postulacion = new Chat();
         $postulacion->trabajo_id = $trabajo;
-        $postulacion->emisor = Auth::user()->id;
-        $postulacion->receptor = $trabajador;
+        $postulacion->emisor = Auth::user()->id;  // Emisor
+        $postulacion->receptor = $trabajador;     // Receptor
         $postulacion->contenido = $mensaje;
         $postulacion->save();
+
+        // Obtener el nombre del emisor correctamente
+        $emisorNombre = Auth::user()->nombre;  // Aquí es donde se obtiene el nombre del emisor
+
+        // Crear la notificación para el receptor (trabajador o cliente)
+        $notificacion = Notificacion::create([
+            'usuario_id' => $trabajador,
+            'mensaje' => 'Tienes un nuevo mensaje de ' . $emisorNombre,
+            'fecha_creacion' => now(),
+            'tipo' => 'mensaje',  // Aquí estamos indicando el tipo de la notificación (mensajes, valoraciones, etc.)
+        ]);
+
+        // Emitir el evento de notificación
+        event(new NewNotificacion($notificacion));  // Aquí estamos emitiendo el evento
+        Log::info('Evento de notificación emitido', ['notificacion' => $notificacion]); 
+        Log::info('Nombre del emisor', ['emisorNombre' => $emisorNombre]); // Log para verificar que se emite el evento
+        Log::info('Usuario autenticado', ['usuario' => Auth::user()]);
+        Log::info('Tipo de notificación', ['tipo' => $notificacion->tipo]);
+
+    
+        return response()->json(['status' => 'success']);
     }
 }

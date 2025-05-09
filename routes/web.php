@@ -19,6 +19,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\Admin\LogroController;
 use App\Http\Controllers\ValoracionesController;
+use App\Http\Controllers\NotificacionController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -171,3 +172,11 @@ Route::get('/mis-trabajos', [JobController::class, 'trabajosPublicados'])->name(
 // Eliminar trabajo
 Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('trabajos.eliminar');
 Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
+
+Route::get('/notificaciones', [NotificacionController::class, 'index'])
+     ->name('notificaciones.index');
+Route::post('/notificaciones/mark-all-read', [NotificacionController::class, 'markAllRead'])
+     ->name('notificaciones.markAllRead');
+Route::post('/notificaciones/sample', [NotificacionController::class, 'storeSample'])
+     ->name('notificaciones.sample');
+     

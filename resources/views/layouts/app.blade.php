@@ -85,50 +85,9 @@
                                 </a>
                             </div>
         
-                            <div class="notification-bell">
-                                <button class="notification-btn" id="notificationBtn">
-                                    <i class="fas fa-bell"></i>
-                                    <span class="notification-badge">3</span>
-                                </button>
-                                <div class="notification-dropdown" id="notificationDropdown">
-                                    <div class="notification-header">
-                                        <h3>Notificaciones</h3>
-                                        <a href="#" class="mark-all-read">Marcar todas como leídas</a>
-                                    </div>
-                                    <div class="notification-list">
-                                        <div class="notification-item unread">
-                                            <div class="notification-icon">
-                                                <i class="fas fa-comment"></i>
-                                            </div>
-                                            <div class="notification-content">
-                                                <p>Tienes un nuevo mensaje de <strong>Juan Pérez</strong></p>
-                                                <span class="notification-time">Hace 5 minutos</span>
-                                            </div>
-                                        </div>
-                                        <div class="notification-item unread">
-                                            <div class="notification-icon">
-                                                <i class="fas fa-heart"></i>
-                                            </div>
-                                            <div class="notification-content">
-                                                <p>Tu proyecto ha recibido una nueva valoración</p>
-                                                <span class="notification-time">Hace 1 hora</span>
-                                            </div>
-                                        </div>
-                                        <div class="notification-item">
-                                            <div class="notification-icon">
-                                                <i class="fas fa-check-circle"></i>
-                                            </div>
-                                            <div class="notification-content">
-                                                <p>Tu postulación para "Diseño web" ha sido aceptada</p>
-                                                <span class="notification-time">Ayer</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="notification-footer">
-                                        <a href="#" class="view-all">Ver todas</a>
-                                    </div>
-                                </div>
-                            </div>
+                            @auth
+                                @include('partials.notifications')
+                            @endauth
         
                             <div class="user-dropdown">
                                 <button class="dropdown-btn">
@@ -251,5 +210,6 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('scripts')
+    @vite(['resources/js/app.js'])
 </body>
 </html>
