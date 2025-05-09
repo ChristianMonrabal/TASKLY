@@ -41,8 +41,16 @@ body {
 
 /* Ajustes específicos para el header en la página de trabajos publicados */
 .main-header {
-    width: calc(100% - 20px) !important;
-    margin: 0 auto !important;
+    width: calc(100% - 20px);
+    left: 10px;
+    right: 10px;
+    position: fixed;
+}
+
+/* Ajustes para el contenido principal */
+.main-content {
+    margin-top: 0;
+    padding-top: 30px;
 }
 
 .page-container {
@@ -122,6 +130,84 @@ h1 {
     height: 100%;
     object-fit: cover;
     border-radius: var(--radius);
+}
+
+/* Estilos para mantener el diseño original */
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.card-img-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-img-container .image-wrapper {
+    position: relative;
+}
+
+.icon-buttons {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+}
+
+.icon-buttons button {
+    background-color: rgba(236, 106, 106, 0.6);
+    border: none;
+    color: #EC6A6A;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+
+.icon-buttons i {
+    font-size: 16px;
+}
+
+.icon-button {
+    background-color: rgba(221, 221, 221, 0.6);
+    border: none;
+    color: #EC6A6A;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.icon-buttons button,
+.icon-buttons a {
+    background-color: rgba(221, 221, 221, 0.6);
+    border: none;
+    color: #EC6A6A;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.icon-buttons i {
+    font-size: 16px;
 }
 
 .card-content {
@@ -307,4 +393,17 @@ h1 {
 
 .card {
     border: 2px solid var(--primary) !important; /* Fuerza el borde rojo */
+}
+
+.main-nav {
+    color: #ffffff !important;
+}
+
+.nav-link {
+    position: relative;
+    color: white;
+    font-weight: normal;
+    padding: 10px 5px;
+    text-decoration: none;
+    transition: all var(--transition);
 }

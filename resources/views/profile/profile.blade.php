@@ -14,16 +14,16 @@
 <body>
     @extends('layouts.app')
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-        <br><br>
-        <h1 class="text-center mb-4">Mi perfil</h1>
-
+        <br><br><br>
         <div class="profile-photo-wrapper">
-            @if($user->foto_perfil)
-            <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo">
+            @if($user->foto_perfil && empty(request('foto_perfil_camera')))
+                <img src="{{ asset('img/profile_images/' . $user->foto_perfil) }}" class="current-photo" id="current-photo">
+            @elseif(!empty(request('foto_perfil_camera')))
+                <img src="{{ request('foto_perfil_camera') }}" class="current-photo" id="current-photo">
             @else
-            <div class="no-photo-placeholder">
-                <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo">
-            </div>
+                <div class="no-photo-placeholder">
+                    <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo" id="current-photo">
+                </div>
             @endif
 
             <button type="button" class="camera-icon-btn" data-bs-toggle="modal" data-bs-target="#cameraModal">
@@ -104,10 +104,6 @@
             </div>
         </div>
 
-        <div id="photo-preview-container" style="display: none; margin: 20px auto; text-align: center;">
-            <p>Vista previa de la nueva foto:</p>
-            <img id="photo-preview" src="" alt="Foto capturada" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;">
-        </div>
         <input type="hidden" name="foto_perfil_camera" id="foto_perfil_camera">
 
         @if(session('success'))
@@ -160,4 +156,3 @@
     <script src="{{ asset('js/profile.js') }}"></script>
 </body>
 </html>
-

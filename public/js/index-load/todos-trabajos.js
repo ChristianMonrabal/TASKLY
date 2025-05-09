@@ -92,7 +92,13 @@ function renderizarTodosTrabajos(trabajos) {
             <div class="estrellas">${estrellasHTML}</div>
             <span class="num-valoraciones">(${numValoraciones})</span>
           </div>
-          <span class="categoria">${trabajo.categoriastipotrabajo && trabajo.categoriastipotrabajo.length > 0 ? trabajo.categoriastipotrabajo[0].nombre : 'Sin categoría'}</span>
+          <div class="categorias">
+            ${
+              trabajo.categoriastipotrabajo && trabajo.categoriastipotrabajo.length > 0
+                ? `<button class="categoria-btn">${trabajo.categoriastipotrabajo.slice(0, 2).map(categoria => categoria.nombre).join(', ')}</button>`
+                : '<button class="categoria-btn">Sin categoría</button>'
+            }
+          </div>
         </div>
       </div>
     `;

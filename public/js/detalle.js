@@ -3,6 +3,10 @@
  * Maneja la galería de imágenes y la interacción con el usuario
  */
 
+// Variables globales para el control de la galería de imágenes
+let imagenesTrabajo = [];
+let currentImageIndex = 0;
+
 // Función para cambiar la imagen principal al hacer clic en una miniatura
 function cambiarImagen(src) {
   const imagenGrande = document.getElementById('imagen-grande');
@@ -25,6 +29,64 @@ function cambiarImagen(src) {
   }
 }
 
+// Función para abrir el modal con la imagen seleccionada
+function abrirModalImagen(src, index) {
+  const modal = document.getElementById('modalImagen');
+  const modalImg = document.getElementById('modalImagenSrc');
+  const contador = document.getElementById('contadorImagen');
+  
+  // Obtener todas las imágenes del trabajo
+  const miniaturas = document.querySelectorAll('.miniatura img');
+  imagenesTrabajo = Array.from(miniaturas).map(img => img.src);
+  currentImageIndex = index;
+  
+  modal.style.display = 'flex';
+  modalImg.src = src;
+  
+  // Actualizar contador (1/5)
+  actualizarContadorImagen();
+  
+  // Mostrar u ocultar flechas de navegación según sea necesario
+  const flechaPrev = document.querySelector('.modal-nav.prev');
+  const flechaNext = document.querySelector('.modal-nav.next');
+  
+  flechaPrev.style.display = imagenesTrabajo.length > 1 ? 'block' : 'none';
+  flechaNext.style.display = imagenesTrabajo.length > 1 ? 'block' : 'none';
+}
+
+// Función para navegar entre imágenes en el modal
+function navegarImagen(direction) {
+  currentImageIndex += direction;
+  
+  // Circular entre las imágenes
+  if (currentImageIndex >= imagenesTrabajo.length) {
+    currentImageIndex = 0;
+  } else if (currentImageIndex < 0) {
+    currentImageIndex = imagenesTrabajo.length - 1;
+  }
+  
+  document.getElementById('modalImagenSrc').src = imagenesTrabajo[currentImageIndex];
+  actualizarContadorImagen();
+}
+
+// Función para actualizar el contador de imágenes
+function actualizarContadorImagen() {
+  const contador = document.getElementById('contadorImagen');
+  if (imagenesTrabajo.length > 1) {
+    contador.textContent = `${currentImageIndex + 1}/${imagenesTrabajo.length}`;
+    contador.style.display = 'block';
+  } else {
+    contador.style.display = 'none';
+  }
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+  document.getElementById('modalImagen').style.display = 'none';
+  document.getElementById('modalImagenSrc').src = '';
+  currentImageIndex = 0;
+}
+
 // Eventos para la página
 document.addEventListener('DOMContentLoaded', function() {
   // Inicializar galería de imágenes
@@ -35,18 +97,37 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Añadir controles de teclado para navegar por las imágenes
     document.addEventListener('keydown', function(e) {
-      if (miniaturas.length <= 1) return;
+      const modal = document.getElementById('modalImagen');
       
-      const activeIndex = Array.from(miniaturas).findIndex(m => m.classList.contains('active'));
-      if (activeIndex === -1) return;
-      
-      // Flecha derecha: siguiente imagen
-      if (e.key === 'ArrowRight' && activeIndex < miniaturas.length - 1) {
-        cambiarImagen(miniaturas[activeIndex + 1].querySelector('img').src);
+      // Si el modal está abierto, manejar navegación con teclado
+      if (modal.style.display === 'flex') {
+        // Flecha derecha o espacio: siguiente imagen
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          e.preventDefault();
+          navegarImagen(1);
+        }
+        // Flecha izquierda: imagen anterior
+        else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          navegarImagen(-1);
+        }
+        // Escape: cerrar modal
+        else if (e.key === 'Escape') {
+          cerrarModal();
+        }
       }
-      // Flecha izquierda: imagen anterior
-      else if (e.key === 'ArrowLeft' && activeIndex > 0) {
-        cambiarImagen(miniaturas[activeIndex - 1].querySelector('img').src);
+      // Si el modal no está abierto, navegar por las miniaturas
+      else if (miniaturas.length > 1) {
+        const activeIndex = Array.from(miniaturas).findIndex(m => m.classList.contains('active'));
+        
+        // Flecha derecha: siguiente imagen
+        if (e.key === 'ArrowRight' && activeIndex < miniaturas.length - 1) {
+          cambiarImagen(miniaturas[activeIndex + 1].querySelector('img').src);
+        }
+        // Flecha izquierda: imagen anterior
+        else if (e.key === 'ArrowLeft' && activeIndex > 0) {
+          cambiarImagen(miniaturas[activeIndex - 1].querySelector('img').src);
+        }
       }
     });
   }
@@ -204,3 +285,11 @@ function confirmarCancelacion() {
       }
   });
 }
+
+// Cerrar al hacer clic fuera de la imagen
+window.addEventListener('click', function (event) {
+  const modal = document.getElementById('modalImagen');
+  if (event.target === modal) {
+      cerrarModal();
+  }
+});
