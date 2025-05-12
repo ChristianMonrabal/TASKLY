@@ -20,6 +20,7 @@ use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\Admin\LogroController;
 use App\Http\Controllers\ValoracionesController;
 use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\ReporteController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -128,6 +129,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/valoraciones', [ValoracionesController::class, 'index'])->name('valoraciones.valoraciones');
     Route::post('/valoraciones/guardar', [ValoracionesController::class, 'store'])->name('valoraciones.store');
 
+    // Reportes
+    Route::get('/reportes/{user_id}', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
+
     // Rutas API Admin
     // —— API para el CRUD Admin ——
     // Usuarios:
@@ -174,9 +179,8 @@ Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('traba
 Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
 
 Route::get('/notificaciones', [NotificacionController::class, 'index'])
-     ->name('notificaciones.index');
+    ->name('notificaciones.index');
 Route::post('/notificaciones/mark-all-read', [NotificacionController::class, 'markAllRead'])
-     ->name('notificaciones.markAllRead');
+    ->name('notificaciones.markAllRead');
 Route::post('/notificaciones/sample', [NotificacionController::class, 'storeSample'])
-     ->name('notificaciones.sample');
-     
+    ->name('notificaciones.sample');
