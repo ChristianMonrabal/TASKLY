@@ -3,85 +3,104 @@
 @section('content')
 <div class="container payment-container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card shadow">
                 <div class="card-header text-center bg-primary text-white">
                     <h3 class="mb-0">Realizar Pago</h3>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <h4 class="border-bottom pb-2">Detalles del Trabajo</h4>
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p><strong>Título:</strong> {{ $trabajo->titulo }}</p>
-                                    <p><strong>Descripción:</strong> {{ Str::limit($trabajo->descripcion, 100) }}</p>
-                                </div>
-                                <div>
-                                    <p><strong>Precio:</strong> €{{ number_format($trabajo->precio, 2) }}</p>
-                                    <p><strong>Categoría:</strong> {{ $trabajo->categoriastipotrabajo->first()->nombre ?? 'No especificada' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <h4 class="border-bottom pb-2">Información del Trabajador</h4>
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p><strong>Nombre:</strong> {{ $trabajador->nombre }}</p>
-                                    <p><strong>Email:</strong> {{ $trabajador->email }}</p>
-                                </div>
-                                <div>
-                                    <p><strong>Experiencia:</strong> {{ $trabajador->perfil->experiencia ?? 'No especificada' }}</p>
-                                    <p><strong>Valoración media:</strong> 
-                                        @if(isset($trabajador->perfil) && $trabajador->perfil->valoracion_media)
-                                            {{ number_format($trabajador->perfil->valoracion_media, 1) }}/5
-                                        @else
-                                            Sin valoraciones
-                                        @endif
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <h4 class="border-bottom pb-2">Resumen del Pago</h4>
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p><strong>Importe:</strong> €{{ number_format($trabajo->precio, 2) }}</p>
-                                    <p><strong>Comisión TASKLY (10%):</strong> €{{ number_format($trabajo->precio * 0.1, 2) }}</p>
-                                </div>
-                                <div>
-                                    <p><strong>Trabajador recibe:</strong> €{{ number_format($trabajo->precio * 0.9, 2) }}</p>
-                                    <p><strong>Total a pagar:</strong> <span class="text-danger font-weight-bold">€{{ number_format($trabajo->precio, 2) }}</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4 class="border-bottom pb-2">Método de Pago</h4>
-                            <div id="payment-message" class="alert d-none"></div>
-                            
-                            <form id="payment-form">
-                                <input type="hidden" id="trabajo_id" value="{{ $trabajo->id }}">
-                                <input type="hidden" id="trabajador_id" value="{{ $trabajador->id }}">
-                                <input type="hidden" id="amount" value="{{ $trabajo->precio }}">
-                                
-                                <div id="payment-element" class="mb-3">
-                                    <!-- El elemento de pago de Stripe se insertará aquí -->
+                <div class="card-body p-0">
+                    <div class="row no-gutters">
+                        <!-- Columna izquierda: Extracto del pago -->
+                        <div class="col-md-5 border-right">
+                            <div class="payment-summary p-4">
+                                <div class="d-flex align-items-center mb-4">
+                                    <img src="/img/logo.png" alt="TASKLY" height="40" class="mr-3">
+                                    <div class="payment-badge">
+                                        <i class="fas fa-shield-alt"></i> Pago Seguro
+                                    </div>
                                 </div>
                                 
-                                <button id="submit-button" class="btn btn-primary btn-lg btn-block">
-                                    <div class="spinner d-none" id="spinner"></div>
-                                    <span id="button-text">Pagar ahora</span>
-                                </button>
-                            </form>
+                                <h4 class="mb-3">{{ $trabajo->titulo }}</h4>
+                                
+                                <div class="worker-info d-flex align-items-center mb-4">
+                                    <div class="avatar mr-2">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <span>{{ $trabajador->nombre }}</span>
+                                </div>
+                                
+                                <div class="divider my-4"></div>
+                                
+                                <div class="price-breakdown">
+                                    <h5 class="mb-3">Resumen del pago</h5>
+                                    
+                                    <div class="fee-summary mb-3">
+                                        <div class="row mb-2">
+                                            <div class="col-8">Subtotal</div>
+                                            <div class="col-4 text-right">€{{ number_format($trabajo->precio, 2) }}</div>
+                                        </div>
+                                        <div class="row text-muted small mb-1">
+                                            <div class="col-8">Comisión de la plataforma (10%)</div>
+                                            <div class="col-4 text-right">€{{ number_format($trabajo->precio * 0.1, 2) }}</div>
+                                        </div>
+                                        <div class="row text-muted small">
+                                            <div class="col-8">El trabajador recibe</div>
+                                            <div class="col-4 text-right">€{{ number_format($trabajo->precio * 0.9, 2) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="divider my-4"></div>
+                                
+                                <div class="total-amount mt-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>Total a pagar:</span>
+                                        <span class="font-weight-bold price-tag">€{{ number_format($trabajo->precio, 2) }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-guarantee mt-4 pt-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-lock text-primary mr-2"></i>
+                                        <small class="text-muted">Pago seguro mediante cifrado SSL</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Columna derecha: Método de pago -->
+                        <div class="col-md-7">
+                            <div class="payment-method p-4">
+                                <h4 class="mb-4">Método de Pago</h4>
+                                <div id="payment-message" class="alert d-none"></div>
+                                
+                                <div class="payment-card-header mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="far fa-credit-card text-primary mr-2"></i>
+                                        <h5 class="mb-0">Tarjeta de crédito o débito</h5>
+                                    </div>
+                                    <div class="mt-2 mb-3 accepted-cards">
+                                        <i class="fab fa-cc-visa mx-1"></i>
+                                        <i class="fab fa-cc-mastercard mx-1"></i>
+                                        <i class="fab fa-cc-amex mx-1"></i>
+                                    </div>
+                                </div>
+                                
+                                <form id="payment-form">
+                                    <input type="hidden" id="trabajo_id" value="{{ $trabajo->id }}">
+                                    <input type="hidden" id="trabajador_id" value="{{ $trabajador->id }}">
+                                    <input type="hidden" id="amount" value="{{ $trabajo->precio }}">
+                                    
+                                    <div id="payment-element" class="mb-4">
+                                        <!-- El elemento de pago de Stripe se insertará aquí -->
+                                    </div>
+                                    
+                                    <button id="submit-button" class="btn btn-primary btn-lg btn-block">
+                                        <div class="spinner d-none" id="spinner"></div>
+                                        <span id="button-text">Pagar ahora</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -93,12 +112,105 @@
 
 @section('styles')
 <style>
+    :root {
+        --payment-primary: #EC6A6A;
+        --payment-light: #f9f9f9;
+        --payment-dark: #333;
+        --payment-border: #eaeaea;
+    }
+    
     .payment-container {
         min-height: 70vh;
     }
     
+    .card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+        background-color: var(--primary);
+        border: none;
+        padding: 15px;
+    }
+    
+    .payment-info {
+        background-color: var(--payment-light);
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .payment-badge {
+        background-color: rgba(236, 106, 106, 0.1);
+        color: var(--primary);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .payment-badge i {
+        margin-right: 5px;
+    }
+    
+    .price-tag {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--payment-dark);
+    }
+    
+    .currency {
+        font-size: 18px;
+        vertical-align: top;
+        margin-right: 2px;
+    }
+    
+    .worker-info {
+        background-color: rgba(236, 106, 106, 0.05);
+        border-radius: 30px;
+        padding: 8px 15px;
+        display: inline-flex;
+    }
+    
+    .avatar i {
+        font-size: 22px;
+        color: var(--primary);
+    }
+    
+    .divider {
+        height: 1px;
+        background-color: var(--payment-border);
+        width: 100%;
+    }
+    
+    .fee-summary {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    }
+    
+    .fee-summary .row {
+        margin-bottom: 5px;
+    }
+    
+    .total-amount {
+        font-size: 18px;
+    }
+    
+    .total-amount .font-weight-bold {
+        color: var(--primary);
+        font-size: 22px;
+    }
+    
     #payment-element {
-        margin-bottom: 24px;
+        margin: 20px 0;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
     
     #submit-button {
@@ -109,10 +221,15 @@
         padding: 12px 16px;
         width: 100%;
         position: relative;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
     
     #submit-button:hover {
         background-color: #d85959;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(236, 106, 106, 0.3);
     }
     
     .spinner,
@@ -182,6 +299,7 @@
 
 @section('scripts')
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let stripe;
     let elements;
@@ -367,16 +485,23 @@
                 return;
             }
             
-            // Mostrar mensaje de éxito
-            document.getElementById('payment-message').textContent = 'Pago completado con éxito. Redirigiendo...';
-            document.getElementById('payment-message').classList.remove('d-none', 'alert-danger');
-            document.getElementById('payment-message').classList.add('alert-success');
-            
-            // Esperar un momento antes de redirigir
-            setTimeout(() => {
-                // Redirigimos a la página de pago completado
-                window.location.href = '{{ route("payment.complete") }}';
-            }, 2000);
+            // Mostrar SweetAlert de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Pago completado con éxito!',
+                text: 'El trabajador ha sido notificado y comenzará a trabajar en tu solicitud.',
+                confirmButtonText: 'Valorar al trabajador',
+                confirmButtonColor: '#EC6A6A',
+                timer: 5000,
+                timerProgressBar: true,
+                allowOutsideClick: false
+            }).then(() => {
+                // Guardar los datos en sesión para la valoración
+                sessionStorage.setItem('trabajo_id', '{{ $trabajo->id }}');
+                sessionStorage.setItem('trabajador_id', '{{ $trabajador->id }}');
+                // Usar la ruta de valoraciones existente
+                window.location.href = '{{ route("valoraciones.valoraciones") }}';
+            });
             
         } catch (error) {
             console.error("Error updating payment status:", error);

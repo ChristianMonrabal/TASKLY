@@ -8,11 +8,10 @@ use App\Models\Trabajo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
+use Stripe\StripeClient;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
-use Stripe\Stripe;
-use Stripe\Transfer;
-use Stripe\Account;
 
 class PaymentController extends Controller
 {
@@ -29,221 +28,131 @@ class PaymentController extends Controller
      */
     public function show(Trabajo $trabajo)
     {
-        // Validar que el trabajo existe y pertenece al usuario logueado
         if (Auth::check() && Auth::id() !== $trabajo->cliente_id) {
-            return redirect()->route('trabajos.index')->with('error', 'No tienes permiso para realizar este pago');
+            return redirect()->route('trabajos.index')
+                ->with('error', 'No tienes permiso para realizar este pago');
         }
-        
-        // Verificar que hay un trabajador aceptado para este trabajo
+
         $postulacion = Postulacion::where('trabajo_id', $trabajo->id)
             ->where('estado_id', 10) // Estado aceptado
             ->first();
-        
-        if (!$postulacion) {
-            return redirect()->route('candidatos.trabajo', $trabajo->id)->with('error', 'No hay un trabajador aceptado para este trabajo');
+
+        if (! $postulacion) {
+            return redirect()->route('candidatos.trabajo', $trabajo->id)
+                ->with('error', 'No hay un trabajador aceptado para este trabajo');
         }
-        
-        // Obtener información del trabajador
+
         $trabajador = $postulacion->trabajador;
-        
-        // Datos para la vista
-        $datos = [
-            'trabajador' => $trabajador,
-            'trabajo' => $trabajo,
-            'postulacion' => $postulacion,
-            'stripe_key' => config('services.stripe.key'),
-            'usuario_actual' => Auth::user()
-        ];
-        
-        return view('payment', $datos);
+
+        return view('payment', [
+            'trabajador'     => $trabajador,
+            'trabajo'        => $trabajo,
+            'postulacion'    => $postulacion,
+            'stripe_key'     => config('services.stripe.key'),
+            'usuario_actual' => Auth::user(),
+        ]);
     }
     
     /**
-     * Crea un PaymentIntent de Stripe
+     * Crea un PaymentIntent de Stripe (Destination Charges)
      */
     public function createIntent(Request $request)
     {
+        $validated = $request->validate([
+            'trabajo_id'    => 'required|integer|exists:trabajos,id',
+            'trabajador_id' => 'required|integer|exists:users,id',
+            'amount'        => 'required|numeric|min:1',
+        ]);
+
+        $amount = (int) ($validated['amount'] * 100);
+        $trabajadorId = $validated['trabajador_id'];
+
+        // Mapeo user_id → Stripe Connect account ID
+        $cuentas = [
+            2 => 'acct_1RLmSdIJN9D9qNg6',  // Alex
+            3 => 'acct_1RLmMlIE2Y4Yj6ja',  // Daniel
+            4 => 'acct_1RLTsZIxgDk5hYr7',  // Christian
+        ];
+        $accountId = $cuentas[$trabajadorId] ?? null;
+
+        // Fallback: si no está en el array, lo leemos de la BD
+        if (! $accountId) {
+            $datosB = DatosBancarios::where('usuario_id', $trabajadorId)->first();
+            $accountId = $datosB->stripe_account_id ?? null;
+        }
+
+        if (! $accountId) {
+            return response()->json(['error' => 'El trabajador no tiene cuenta Stripe configurada'], 400);
+        }
+
+        $applicationFee = (int) ($amount * 0.1); // 10% plataforma
+
+        Log::info('Creando PaymentIntent (Destination Charges)', [
+            'amount'          => $amount,
+            'application_fee' => $applicationFee,
+            'destination'     => $accountId,
+        ]);
+
         try {
-            // Validación
-            $validated = $request->validate([
-                'trabajo_id' => 'required|integer|exists:trabajos,id',
-                'trabajador_id' => 'required|integer|exists:users,id',
-                'amount' => 'required|numeric|min:1'
+            $stripe = new StripeClient(config('services.stripe.secret'));
+
+            $intent = $stripe->paymentIntents->create([
+                'amount'                 => $amount,
+                'currency'               => 'eur',
+                'payment_method_types'   => ['card'],
+                'application_fee_amount' => $applicationFee,
+                'transfer_data'          => [
+                    'destination' => $accountId,
+                ],
+                'metadata'               => [
+                    'trabajo_id'    => $validated['trabajo_id'],
+                    'trabajador_id' => $trabajadorId,
+                ],
             ]);
-            
-            // Convertir cantidad a centavos (Stripe usa centavos)
-            $amount = (int)($validated['amount'] * 100);
-            
-            // Crear el PaymentIntent
-            $intent = PaymentIntent::create([
-                'amount' => $amount,
-                'currency' => 'eur',
-                'metadata' => [
-                    'trabajo_id' => $validated['trabajo_id'],
-                    'trabajador_id' => $validated['trabajador_id']
-                ]
-            ]);
-            
-            // Devolver el client_secret que se usará en el frontend
+
             return response()->json([
-                'clientSecret' => $intent->client_secret
+                'clientSecret' => $intent->client_secret,
+                'account_id'   => $accountId,
             ]);
-            
         } catch (ApiErrorException $e) {
-            Log::error('Error al crear PaymentIntent: ' . $e->getMessage());
-            return response()->json([
-                'error' => $e->getMessage()
-            ], 500);
+            Log::error('Stripe API Error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
     
     /**
-     * Actualiza el estado del pago
+     * Actualiza el estado del pago tras la confirmación en el frontend.
+     * Con Destination Charges no hace falta Transfer manual.
      */
     public function updatePaymentStatus(Request $request)
     {
-        try {
-            // Validación
-            $validated = $request->validate([
-                'payment_intent_id' => 'required|string',
-                'trabajo_id' => 'required|integer',
-                'trabajador_id' => 'required|integer'
-            ]);
-            
-            $trabajoId = $validated['trabajo_id'];
-            $trabajadorId = $validated['trabajador_id'];
-            
-            // Recuperamos el PaymentIntent
-            $intent = PaymentIntent::retrieve($request->payment_intent_id);
-            
-            if ($intent->status === 'succeeded') {
-                // PASO 1: Actualizar el estado de la postulación
-                $postulacion = Postulacion::where('trabajo_id', $trabajoId)
-                    ->where('trabajador_id', $trabajadorId)
-                    ->first();
-                
-                if (!$postulacion) {
-                    Log::error('No se encontró la postulación para actualizar el estado de pago', [
-                        'trabajo_id' => $trabajoId,
-                        'trabajador_id' => $trabajadorId
-                    ]);
-                    
-                    return response()->json([
-                        'error' => 'No se encontró la postulación'
-                    ], 404);
-                }
-                
-                // Actualizar el estado a pagado (suponiendo que el ID de estado pagado es 11)
-                $postulacion->estado_id = 11; // Estado pagado
-                $postulacion->save();
-                
-                // PASO 2: Transferencia al trabajador desde la plataforma
-                // Buscamos la cuenta conectada del trabajador, basado en los valores proporcionados
-                
-                // Asignamos directamente los IDs de cuentas correctos
-                $cuentasStripe = [
-                    1 => 'acct_1RLTsZIxgDk5hYr7', // Christian (TASKLY)
-                    2 => 'acct_1RLmSdIJN9D9qNg6', // Alex
-                    3 => 'acct_1RLmMlIE2Y4Yj6ja'  // Juan/Daniel
-                ];
-                
-                Log::info('Transferencia a trabajador - IDs específicos', [
-                    'trabajador_id' => $trabajadorId,
-                    'cuentas_disponibles' => array_keys($cuentasStripe)
-                ]);
-                
-                // Obtenemos el ID de cuenta del trabajador
-                $accountId = $cuentasStripe[$trabajadorId] ?? null;
-                
-                if (!$accountId) {
-                    // Como plan B, buscamos en la base de datos
-                    $datosBancarios = DatosBancarios::where('usuario_id', $trabajadorId)->first();
-                    if ($datosBancarios && $datosBancarios->stripe_account_id) {
-                        $accountId = $datosBancarios->stripe_account_id;
-                    }
-                }
-                
-                Log::info('ID de cuenta para la transferencia', [
-                    'trabajador_id' => $trabajadorId,
-                    'account_id' => $accountId
-                ]);
-                
-                if ($accountId) {
-                    try {
-                        // Verificamos que la cuenta existe y está activa
-                        $account = Account::retrieve($accountId);
-                        
-                        Log::info('Cuenta Stripe del trabajador', [
-                            'account_id' => $accountId,
-                            'charges_enabled' => $account->charges_enabled,
-                            'payouts_enabled' => $account->payouts_enabled
-                        ]);
-                        
-                        // Calculamos el monto a transferir (90% para el trabajador)
-                        $amount = $intent->amount;
-                        $transferAmount = (int)($amount * 0.9); // 90% para el trabajador
-                        
-                        if ($account->charges_enabled) {
-                            Log::info('Iniciando transferencia al trabajador', [
-                                'amount' => $transferAmount,
-                                'currency' => 'eur',
-                                'destination' => $accountId
-                            ]);
-                            
-                            // Creamos la transferencia a la cuenta conectada
-                            $transfer = Transfer::create([
-                                'amount' => $transferAmount,
-                                'currency' => 'eur',
-                                'destination' => $accountId,
-                                'transfer_group' => "TRABAJO-{$trabajoId}",
-                                'metadata' => [
-                                    'trabajo_id' => $trabajoId,
-                                    'trabajador_id' => $trabajadorId
-                                ]
-                            ]);
-                            
-                            Log::info('Transferencia al trabajador completada con éxito', [
-                                'transfer_id' => $transfer->id,
-                                'amount' => $transferAmount / 100, // Convertimos de centavos a euros para el log
-                                'destination' => $accountId
-                            ]);
-                        } else {
-                            Log::warning('La cuenta Stripe del trabajador no está habilitada para recibir pagos', [
-                                'account_id' => $accountId,
-                                'charges_enabled' => $account->charges_enabled,
-                                'payouts_enabled' => $account->payouts_enabled
-                            ]);
-                        }
-                    } catch (\Exception $e) {
-                        // Capturamos el error pero continuamos con el proceso
-                        // El administrador podrá transferir manualmente más tarde
-                        Log::error('Error al transferir fondos al trabajador: ' . $e->getMessage(), [
-                            'error' => $e->getMessage(),
-                            'trabajador_id' => $trabajadorId,
-                            'stripe_account_id' => $accountId
-                        ]);
-                    }
-                } else {
-                    Log::warning('El trabajador no tiene cuenta Stripe configurada', [
-                        'trabajador_id' => $trabajadorId
-                    ]);
-                }
-                
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Pago completado correctamente'
-                ]);
-            } else {
-                return response()->json([
-                    'error' => 'El pago no ha sido completado'
-                ], 400);
+        $validated = $request->validate([
+            'payment_intent_id' => 'required|string',
+            'trabajo_id'        => 'required|integer',
+            'trabajador_id'     => 'required|integer',
+        ]);
+
+        $intent = PaymentIntent::retrieve($validated['payment_intent_id']);
+
+        if ($intent->status === 'succeeded') {
+            $post = Postulacion::where('trabajo_id', $validated['trabajo_id'])
+                ->where('trabajador_id', $validated['trabajador_id'])
+                ->first();
+
+            if (! $post) {
+                return response()->json(['error' => 'No se encontró la postulación'], 404);
             }
-        } catch (\Exception $e) {
-            Log::error('Error al actualizar el estado del trabajo: ' . $e->getMessage());
+
+            $post->estado_id = 11; // pagado
+            $post->save();
+
             return response()->json([
-                'error' => 'Error al actualizar el estado del trabajo: ' . $e->getMessage()
-            ], 500);
+                'success' => true,
+                'message' => 'Pago completado correctamente',
+            ]);
         }
+
+        return response()->json(['error' => 'El pago no ha sido completado'], 400);
     }
     
     /**
@@ -254,11 +163,9 @@ class PaymentController extends Controller
         $publicKey = config('services.stripe.key');
         $secretKey = config('services.stripe.secret');
         
-        $isConfigured = !empty($publicKey) && !empty($secretKey);
-        
         return response()->json([
-            'configured' => $isConfigured,
-            'public_key' => $isConfigured ? $publicKey : null
+            'configured' => ! empty($publicKey) && ! empty($secretKey),
+            'public_key' => $publicKey ?: null,
         ]);
     }
 }
