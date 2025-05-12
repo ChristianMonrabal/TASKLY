@@ -189,7 +189,7 @@ public function index()
 
     public function mostrarDetalle($id)
     {
-        $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones'])->findOrFail($id);
+        $trabajo = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'estado', 'cliente', 'valoraciones', 'postulaciones'])->findOrFail($id);
 
         $yaPostulado = false;
         if (Auth::check()) {
