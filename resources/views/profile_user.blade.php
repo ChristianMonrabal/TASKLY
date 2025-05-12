@@ -45,7 +45,7 @@
                     <a href="{{ route('vista.chat', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
                         <i class="fas fa-comments"></i> Enviar mensaje
                     </a>
-                    <a href="{{ route('vista.chat', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
+                    <a href="{{ route('reportes.index', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
                         <i class="fas fa-exclamation-triangle"></i> Reportar usuario
                     </a>
                 </div>

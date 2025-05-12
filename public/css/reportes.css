@@ -1,0 +1,30 @@
+h2 {
+    color : #EC6A6A;
+    text-align: center;
+}
+
+button {
+    background-color: #EC6A6A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.center {
+    text-align: center;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    resize: none;
+    border: #EC6A6A double 2px;
+}
