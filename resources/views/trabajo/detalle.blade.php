@@ -149,7 +149,7 @@
 
                                     <div class="boton-wrapper">
                                         <a href="{{ route('vista.chat', $trabajo->id) }}" class="btn btn-chat" title="Chatear">
-                                            <i class="fas fa-comments fa-lg"></i> Mensajes
+                                            <i class="fas fa-comments fa-lg"></i>
                                         </a>
                                     </div>
                                 @else
