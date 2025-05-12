@@ -3,58 +3,55 @@
  * Este archivo contiene la lógica para el funcionamiento de los botones de scroll
  */
 
-// Función para inicializar los botones de scroll
-function inicializarBotonesScroll() {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('Inicializando botones de scroll...');
-  
-  // Asegurarse de que los elementos existen en el DOM
+
+  // Seleccionar elementos del DOM
+  const cardScrollNuevos = document.getElementById('cardScrollNuevos');
+  const btnLeftNuevos = document.getElementById('btn-left-nuevos');
+  const btnRightNuevos = document.getElementById('btn-right-nuevos');
+
+  // Verificar que los elementos existen
   if (!cardScrollNuevos || !btnLeftNuevos || !btnRightNuevos) {
     console.error('No se encontraron todos los elementos necesarios para los botones de scroll');
     return;
   }
-  
-  // Eliminar eventos existentes para evitar duplicados
-  btnLeftNuevos.removeEventListener('click', scrollIzquierda);
-  btnRightNuevos.removeEventListener('click', scrollDerecha);
-  
-  // Agregar nuevos event listeners
-  btnLeftNuevos.addEventListener('click', scrollIzquierda);
-  btnRightNuevos.addEventListener('click', scrollDerecha);
-  
-  console.log('Botones de scroll inicializados correctamente');
-  
-  // Mostrar/ocultar botones según sea necesario
-  actualizarBotonesScroll();
-  
-  // Actualizar estado de botones al cargar y al hacer scroll
-  cardScrollNuevos.addEventListener('scroll', actualizarBotonesScroll);
-  window.addEventListener('resize', actualizarBotonesScroll);
-}
 
-// Función para manejar el scroll hacia la izquierda
-function scrollIzquierda() {
-  console.log('Botón izquierdo clickeado');
-  if (cardScrollNuevos) {
-    // Calcular la distancia de scroll basada en el ancho visible
+  // Función para manejar el scroll hacia la izquierda
+  function scrollIzquierda() {
+    console.log('Botón izquierdo clickeado');
     const scrollDistance = Math.min(cardScrollNuevos.clientWidth * 0.8, 800);
     cardScrollNuevos.scrollBy({
       left: -scrollDistance,
       behavior: 'smooth'
     });
   }
-}
 
-// Función para manejar el scroll hacia la derecha
-function scrollDerecha() {
-  console.log('Botón derecho clickeado');
-  if (cardScrollNuevos) {
-    // Calcular la distancia de scroll basada en el ancho visible
+  // Función para manejar el scroll hacia la derecha
+  function scrollDerecha() {
+    console.log('Botón derecho clickeado');
     const scrollDistance = Math.min(cardScrollNuevos.clientWidth * 0.8, 800);
     cardScrollNuevos.scrollBy({
       left: scrollDistance,
       behavior: 'smooth'
     });
   }
-}
 
-// La función se llamará desde el script principal después de cargar los elementos necesarios
+  // Función para actualizar el estado de los botones de scroll
+  function actualizarBotonesScroll() {
+    // Siempre mostrar ambos botones
+    btnLeftNuevos.style.display = 'block';
+    btnRightNuevos.style.display = 'block';
+  }
+
+  // Agregar eventos a los botones
+  btnLeftNuevos.addEventListener('click', scrollIzquierda);
+  btnRightNuevos.addEventListener('click', scrollDerecha);
+
+  // Actualizar el estado de los botones al cargar y al hacer scroll
+  cardScrollNuevos.addEventListener('scroll', actualizarBotonesScroll);
+  window.addEventListener('resize', actualizarBotonesScroll);
+
+  // Inicializar el estado de los botones después de un pequeño retraso
+  setTimeout(actualizarBotonesScroll, 100); // Asegura que el contenido esté completamente cargado
+});
