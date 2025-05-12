@@ -121,14 +121,22 @@
                             @if (Auth::check())
                                 @if (Auth::id() != $trabajo->cliente_id)
                                     <div class="boton-wrapper">
-                                        @if (isset($yaPostulado) && $yaPostulado)
-                                            <form id="cancelar-postulacion-form" action="{{ route('trabajos.cancelarPostulacion', $trabajo->id) }}" method="POST" style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                            <button type="button" class="btn btn-cancelar" onclick="confirmarCancelacion()">
-                                                <i class="fas fa-times"></i> Cancelar postulación
-                                            </button>
+                                        @php
+                                            $postulacion = $trabajo->postulaciones->where('trabajador_id', Auth::id())->first();
+                                        @endphp
+
+                                        @if ($postulacion)
+                                            @if ($postulacion->estado_id == 11) {{-- Estado "rechazado" --}}
+                                                <button class="btn btn-danger" disabled>No has sido seleccionado</button>
+                                            @else
+                                                <form id="cancelar-postulacion-form" action="{{ route('trabajos.cancelarPostulacion', $trabajo->id) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                                <button type="button" class="btn btn-cancelar" onclick="confirmarCancelacion()">
+                                                    <i class="fas fa-times"></i> Cancelar postulación
+                                                </button>
+                                            @endif
                                         @else
                                             <form class="postular-form" action="{{ route('trabajos.postular', $trabajo->id) }}" method="POST">
                                                 @csrf
@@ -141,7 +149,7 @@
 
                                     <div class="boton-wrapper">
                                         <a href="{{ route('vista.chat', $trabajo->id) }}" class="btn btn-chat" title="Chatear">
-                                            <i class="fas fa-comments fa-lg"></i>
+                                            <i class="fas fa-comments fa-lg"></i> Mensajes
                                         </a>
                                     </div>
                                 @else
@@ -158,7 +166,7 @@
 
                                 <div class="boton-wrapper">
                                     <button class="btn btn-chat" disabled title="Chatear">
-                                        <i class="fas fa-comments fa-lg"></i>
+                                        <i class="fas fa-comments fa-lg"></i> Mensajes
                                     </button>
                                 </div>
                             @endif
