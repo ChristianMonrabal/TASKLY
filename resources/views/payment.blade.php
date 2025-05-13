@@ -500,9 +500,17 @@
             }
             
             // Preparamos la URL a la que redirigir a la página de valoraciones existente
-            let redirectUrl = data.valoracion_data && data.valoracion_data.redirect_url 
+            let baseUrl = data.valoracion_data && data.valoracion_data.redirect_url 
                 ? data.valoracion_data.redirect_url 
                 : '{{ route("valoraciones.valoraciones") }}';
+                
+            // Añadimos los parámetros necesarios a la URL para pasarlos al backend
+            let redirectUrl = baseUrl;
+            if (data.valoracion_data) {
+                redirectUrl = baseUrl + '?trabajo_id=' + data.valoracion_data.trabajo_id + 
+                              '&trabajador_id=' + data.valoracion_data.trabajador_id + 
+                              '&postulacion_id=' + data.valoracion_data.postulacion_id;
+            }
             
             console.log('URL de redirección preparada:', redirectUrl);
             
