@@ -56,12 +56,19 @@
                             
                             <!-- Acciones fuera del enlace para no interferir con el clic -->
                             <div class="action-icons text-center mt-2">
-                                <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
-                                    <i class="fas fa-check"></i>
-                                </a>
-                                <a href="#" class="action-icon reject mx-1" data-id="{{ $postulacion->id }}">
-                                    <i class="fas fa-times"></i>
-                                </a>
+                                @if($postulacion->estado_id === 10)
+                                    <!-- Mostramos un indicador de aceptado pero no el botón de pago -->
+                                    <span class="badge bg-success text-white p-2">
+                                        <i class="fas fa-check mr-1"></i> Aceptado
+                                    </span>
+                                @else
+                                    <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <a href="#" class="action-icon reject mx-1" data-id="{{ $postulacion->id }}">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                @endif
                                 <a href="/chat?user_id={{ $postulacion->trabajador->id }}" class="action-icon chat mx-1">
                                     <i class="fas fa-comments"></i>
                                 </a>

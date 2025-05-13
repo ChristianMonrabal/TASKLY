@@ -11,6 +11,25 @@ class ValoracionesController extends Controller
     {
         return view('valoraciones.valoraciones');
     }
+    
+    /**
+     * Muestra la página para valorar a un trabajador tras completar un pago
+     */
+    public function mostrarFormularioValoracion($trabajador_id)
+    {
+        // Obtener el trabajador
+        $trabajador = \App\Models\User::findOrFail($trabajador_id);
+        
+        // Obtener valoraciones previas del trabajador para mostrarlas
+        $valoraciones = Valoracion::where('trabajador_id', $trabajador_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('valoraciones.crear', [
+            'trabajador' => $trabajador,
+            'valoraciones' => $valoraciones
+        ]);
+    }
 
     public function store(Request $request)
 {
