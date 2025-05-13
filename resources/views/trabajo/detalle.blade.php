@@ -96,15 +96,16 @@
                     <div class="info-col sidebar-col">
                         <div class="sidebar-card">
                             <h4 class="card-titulo">Publicado por {{ $trabajo->cliente->nombre }}</h4>
-                            <div class="usuario-info">
-                                <div class="usuario-avatar">
-                                    <img src="{{ $trabajo->cliente->foto_perfil 
-                                                ? asset('img/profile_images/' . $trabajo->cliente->foto_perfil) 
-                                                : asset('img/profile_images/perfil_default.png') }}"
-                                        alt="Foto de {{ $trabajo->cliente->nombre }}">
+                                <div class="usuario-info">
+                                    <div class="usuario-avatar">
+                                        <a href="{{ route('perfil.usuario', ['nombre' => Str::slug($trabajo->cliente->nombre . ' ' . $trabajo->cliente->apellidos)]) }}">
+                                            <img src="{{ $trabajo->cliente->foto_perfil 
+                                                        ? asset('img/profile_images/' . $trabajo->cliente->foto_perfil) 
+                                                        : asset('img/profile_images/perfil_default.png') }}"
+                                                alt="Foto de {{ $trabajo->cliente->nombre }}">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-
                             <div>
                                 <div class="usuario-nombre">{{ $trabajo->cliente->nombre ?? 'Usuario' }}</div>
                                 @php
