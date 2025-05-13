@@ -57,10 +57,10 @@
                             <!-- Acciones fuera del enlace para no interferir con el clic -->
                             <div class="action-icons text-center mt-2">
                                 @if($postulacion->estado_id === 10)
-                                    <!-- Botón de pago para candidatos aceptados -->
-                                    <a href="{{ route('payment.show', $trabajo->id) }}" class="btn btn-success btn-sm btn-pagar">
-                                        <i class="fas fa-credit-card mr-1"></i> Realizar Pago
-                                    </a>
+                                    <!-- Mostramos un indicador de aceptado pero no el botón de pago -->
+                                    <span class="badge bg-success text-white p-2">
+                                        <i class="fas fa-check mr-1"></i> Aceptado
+                                    </span>
                                 @else
                                     <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
                                         <i class="fas fa-check"></i>

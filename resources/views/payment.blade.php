@@ -485,23 +485,50 @@
                 return;
             }
             
-            // Mostrar SweetAlert de éxito
+            // Registra los datos para depuración
+            console.log('Respuesta completa del servidor:', data);
+            
+            // Guarda los datos importantes inmediatamente en sessionStorage
+            if (data.valoracion_data) {
+                sessionStorage.setItem('trabajo_id', data.valoracion_data.trabajo_id);
+                sessionStorage.setItem('trabajador_id', data.valoracion_data.trabajador_id);
+                sessionStorage.setItem('postulacion_id', data.valoracion_data.postulacion_id);
+            } else {
+                // Datos fallback si no vienen del backend
+                sessionStorage.setItem('trabajo_id', trabajo_id);
+                sessionStorage.setItem('trabajador_id', trabajador_id);
+            }
+            
+            // Preparamos la URL a la que redirigir a la página de valoraciones existente
+            let redirectUrl = data.valoracion_data && data.valoracion_data.redirect_url 
+                ? data.valoracion_data.redirect_url 
+                : '{{ route("valoraciones.valoraciones") }}';
+            
+            console.log('URL de redirección preparada:', redirectUrl);
+            
+            // Mostrar notificación simple con redirección directa
+            console.log('Mostrando SweetAlert y preparando redirección a:', redirectUrl);
+            
+            // Primero agregamos la redirección con un pequeño retraso para asegurar que funcione
+            setTimeout(function() {
+                window.location.href = redirectUrl;
+            }, 2000);
+            
+            // Luego mostramos el SweetAlert (la redirección ocurrirá de todos modos)
             Swal.fire({
                 icon: 'success',
                 title: '¡Pago completado con éxito!',
-                text: 'El trabajador ha sido notificado y comenzará a trabajar en tu solicitud.',
-                confirmButtonText: 'Valorar al trabajador',
-                confirmButtonColor: '#EC6A6A',
-                timer: 5000,
-                timerProgressBar: true,
+                text: 'El trabajador ha sido notificado. Redirigiendo a valoraciones...',
+                showConfirmButton: false,
+                timer: 1500,
                 allowOutsideClick: false
-            }).then(() => {
-                // Guardar los datos en sesión para la valoración
-                sessionStorage.setItem('trabajo_id', '{{ $trabajo->id }}');
-                sessionStorage.setItem('trabajador_id', '{{ $trabajador->id }}');
-                // Usar la ruta de valoraciones existente
-                window.location.href = '{{ route("valoraciones.valoraciones") }}';
             });
+            
+            // Por si acaso el SweetAlert no funciona, redireccionar después de 5 segundos
+            setTimeout(function() {
+                console.log('Redirección por timeout de seguridad');
+                window.location.href = redirectUrl;
+            }, 5000);
             
         } catch (error) {
             console.error("Error updating payment status:", error);
