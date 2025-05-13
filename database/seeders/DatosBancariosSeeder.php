@@ -21,7 +21,7 @@ class DatosBancariosSeeder extends Seeder
         $tasklyAccountId = 'acct_1RLTsZIxgDk5hYr7';
         
         // Mapeamos los IDs de Stripe para los usuarios específicos
-        // Asegurando que cada trabajador tenga su propio ID
+        // Mapeamos los IDs de Stripe para los usuarios específicos - cuentas reales
         $stripeAccounts = [
             1 => $tasklyAccountId,           // Christian/TASKLY (cuenta principal)
             2 => 'acct_1RLmSdIJN9D9qNg6',  // Alex

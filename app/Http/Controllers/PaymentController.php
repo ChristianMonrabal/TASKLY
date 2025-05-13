@@ -74,39 +74,24 @@ class PaymentController extends Controller
         $trabajoTitulo = $trabajo->titulo ?? 'Trabajo ID: ' . $trabajoId;
         
         // ID de la cuenta principal de TASKLY que recibirá la comisión
-        $tasklyAccountId = 'acct_1RLTsZIxgDk5hYr7'; // Cuenta principal de TASKLY
+        // Obtenemos la cuenta principal de TASKLY de la base de datos (usuarioID = 1)
+        $datosTASKLY = DatosBancarios::where('usuario_id', 1)->first();
+        $tasklyAccountId = $datosTASKLY ? $datosTASKLY->stripe_account_id : 'acct_1RLTsZIxgDk5hYr7';
         
         // Obtenemos el ID de cuenta de Stripe Connect del trabajador
         $datosB = DatosBancarios::where('usuario_id', $trabajadorId)->first();
         
-        // Si no hay datos bancarios o falta la cuenta de Stripe, creamos/actualizamos con una cuenta única para este trabajador
+        // Si el trabajador no tiene datos bancarios configurados, devolvemos un error
         if (!$datosB || empty($datosB->stripe_account_id)) {
-            // En producción, estas serían cuentas reales creadas con Stripe Connect
-            // Para pruebas, generamos IDs únicos por trabajador para asegurar que cada uno reciba su pago
-            
-            // Generamos un ID único para el trabajador diferente a la cuenta principal de TASKLY
-            $workerStripeId = 'acct_worker_' . str_pad($trabajadorId, 10, '0', STR_PAD_LEFT);
-            
-            if (!$datosB) {
-                Log::info("Creando datos bancarios para el trabajador ID: {$trabajadorId} con cuenta Stripe: {$workerStripeId}");
-                $datosB = new DatosBancarios();
-                $datosB->usuario_id = $trabajadorId;
-                $datosB->titular = 'Usuario ' . $trabajadorId;
-                $datosB->iban = 'ES' . str_pad(mt_rand(1000000000000000, 9999999999999999), 24, '0', STR_PAD_LEFT);
-                $datosB->nombre_banco = 'Banco Ejemplo';
-                $datosB->stripe_account_id = $workerStripeId; // ID único para este trabajador
-            } else {
-                Log::info("Actualizando cuenta Stripe para trabajador ID: {$trabajadorId} a: {$workerStripeId}");
-                $datosB->stripe_account_id = $workerStripeId; // ID único para este trabajador
-            }
-            
-            $datosB->save();
-            $accountId = $workerStripeId;
-        } else {
-            // El trabajador ya tiene una cuenta válida
-            $accountId = $datosB->stripe_account_id;
-            Log::info("Usando cuenta Stripe existente para trabajador ID: {$trabajadorId}: {$accountId}");
+            Log::error("Error: El trabajador ID {$trabajadorId} no tiene cuenta Stripe configurada");
+            return response()->json([
+                'error' => 'El trabajador no tiene una cuenta para recibir pagos configurada.'
+            ], 400);
         }
+        
+        // Usamos la cuenta Stripe del trabajador directamente de la BD
+        $accountId = $datosB->stripe_account_id;
+        Log::info("Usando cuenta Stripe existente para trabajador ID: {$trabajadorId}: {$accountId}");
         
         Log::info("Usando cuenta de Stripe: {$accountId} para el trabajador ID: {$trabajadorId}");
 
