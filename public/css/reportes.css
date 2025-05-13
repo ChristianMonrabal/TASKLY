@@ -28,3 +28,9 @@ textarea {
     resize: none;
     border: #EC6A6A double 2px;
 }
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
