@@ -17,13 +17,17 @@
     <div class="valoracion-wrapper">
         <div class="profile-photo-wrapper">
             <div class="no-photo-placeholder">
-                <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo">
+                @if(isset($trabajador) && !empty($trabajador->foto_perfil))
+                    <img src="{{ asset('img/profile_images/' . $trabajador->foto_perfil) }}" class="current-photo" alt="{{ $trabajador->nombre ?? 'Perfil' }}">
+                @else
+                    <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo" alt="Perfil">
+                @endif
             </div>
         </div>
 
         <div class="valoracion-container">
-            <h6>Juan Pérez</h6>
-            <h2>Montaje de muebles</h2>
+            <h6>{{ $trabajador->nombre ?? 'Juan Pérez' }}</h6>
+            <h2>{{ $trabajo->titulo ?? 'Montaje de muebles' }}</h2>
 
             <div class="rating-stars" id="stars">
                 <i class="fas fa-star" data-value="1"></i>
