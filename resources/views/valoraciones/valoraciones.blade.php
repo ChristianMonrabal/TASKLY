@@ -26,8 +26,8 @@
         </div>
 
         <div class="valoracion-container">
-            <h6>{{ $trabajador->nombre ?? 'Juan Pérez' }}</h6>
-            <h2>{{ $trabajo->titulo ?? 'Montaje de muebles' }}</h2>
+            <h6>{{ $trabajador->nombre }}</h6>
+            <h2>{{ $trabajo->titulo }}</h2>
 
             <div class="rating-stars" id="stars">
                 <i class="fas fa-star" data-value="1"></i>

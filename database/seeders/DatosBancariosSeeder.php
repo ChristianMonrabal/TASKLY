@@ -17,15 +17,14 @@ class DatosBancariosSeeder extends Seeder
         // Limpiamos los datos bancarios anteriores
         DatosBancarios::truncate();
         
-        // ID de la cuenta principal de TASKLY que recibirá la comisión
-        $tasklyAccountId = 'acct_1RLTsZIxgDk5hYr7';
+       
         
         // Mapeamos los IDs de Stripe para los usuarios específicos
         // Mapeamos los IDs de Stripe para los usuarios específicos - cuentas reales
         $stripeAccounts = [
-            1 => $tasklyAccountId,           // Christian/TASKLY (cuenta principal)
-            2 => 'acct_1RLmSdIJN9D9qNg6',  // Alex
-            3 => 'acct_1RLmMlIE2Y4Yj6ja',  // Daniel
+            2 => 'acct_1RLTsZIxgDk5hYr7',           // Christian/TASKLY (cuenta principal)
+            3 => 'acct_1RLmSdIJN9D9qNg6',  // Alex
+            4 => 'acct_1RLmMlIE2Y4Yj6ja',  // Daniel
         ];
         
         // Creamos datos bancarios para todos los trabajadores
