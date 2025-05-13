@@ -91,9 +91,6 @@
                             <div class="action-buttons">
                                 <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                 <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
-                                @if($postulacion)
-                                    <a href="{{ route('payment.show', $trabajo->id) }}" class="action-btn payment-action-btn">Pagar y finalizar</a>
-                                @endif
                                 <br>
                             </div>
                         </div>
