@@ -15,27 +15,30 @@ class ValoracionesController extends Controller
      */
     public function index(Request $request)
     {
-        // Intentamos obtener datos del trabajo y trabajador de la sesión
-        $trabajoId = session('trabajo_id');
-        $trabajadorId = session('trabajador_id');
-        $postulacionId = session('postulacion_id');
-
-        // Si no hay datos en la sesión, intentamos recuperarlos del request
-        if ((!$trabajoId || !$trabajadorId) && $request->has('trabajo_id') && $request->has('trabajador_id')) {
-            $trabajoId = $request->input('trabajo_id');
-            $trabajadorId = $request->input('trabajador_id');
-            $postulacionId = $request->input('postulacion_id');
-            
-            // Guardamos en sesión para uso posterior
+        // Intentamos obtener datos del trabajo y trabajador de la sesión o de la URL
+        $trabajoId = $request->input('trabajo_id', session('trabajo_id'));
+        $trabajadorId = $request->input('trabajador_id', session('trabajador_id'));
+        $postulacionId = $request->input('postulacion_id', session('postulacion_id'));
+        
+        // Guardamos en sesión para uso posterior
+        if ($trabajoId && $trabajadorId) {
             session(['trabajo_id' => $trabajoId]);
             session(['trabajador_id' => $trabajadorId]);
-            session(['postulacion_id' => $postulacionId]);
-        }
-
-        // Si tenemos los IDs, cargamos el trabajo y el trabajador
-        if ($trabajoId && $trabajadorId) {
+            if ($postulacionId) {
+                session(['postulacion_id' => $postulacionId]);
+            }
+            
+            // Cargamos el trabajo y el trabajador
             $trabajo = Trabajo::find($trabajoId);
             $trabajador = User::find($trabajadorId);
+            
+            // Registramos para depuración
+            \Illuminate\Support\Facades\Log::info("Cargando valoración", [
+                'trabajo_id' => $trabajoId,
+                'trabajador_id' => $trabajadorId,
+                'trabajo_encontrado' => $trabajo ? 'Sí' : 'No',
+                'trabajador_encontrado' => $trabajador ? 'Sí' : 'No'
+            ]);
             
             if ($trabajo && $trabajador) {
                 return view('valoraciones.valoraciones', [
@@ -43,11 +46,16 @@ class ValoracionesController extends Controller
                     'trabajador' => $trabajador,
                     'postulacion_id' => $postulacionId
                 ]);
+            } else {
+                // Si no encontramos los objetos, mostramos un error
+                return redirect()->route('trabajos.index')
+                    ->with('error', 'No se pudieron cargar los datos del trabajo o del trabajador.');
             }
         }
-
-        // Si no hay datos válidos, mostramos la vista con datos vacíos
-        return view('valoraciones.valoraciones');
+        
+        // Si llegamos aquí, no hay datos suficientes para mostrar la valoración
+        return redirect()->route('trabajos.index')
+            ->with('error', 'No hay suficiente información para mostrar esta valoración.');
     }
     
     /**
