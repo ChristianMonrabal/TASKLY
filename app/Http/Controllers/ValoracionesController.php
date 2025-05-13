@@ -4,11 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Valoracion;
+use App\Models\Trabajo;
+use App\Models\User;
+use App\Models\Postulacion;
 
 class ValoracionesController extends Controller
 {
-    public function index()
+    /**
+     * Muestra la página de valoraciones con datos dinámicos del trabajo y trabajador
+     */
+    public function index(Request $request)
     {
+        // Intentamos obtener datos del trabajo y trabajador de la sesión
+        $trabajoId = session('trabajo_id');
+        $trabajadorId = session('trabajador_id');
+        $postulacionId = session('postulacion_id');
+
+        // Si no hay datos en la sesión, intentamos recuperarlos del request
+        if ((!$trabajoId || !$trabajadorId) && $request->has('trabajo_id') && $request->has('trabajador_id')) {
+            $trabajoId = $request->input('trabajo_id');
+            $trabajadorId = $request->input('trabajador_id');
+            $postulacionId = $request->input('postulacion_id');
+            
+            // Guardamos en sesión para uso posterior
+            session(['trabajo_id' => $trabajoId]);
+            session(['trabajador_id' => $trabajadorId]);
+            session(['postulacion_id' => $postulacionId]);
+        }
+
+        // Si tenemos los IDs, cargamos el trabajo y el trabajador
+        if ($trabajoId && $trabajadorId) {
+            $trabajo = Trabajo::find($trabajoId);
+            $trabajador = User::find($trabajadorId);
+            
+            if ($trabajo && $trabajador) {
+                return view('valoraciones.valoraciones', [
+                    'trabajo' => $trabajo,
+                    'trabajador' => $trabajador,
+                    'postulacion_id' => $postulacionId
+                ]);
+            }
+        }
+
+        // Si no hay datos válidos, mostramos la vista con datos vacíos
         return view('valoraciones.valoraciones');
     }
     
@@ -18,7 +56,7 @@ class ValoracionesController extends Controller
     public function mostrarFormularioValoracion($trabajador_id)
     {
         // Obtener el trabajador
-        $trabajador = \App\Models\User::findOrFail($trabajador_id);
+        $trabajador = User::findOrFail($trabajador_id);
         
         // Obtener valoraciones previas del trabajador para mostrarlas
         $valoraciones = Valoracion::where('trabajador_id', $trabajador_id)
@@ -32,37 +70,37 @@ class ValoracionesController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'comentario' => 'required|string',
-        'puntuacion' => 'nullable|integer|min:1|max:5',
-        'imagen' => 'nullable|image|max:2048',
-    ]);
+    {
+        $request->validate([
+            'comentario' => 'required|string',
+            'puntuacion' => 'nullable|integer|min:1|max:5',
+            'imagen' => 'nullable|image|max:2048',
+        ]);
 
-    $trabajoId = session('trabajo_id');
-    $trabajadorId = session('trabajador_id');
+        $trabajoId = session('trabajo_id');
+        $trabajadorId = session('trabajador_id');
 
-    if (!$trabajoId || !$trabajadorId) {
-        return redirect()->back()->with('error', 'Faltan datos del trabajo o trabajador.');
+        if (!$trabajoId || !$trabajadorId) {
+            return redirect()->back()->with('error', 'Faltan datos del trabajo o trabajador.');
+        }
+
+        $rutaImagen = null;
+        if ($request->hasFile('imagen')) {
+            $imagen = $request->file('imagen');
+            $nombreImagen = uniqid('valoracion_') . '.' . $imagen->getClientOriginalExtension();
+            $imagen->move(public_path('img/valoraciones'), $nombreImagen);
+            $rutaImagen = 'img/valoraciones/' . $nombreImagen;
+        }
+
+        Valoracion::create([
+            'trabajo_id' => $trabajoId,
+            'trabajador_id' => $trabajadorId,
+            'puntuacion' => $request->input('puntuacion'),
+            'img_valoracion' => $rutaImagen,
+            'comentario' => $request->input('comentario'),
+        ]);
+
+        return redirect()->route('trabajos.finalizados')->with('success', 'Valoración guardada correctamente.');
     }
-
-    $rutaImagen = null;
-    if ($request->hasFile('imagen')) {
-        $imagen = $request->file('imagen');
-        $nombreImagen = uniqid('valoracion_') . '.' . $imagen->getClientOriginalExtension();
-        $imagen->move(public_path('img/valoraciones'), $nombreImagen);
-        $rutaImagen = 'img/valoraciones/' . $nombreImagen;
-    }
-
-    Valoracion::create([
-        'trabajo_id' => $trabajoId,
-        'trabajador_id' => $trabajadorId,
-        'puntuacion' => $request->input('puntuacion'),
-        'img_valoracion' => $rutaImagen,
-        'comentario' => $request->input('comentario'),
-    ]);
-
-    return redirect()->route('trabajos.finalizados')->with('success', 'Valoración guardada correctamente.');
-}
 
 }
