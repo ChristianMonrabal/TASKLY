@@ -14,12 +14,20 @@
 
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.27.2/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
+    <script type="module" src="{{ asset('js/notifications.js') }}"></script>
+
 
     <!-- Estilos específicos de la página -->
     @yield('styles')
     
     <!-- Scripts en el head -->
     @yield('head_scripts')
+
 </head>
 
 <body>

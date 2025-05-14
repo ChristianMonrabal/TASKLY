@@ -1,16 +1,20 @@
-document.addEventListener('DOMContentLoaded', function() {
-    stars = document.querySelectorAll('#stars i');
-    selectedRating = 0;
+document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.querySelectorAll('#stars i');
+    const puntuacionInput = document.getElementById('puntuacion');
+    const starError = document.getElementById('star-error');
+    let selectedRating = 0;
 
-    stars.forEach(function(star) {
-        star.addEventListener('click', function() {
-            selectedRating = star.getAttribute('data-value');
+    stars.forEach(function (star) {
+        star.addEventListener('click', function () {
+            selectedRating = parseInt(star.getAttribute('data-value'));
+            puntuacionInput.value = selectedRating; // Asignar puntuación al input oculto
             updateStars(selectedRating);
+            starError.style.display = 'none';
         });
     });
 
     function updateStars(rating) {
-        stars.forEach(function(star) {
+        stars.forEach(function (star) {
             star.classList.remove('selected');
             if (parseInt(star.getAttribute('data-value')) <= rating) {
                 star.classList.add('selected');
@@ -18,47 +22,45 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    imageInput = document.getElementById('imagen1');
-    imageError = document.getElementById('image-error');
-
-    function validateImages() {
-        if (!imageInput.files.length) {
-            imageError.style.display = 'inline';
-        } else {
-            imageError.style.display = 'none';
-        }
-    }
-
-    commentInput = document.getElementById('comentario');
-    commentError = document.getElementById('comment-error');
+    const imageInput = document.getElementById('imagen');
+    const commentInput = document.getElementById('comentario');
+    const commentError = document.getElementById('comment-error');
 
     function validateComment() {
         if (commentInput.value.trim() === '') {
             commentError.style.display = 'inline';
+            return false;
         } else {
             commentError.style.display = 'none';
+            return true;
         }
     }
 
-    commentInput.addEventListener('blur', validateComment);
-
-    submitButton = document.querySelector('button[type="submit"]');
-    submitButton.addEventListener('click', function(event) {
-        validateComment();
-        validateImages();
-
-        if (commentInput.value.trim() === '' || !imageInput.files.length) {
-            event.preventDefault();
+    function validateStars() {
+        if (puntuacionInput.value === '') {
+            starError.style.display = 'inline';
+            return false;
+        } else {
+            starError.style.display = 'none';
+            return true;
         }
-    });
+    }
+
+    function validateForm() {
+        const isCommentValid = validateComment();
+        const isStarsValid = validateStars();
+        return isCommentValid && isStarsValid;
+    }
+
+    commentInput.addEventListener('blur', validateComment);
 });
 
 function previewImage(event, previewId) {
-    file = event.target.files[0];
-    preview = document.getElementById(previewId);
+    const file = event.target.files[0];
+    const preview = document.getElementById(previewId);
 
     if (file) {
-        reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = function () {
             preview.src = reader.result;
             preview.style.display = 'block';

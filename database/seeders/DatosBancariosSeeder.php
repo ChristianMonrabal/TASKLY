@@ -14,14 +14,32 @@ class DatosBancariosSeeder extends Seeder
      */
     public function run(): void
     {
+        // Limpiamos los datos bancarios anteriores
+        DatosBancarios::truncate();
+        
+       
+        
+        // Mapeamos los IDs de Stripe para los usuarios específicos
+        // Mapeamos los IDs de Stripe para los usuarios específicos - cuentas reales
+        $stripeAccounts = [
+            2 => 'acct_1RLTsZIxgDk5hYr7',           // Christian/TASKLY (cuenta principal)
+            3 => 'acct_1RLmSdIJN9D9qNg6',  // Alex
+            4 => 'acct_1RLmMlIE2Y4Yj6ja',  // Daniel
+        ];
+        
+        // Creamos datos bancarios para todos los trabajadores
         $usuarios = User::where('rol_id', 2)->get();
-
+        
         foreach ($usuarios as $usuario) {
+            // Verificamos si existe un ID de Stripe específico para este usuario
+            $stripeAccountId = $stripeAccounts[$usuario->id] ?? null;
+            
             DatosBancarios::create([
                 'usuario_id' => $usuario->id,
                 'titular' => $usuario->nombre,
-                'iban' => 'ES' . str_pad(mt_rand(1000000000000000, 9999999999999999), 24, '0', STR_PAD_LEFT), // IBAN ajustado a 34 caracteres
+                'iban' => 'ES' . str_pad(mt_rand(1000000000000000, 9999999999999999), 24, '0', STR_PAD_LEFT),
                 'nombre_banco' => 'Banco Ejemplo',
+                'stripe_account_id' => $stripeAccountId
             ]);
         }
     }

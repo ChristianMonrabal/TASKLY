@@ -3,7 +3,12 @@
 @section('title', 'Perfil de ' . $usuario->nombre)
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/profile_user.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('css/profile_user.css') }}"> --}}
+    <style>
+        .estrella-amarilla {
+            color: #FFD700;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -14,6 +19,8 @@
             <div class="card shadow rounded-lg border border-danger p-4">
 
                 {{-- Información del perfil --}}
+                <div class="card-body text-center">
+            {{-- Información del perfil --}}
                 <div class="card-body text-center">
 
                     {{-- Foto de perfil --}}
@@ -62,7 +69,7 @@
                     @if($usuario->valoracionesRecibidas->count())
                         <div class="text-center mb-4">
                             <h4 class="text-dark">Valoración media de todos sus trabajos:</h4>
-                            <div class="text-warning fs-4">
+                            <div class="estrella-amarilla fs-4">
                                 @php
                                     $media = round($mediaValoraciones, 1);
                                     $mediaEntera = floor($media);
@@ -71,11 +78,11 @@
 
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= $mediaEntera)
-                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star estrella-amarilla"></i>
                                     @elseif ($i == $mediaEntera + 1 && $mediaDecimal >= 0.5)
-                                        <i class="fas fa-star-half-alt"></i>
+                                        <i class="fas fa-star-half-alt estrella-amarilla"></i>
                                     @else
-                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star estrella-amarilla"></i>
                                     @endif
                                 @endfor
 
@@ -83,27 +90,18 @@
                             </div>
                         </div>
                     @endif
-    
+
                     {{-- Contenedor para cada valoración individual --}}
                     @if($usuario->valoracionesRecibidas->count())
                         @foreach($usuario->valoracionesRecibidas as $valoracion)
                             <div class="mb-3">
-                                {{-- Contenedor para cada valoración individual --}}
                                 <div class="border border-danger rounded p-3 mb-3">
-
-                                    {{-- Imagen de la valoración --}}
-                                    @if ($valoracion->img_valoracion)
-                                        <div class="mb-3">
-                                            <img src="{{ asset('img/valoraciones/' . $valoracion->img_valoracion) }}" alt="Imagen de valoración" class="img-fluid rounded" width="120">
-                                        </div>
-                                    @endif
-
                                     {{-- Título y estrellas --}}
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h5 class="mb-0"><strong>{{ $valoracion->trabajo->titulo ?? 'Trabajo desconocido' }}</strong></h5>
-                                        <span class="text-warning">
+                                        <span class="estrella-amarilla">
                                             @for ($i = 1; $i <= 5; $i++)
-                                                <i class="fas fa-star{{ $i <= $valoracion->puntuacion ? '' : '-o' }}"></i>
+                                                <i class="fas fa-star{{ $i <= $valoracion->puntuacion ? '' : '-o' }} estrella-amarilla"></i>
                                             @endfor
                                         </span>
                                     </div>

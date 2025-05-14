@@ -51,6 +51,18 @@ Route::middleware('auth')->group(function () {
     // Rutas de perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Rutas para el sistema de pagos con Stripe
+    Route::get('/payment/{trabajo}', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/intent', [App\Http\Controllers\PaymentController::class, 'createIntent'])->name('payment.create-intent');
+    Route::post('/payment/update-status', [App\Http\Controllers\PaymentController::class, 'updatePaymentStatus'])->name('payment.update-status');
+    Route::get('/payment/complete', function() {
+        return view('payment-complete');
+    })->name('payment.complete');
+    Route::get('/payment/check-config', [App\Http\Controllers\PaymentController::class, 'checkStripeConfig'])->name('payment.check-config');
+    
+    // Ruta para valoraciones (especialmente después del pago)
+    Route::get('/valoraciones/{trabajador_id}', [App\Http\Controllers\ValoracionesController::class, 'mostrarFormularioValoracion'])->name('valoraciones.trabajador');
 
     // Ruta para la página de mensajes
     Route::get('/mensajes', function () {
@@ -82,7 +94,7 @@ Route::middleware('auth')->group(function () {
 
     // Chat
     Route::controller(ChatController::class)->group(function () {
-        Route::get('/chat', 'Vistachat')->name('vista.chat');
+        Route::get('/chat/{id?}', [ChatController::class, 'Vistachat'])->name('vista.chat');
         Route::post('/cargamensajes', 'cargamensajes');
         Route::post('/enviomensaje', 'enviomensaje');
     });
@@ -181,9 +193,15 @@ Route::get('/mis-trabajos', [JobController::class, 'trabajosPublicados'])->name(
 Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('trabajos.eliminar');
 Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
 
-Route::get('/notificaciones', [NotificacionController::class, 'index'])
-    ->name('notificaciones.index');
-Route::post('/notificaciones/mark-all-read', [NotificacionController::class, 'markAllRead'])
-    ->name('notificaciones.markAllRead');
-Route::post('/notificaciones/sample', [NotificacionController::class, 'storeSample'])
-    ->name('notificaciones.sample');
+Route::middleware('auth')->group(function () {
+    Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
+    // Ruta para crear una notificación (puedes probar esto con Postman o frontend)
+    Route::post('/notificaciones', [NotificacionController::class, 'store']);
+
+    Route::post('/notificaciones/mark-all-read', [NotificacionController::class, 'markAllAsRead']);
+    Route::post('/notificaciones/{id}/mark-read', [NotificacionController::class, 'markAsRead']);
+
+    // Ruta para obtener notificaciones no leídas
+    Route::get('/notificaciones/new', [NotificacionController::class, 'getNewNotifications']);
+});
+
