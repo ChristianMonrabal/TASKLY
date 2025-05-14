@@ -61,5 +61,35 @@ class EstadoSeeder extends Seeder
             'nombre' => 'Rechazada',
             'tipo_estado' => 'postulaciones',
         ]);
+
+
+
+        Estado::create([
+            'nombre' => 'Baja',
+            'tipo_estado' => 'reporte_gravedad',
+        ]);
+        Estado::create([
+            'nombre' => 'Media',
+            'tipo_estado' => 'reporte_gravedad',
+        ]);
+        Estado::create([
+            'nombre' => 'Alta',
+            'tipo_estado' => 'reporte_gravedad',
+        ]);
+
+
+
+        Estado::create([
+            'nombre' => 'Espera',
+            'tipo_estado' => 'reporte_estado',
+        ]);
+        Estado::create([
+            'nombre' => 'Abierto',
+            'tipo_estado' => 'reporte_estado',
+        ]);
+        Estado::create([
+            'nombre' => 'Cerrado',
+            'tipo_estado' => 'reporte_estado',
+        ]);
     }
 }

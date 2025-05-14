@@ -133,6 +133,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/reportes/{user_id}', [ReporteController::class, 'index'])->name('reportes.index');
     Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
 
+    
+    Route::get('/listareportes', [ReporteController::class, 'listareportes'])->name('listareportes.listareportes');
+
     // Rutas API Admin
     // —— API para el CRUD Admin ——
     // Usuarios:

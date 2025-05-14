@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Reporte;
+use App\Models\reportes;
 use App\Models\User;
 
 class ReporteController extends Controller
@@ -30,5 +30,22 @@ class ReporteController extends Controller
 
         return redirect()->route('reportes.index', ['user_id' => $request->user_id])
             ->with('success', 'El reporte ha sido enviado a nuestro administrador.');
+    }
+
+    public function listareportes()
+    {
+        $reportes = reportes::with([
+            'usuarioReportado:id,nombre',
+            'reportadoPor:id,nombre',
+            'nivelGravedad:id,nombre',
+            'estadoReporte:id,nombre'
+        ])->get();
+
+        // Agregar columna personalizada
+        $reportes->each(function ($reporte) {
+            $reporte->total_reportes_usuario = reportes::where('id_usuario', $reporte->id_usuario)->count();
+        });
+
+        return response()->json($reportes);
     }
 }
