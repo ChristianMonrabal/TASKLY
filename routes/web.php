@@ -51,6 +51,18 @@ Route::middleware('auth')->group(function () {
     // Rutas de perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Rutas para el sistema de pagos con Stripe
+    Route::get('/payment/{trabajo}', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/intent', [App\Http\Controllers\PaymentController::class, 'createIntent'])->name('payment.create-intent');
+    Route::post('/payment/update-status', [App\Http\Controllers\PaymentController::class, 'updatePaymentStatus'])->name('payment.update-status');
+    Route::get('/payment/complete', function() {
+        return view('payment-complete');
+    })->name('payment.complete');
+    Route::get('/payment/check-config', [App\Http\Controllers\PaymentController::class, 'checkStripeConfig'])->name('payment.check-config');
+    
+    // Ruta para valoraciones (especialmente después del pago)
+    Route::get('/valoraciones/{trabajador_id}', [App\Http\Controllers\ValoracionesController::class, 'mostrarFormularioValoracion'])->name('valoraciones.trabajador');
 
     // Ruta para la página de mensajes
     Route::get('/mensajes', function () {

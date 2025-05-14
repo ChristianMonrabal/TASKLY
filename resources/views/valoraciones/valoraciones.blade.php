@@ -11,52 +11,68 @@
 </head>
 
 <body>
-    @extends('layouts.app')
-    @section('content')
+@extends('layouts.app')
+@section('content')
 
-    <div class="valoracion-wrapper">
-        <div class="profile-photo-wrapper">
-            <div class="no-photo-placeholder">
-                <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo">
-            </div>
-        </div>
-
-        <div class="valoracion-container">
-            <h6>Juan Pérez</h6>
-            <h2>Montaje de muebles</h2>
-
-            <div class="rating-stars" id="stars">
-                <i class="fas fa-star" data-value="1"></i>
-                <i class="fas fa-star" data-value="2"></i>
-                <i class="fas fa-star" data-value="3"></i>
-                <i class="fas fa-star" data-value="4"></i>
-                <i class="fas fa-star" data-value="5"></i>
-            </div>
-            <span id="star-error" class="error-message">Por favor, selecciona una calificación.</span>
-
-            <div class="form-group">
-                <label for="comentario">Añade un comentario:</label>
-                <textarea id="comentario" rows="4" placeholder="Escribe tu valoración..."></textarea>
-                <span id="comment-error" class="error-message">El comentario no puede estar vacío.</span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label>Añadir imagen</label>
-                <div class="d-flex justify-content-between">
-                    <div class="image-upload">
-                        <label for="imagen1" id="image-label">
-                            <span>+</span>
-                        </label>
-                        <input type="file" name="imagenes[]" id="imagen1" accept="image/*" onchange="previewImage(event, 'imagen1-preview')" onblur="validateImages()">
-                        <img id="imagen1-preview" src="" alt="Vista previa" style="display: none;" onclick="showImageInModal(this)">
-                    </div>
-                </div>
-                <span id="image-error" class="error-message">Debes añadir al menos una imagen.</span>
-            </div>
-            <button class="btn color w-100">Finalizar trabajo</button>
+<div class="valoracion-wrapper">
+    <div class="profile-photo-wrapper">
+        <div class="no-photo-placeholder">
+            @if(isset($trabajador) && !empty($trabajador->foto_perfil))
+                <img src="{{ asset('img/profile_images/' . $trabajador->foto_perfil) }}" class="current-photo" alt="{{ $trabajador->nombre ?? 'Perfil' }}">
+            @else
+                <img src="{{ asset('img/profile_images/perfil_default.png') }}" class="current-photo" alt="Perfil">
+            @endif
         </div>
     </div>
-    @endsection
-    <script src="{{ asset('js/valoraciones.js') }}"></script>
+
+    <form class="valoracion-container" action="{{ route('valoraciones.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+        @csrf
+
+        <h6>{{ $trabajador->nombre }}</h6>
+        <h2>{{ $trabajo->titulo }}</h2>
+
+        <div class="rating-stars" id="stars">
+            <i class="fas fa-star" data-value="1"></i>
+            <i class="fas fa-star" data-value="2"></i>
+            <i class="fas fa-star" data-value="3"></i>
+            <i class="fas fa-star" data-value="4"></i>
+            <i class="fas fa-star" data-value="5"></i>
+        </div>
+        <input type="hidden" name="puntuacion" id="puntuacion">
+        @error('puntuacion')
+            <span class="error-message text-danger d-block mt-1 center">{{ $message }}</span>
+        @enderror
+
+        <div class="form-group">
+            <label for="comentario">Añade un comentario:</label>
+            <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu valoración...">{{ old('comentario') }}</textarea>
+            @error('comentario')
+                <span class="error-message text-danger d-block mt-1">{{ $message }}</span>
+            @enderror
+            <span id="comment-error" class="error-message" style="display: none;">El comentario no puede estar vacío.</span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Añadir imagen</label>
+            <div class="d-flex justify-content-between">
+                <div class="image-upload">
+                    <label for="imagen" id="image-label">
+                        <span>+</span>
+                    </label>
+                    <input type="file" name="imagen" id="imagen" accept="image/*" onchange="previewImage(event, 'imagen-preview')" onblur="validateImages()">
+                    <img id="imagen-preview" src="" alt="Vista previa" style="display: none;" onclick="showImageInModal(this)">
+                </div>
+            </div>
+            @error('imagen')
+                <span class="error-message text-danger d-block mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn color w-100">Finalizar trabajo</button>
+    </form>
+</div>
+
+@endsection
+<script src="{{ asset('js/valoraciones.js') }}"></script>
 </body>
 </html>

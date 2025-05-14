@@ -9,6 +9,33 @@
     <script src="{{ asset('js/sweet_alert_calendario.js') }}"></script>
     <script src="{{ asset('js/eliminar_trabajo.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        /* Estilos para el botón de pago */
+        .payment-btn {
+            background-color: #fff;
+            border: 1px solid #EC6A6A;
+        }
+        
+        .payment-btn:hover {
+            background-color: #EC6A6A;
+        }
+        
+        .payment-btn:hover i {
+            color: white !important;
+        }
+        
+        .payment-action-btn {
+            background-color: #EC6A6A;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .payment-action-btn:hover {
+            background-color: #d85555;
+            color: white;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -38,6 +65,18 @@
                                     <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
+                                    
+                                    @php
+                                        $postulacion = App\Models\Postulacion::where('trabajo_id', $trabajo->id)
+                                            ->where('estado_id', 10) // Estado aceptado
+                                            ->first();
+                                    @endphp
+                                    
+                                    @if($postulacion)
+                                        <a href="{{ route('payment.show', $trabajo->id) }}" title="Realizar pago" class="icon-button payment-btn">
+                                            <i class="fas fa-credit-card" style="color:#EC6A6A;"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -52,7 +91,6 @@
                             <div class="action-buttons">
                                 <a href="{{ route('trabajos.detalle', $trabajo->id) }}" class="action-btn">Ver detalles</a>
                                 <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn">Ver candidatos</a>
-                                {{-- <a href="{{ route('pago.show', $trabajo->id) }}" class="action-btn">Pagar y finalizar</a> --}}
                                 <br>
                             </div>
                         </div>
