@@ -96,15 +96,16 @@
                     <div class="info-col sidebar-col">
                         <div class="sidebar-card">
                             <h4 class="card-titulo">Publicado por {{ $trabajo->cliente->nombre }}</h4>
-                            <div class="usuario-info">
-                                <div class="usuario-avatar">
-                                    <img src="{{ $trabajo->cliente->foto_perfil 
-                                                ? asset('img/profile_images/' . $trabajo->cliente->foto_perfil) 
-                                                : asset('img/profile_images/perfil_default.png') }}"
-                                        alt="Foto de {{ $trabajo->cliente->nombre }}">
+                                <div class="usuario-info">
+                                    <div class="usuario-avatar">
+                                        <a href="{{ route('perfil.usuario', ['nombre' => Str::slug($trabajo->cliente->nombre . ' ' . $trabajo->cliente->apellidos)]) }}">
+                                            <img src="{{ $trabajo->cliente->foto_perfil 
+                                                        ? asset('img/profile_images/' . $trabajo->cliente->foto_perfil) 
+                                                        : asset('img/profile_images/perfil_default.png') }}"
+                                                alt="Foto de {{ $trabajo->cliente->nombre }}">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-
                             <div>
                                 <div class="usuario-nombre">{{ $trabajo->cliente->nombre ?? 'Usuario' }}</div>
                                 @php
@@ -121,14 +122,22 @@
                             @if (Auth::check())
                                 @if (Auth::id() != $trabajo->cliente_id)
                                     <div class="boton-wrapper">
-                                        @if (isset($yaPostulado) && $yaPostulado)
-                                            <form id="cancelar-postulacion-form" action="{{ route('trabajos.cancelarPostulacion', $trabajo->id) }}" method="POST" style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                            <button type="button" class="btn btn-cancelar" onclick="confirmarCancelacion()">
-                                                <i class="fas fa-times"></i> Cancelar postulación
-                                            </button>
+                                        @php
+                                            $postulacion = $trabajo->postulaciones->where('trabajador_id', Auth::id())->first();
+                                        @endphp
+
+                                        @if ($postulacion)
+                                            @if ($postulacion->estado_id == 11) {{-- Estado "rechazado" --}}
+                                                <button class="btn btn-danger" disabled>No has sido seleccionado</button>
+                                            @else
+                                                <form id="cancelar-postulacion-form" action="{{ route('trabajos.cancelarPostulacion', $trabajo->id) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                                <button type="button" class="btn btn-cancelar" onclick="confirmarCancelacion()">
+                                                    <i class="fas fa-times"></i> Cancelar postulación
+                                                </button>
+                                            @endif
                                         @else
                                             <form class="postular-form" action="{{ route('trabajos.postular', $trabajo->id) }}" method="POST">
                                                 @csrf
@@ -158,7 +167,7 @@
 
                                 <div class="boton-wrapper">
                                     <button class="btn btn-chat" disabled title="Chatear">
-                                        <i class="fas fa-comments fa-lg"></i>
+                                        <i class="fas fa-comments fa-lg"></i> Mensajes
                                     </button>
                                 </div>
                             @endif

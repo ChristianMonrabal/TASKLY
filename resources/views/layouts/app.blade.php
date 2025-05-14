@@ -47,7 +47,7 @@
                             <li>
                                 <a href="{{ route('trabajos.index') }}"
                                     class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}">
-                                    <i class="fas fa-briefcase"></i> Trabajos
+                                    <i class="fas fa-briefcase"></i> Inicio
                                 </a>
                             </li>
                             <li>

@@ -71,7 +71,6 @@
                     </a>
                 </div>
             @endforeach
-        
         </div>
         @else
             <div class="alert alert-info">
