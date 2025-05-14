@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/payment.css') }}">
+@endsection
+
 @section('content')
 <div class="container payment-container py-5">
     <div class="row justify-content-center">
@@ -10,23 +14,12 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="row no-gutters">
-                        <!-- Columna izquierda: Extracto del pago -->
                         <div class="col-md-5 border-right">
                             <div class="payment-summary p-4">
                                 <div class="d-flex align-items-center mb-4">
-                                    <img src="/img/logo.png" alt="TASKLY" height="40" class="mr-3">
                                     <div class="payment-badge">
                                         <i class="fas fa-shield-alt"></i> Pago Seguro
                                     </div>
-                                </div>
-                                
-                                <h4 class="mb-3">{{ $trabajo->titulo }}</h4>
-                                
-                                <div class="worker-info d-flex align-items-center mb-4">
-                                    <div class="avatar mr-2">
-                                        <i class="fas fa-user-circle"></i>
-                                    </div>
-                                    <span>{{ $trabajador->nombre }}</span>
                                 </div>
                                 
                                 <div class="divider my-4"></div>
@@ -71,21 +64,6 @@
                         <!-- Columna derecha: Método de pago -->
                         <div class="col-md-7">
                             <div class="payment-method p-4">
-                                <h4 class="mb-4">Método de Pago</h4>
-                                <div id="payment-message" class="alert d-none"></div>
-                                
-                                <div class="payment-card-header mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <i class="far fa-credit-card text-primary mr-2"></i>
-                                        <h5 class="mb-0">Tarjeta de crédito o débito</h5>
-                                    </div>
-                                    <div class="mt-2 mb-3 accepted-cards">
-                                        <i class="fab fa-cc-visa mx-1"></i>
-                                        <i class="fab fa-cc-mastercard mx-1"></i>
-                                        <i class="fab fa-cc-amex mx-1"></i>
-                                    </div>
-                                </div>
-                                
                                 <form id="payment-form">
                                     <input type="hidden" id="trabajo_id" value="{{ $trabajo->id }}">
                                     <input type="hidden" id="trabajador_id" value="{{ $trabajador->id }}">
@@ -108,193 +86,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('styles')
-<style>
-    :root {
-        --payment-primary: #EC6A6A;
-        --payment-light: #f9f9f9;
-        --payment-dark: #333;
-        --payment-border: #eaeaea;
-    }
-    
-    .payment-container {
-        min-height: 70vh;
-    }
-    
-    .card {
-        border: none;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .card-header {
-        background-color: var(--primary);
-        border: none;
-        padding: 15px;
-    }
-    
-    .payment-info {
-        background-color: var(--payment-light);
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    
-    .payment-badge {
-        background-color: rgba(236, 106, 106, 0.1);
-        color: var(--primary);
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 500;
-    }
-    
-    .payment-badge i {
-        margin-right: 5px;
-    }
-    
-    .price-tag {
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--payment-dark);
-    }
-    
-    .currency {
-        font-size: 18px;
-        vertical-align: top;
-        margin-right: 2px;
-    }
-    
-    .worker-info {
-        background-color: rgba(236, 106, 106, 0.05);
-        border-radius: 30px;
-        padding: 8px 15px;
-        display: inline-flex;
-    }
-    
-    .avatar i {
-        font-size: 22px;
-        color: var(--primary);
-    }
-    
-    .divider {
-        height: 1px;
-        background-color: var(--payment-border);
-        width: 100%;
-    }
-    
-    .fee-summary {
-        background-color: white;
-        border-radius: 8px;
-        padding: 15px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-    }
-    
-    .fee-summary .row {
-        margin-bottom: 5px;
-    }
-    
-    .total-amount {
-        font-size: 18px;
-    }
-    
-    .total-amount .font-weight-bold {
-        color: var(--primary);
-        font-size: 22px;
-    }
-    
-    #payment-element {
-        margin: 20px 0;
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    }
-    
-    #submit-button {
-        background-color: var(--primary);
-        border-color: var(--primary);
-        color: white;
-        font-size: 16px;
-        padding: 12px 16px;
-        width: 100%;
-        position: relative;
-        border-radius: 30px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    #submit-button:hover {
-        background-color: #d85959;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(236, 106, 106, 0.3);
-    }
-    
-    .spinner,
-    .spinner:before,
-    .spinner:after {
-        border-radius: 50%;
-    }
-    
-    .spinner {
-        color: #ffffff;
-        font-size: 22px;
-        text-indent: -99999px;
-        margin: 0 auto;
-        position: relative;
-        width: 20px;
-        height: 20px;
-        box-shadow: inset 0 0 0 2px;
-        -webkit-transform: translateZ(0);
-        -ms-transform: translateZ(0);
-        transform: translateZ(0);
-    }
-    
-    .spinner:before,
-    .spinner:after {
-        position: absolute;
-        content: '';
-    }
-    
-    .spinner:before {
-        width: 10.4px;
-        height: 20.4px;
-        background: var(--primary);
-        border-radius: 20.4px 0 0 20.4px;
-        top: -0.2px;
-        left: -0.2px;
-        -webkit-transform-origin: 10.4px 10.2px;
-        transform-origin: 10.4px 10.2px;
-        -webkit-animation: loading 2s infinite ease 1.5s;
-        animation: loading 2s infinite ease 1.5s;
-    }
-    
-    .spinner:after {
-        width: 10.4px;
-        height: 10.2px;
-        background: var(--primary);
-        border-radius: 0 10.2px 10.2px 0;
-        top: -0.1px;
-        left: 10.2px;
-        -webkit-transform-origin: 0px 10.2px;
-        transform-origin: 0px 10.2px;
-        -webkit-animation: loading 2s infinite ease;
-        animation: loading 2s infinite ease;
-    }
-    
-    @keyframes loading {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
-    }
-</style>
 @endsection
 
 @section('scripts')
