@@ -2,121 +2,140 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Trabajo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Trabajo;
 use App\Models\Chat;
 use App\Models\User;
 use App\Models\Postulacion;
 use App\Models\Notificacion;
 use App\Events\NewNotificacion;
-use Illuminate\Support\Facades\Log;
-
 
 class ChatController extends Controller
 {
-    public function Vistachat($id = null)
+    /**
+     * Muestra la vista de chats. Si llega ?trabajador=ID, calcula selectedChatId
+     */
+    public function Vistachat(Request $request, $id = null)
     {
         $user = Auth::user();
-        $trabajoSeleccionado = null;
 
-        // Si se proporciona un ID de trabajo, lo cargamos para la vista
-        if ($id !== null) {
-            $trabajoSeleccionado = Trabajo::with(['cliente', 'postulaciones'])->findOrFail($id);
-        }
+        // 1) Trabajo seleccionado opcional
+        $trabajoSeleccionado = $id
+            ? Trabajo::with(['cliente','postulaciones'])->findOrFail($id)
+            : null;
 
-        $postulacionesRecibidas = Postulacion::with(['trabajador:id,nombre,apellidos,foto_perfil', 'trabajo:id,titulo'])
-            ->whereHas('trabajo', function ($query) use ($user) {
-                $query->where('cliente_id', $user->id);
-            })
-            ->where('estado_id', 10) // Estado de postulacion recibida
+        // 2) Construir lista de “chats” (postulaciones)
+        $recibidas = Postulacion::with([
+                'trabajador:id,nombre,apellidos,foto_perfil',
+                'trabajo:id,titulo'
+            ])
+            ->whereHas('trabajo', fn($q) => $q->where('cliente_id', $user->id))
+            ->where('estado_id', 10)
             ->get()
-            ->map(function ($postulacion) {
-                $postulacion->tipo = 'recibida';
-                return $postulacion;
-            });
+            ->map(fn($p) => tap($p, fn($x) => $x->tipo = 'recibida'));
 
-        $postulacionesRealizadas = Postulacion::with(['trabajo:id,titulo,cliente_id', 'trabajo.cliente:id,nombre,apellidos,foto_perfil'])
+        $realizadas = Postulacion::with([
+                'trabajo:id,titulo,cliente_id',
+                'trabajo.cliente:id,nombre,apellidos,foto_perfil'
+            ])
             ->where('trabajador_id', $user->id)
             ->where('estado_id', 10)
             ->get()
-            ->map(function ($postulacion) {
-                $postulacion->tipo = 'realizada';
-                return $postulacion;
-            });
+            ->map(fn($p) => tap($p, fn($x) => $x->tipo = 'realizada'));
 
-        // Aquí se mezclan
-        $chats = $postulacionesRecibidas->merge($postulacionesRealizadas);
+        $chats = $recibidas->merge($realizadas);
 
-        return view('chat.index', compact('chats', 'user', 'trabajoSeleccionado'));
+        // 3) Parám. de notificación: otro usuario
+        $selectedTrabajadorId = $request->query('trabajador');
+
+        // 4) Buscar el “id” de la postulación (el chat) que coincida
+        $selectedChatId = null;
+        if ($id && $selectedTrabajadorId) {
+            foreach ($chats as $p) {
+                $otro = $p->tipo === 'recibida'
+                    ? $p->trabajador_id
+                    : $p->trabajo->cliente_id;
+                if ($p->trabajo_id == $id && $otro == $selectedTrabajadorId) {
+                    $selectedChatId = $p->id;
+                    break;
+                }
+            }
+        }
+
+        return view('chat.index', compact(
+            'chats',
+            'user',
+            'trabajoSeleccionado',
+            'selectedTrabajadorId',
+            'selectedChatId'
+        ));
     }
 
+    /**
+     * Devuelve JSON con mensajes y user (colección).
+     */
     public function cargamensajes(Request $request)
     {
-        $trabajo_id = $request->input('trabajo_id');
+        $trabajo_id    = $request->input('trabajo_id');
         $trabajador_id = $request->input('trabajador_id');
-        $usuario = Auth::user()->id;
+        $usuario_id    = Auth::id();
 
-        $chats = Chat::with("emisor:id,nombre,apellidos,foto_perfil,created_at,updated_at")
-            ->with("receptor:id,nombre,apellidos,foto_perfil")
-            ->with("trabajo:id,titulo,descripcion")
+        $chats = Chat::with('emisor:id,nombre,apellidos,foto_perfil')
+            ->with('receptor:id,nombre,apellidos,foto_perfil')
+            ->with('trabajo:id,titulo,descripcion')
             ->where('trabajo_id', $trabajo_id)
-            ->where(function ($trabajador) use ($trabajador_id) {
-                $trabajador->where('emisor', $trabajador_id)
-                    ->orWhere('receptor', $trabajador_id);
-            })
-            ->where(function ($cliente) use ($usuario) {
-                $cliente->where('emisor', $usuario)
-                    ->orWhere('receptor', $usuario);
-            })
+            ->where(fn($q) => $q->where('emisor', $trabajador_id)
+                                 ->orWhere('receptor', $trabajador_id))
+            ->where(fn($q) => $q->where('emisor', $usuario_id)
+                                 ->orWhere('receptor', $usuario_id))
             ->get();
+
         $user = User::where('id', $trabajador_id)->get();
 
-        // $chat = Chat::with("trabajador:id,nombre,apellidos,foto_perfil")
-        // ->with("trabajo:id,titulo,descripcion")
-        // ->where('trabajo_id', $trabajo_id)
-        // ->where(function ($query) use ($trabajador_id) {
-        //     $query->where('trabajador_id', $trabajador_id)
-        //         ->orWhere('trabajador_id', auth()->user()->id);
-        // })
-        // ->get();
-
-        return response()->json(['chats' => $chats, 'user' => $user,]);
+        return response()->json([
+            'chats' => $chats,
+            'user'  => $user,
+        ]);
     }
 
+    /**
+     * Guarda mensaje y emite notificación con URL al hilo concreto.
+     */
     public function enviomensaje(Request $request)
     {
-        $trabajo = $request->input('trabajo');
+        $trabajo    = $request->input('trabajo');
         $trabajador = $request->input('trabajador');
-        $mensaje = $request->input('mensaje');
-    
-       // Guardar el mensaje en la base de datos
-        $postulacion = new Chat();
-        $postulacion->trabajo_id = $trabajo;
-        $postulacion->emisor = Auth::user()->id;  // Emisor
-        $postulacion->receptor = $trabajador;     // Receptor
-        $postulacion->contenido = $mensaje;
-        $postulacion->save();
+        $mensaje    = $request->input('mensaje');
 
-        // Obtener el nombre del emisor correctamente
-        $emisorNombre = Auth::user()->nombre;  // Aquí es donde se obtiene el nombre del emisor
-
-        // Crear la notificación para el receptor (trabajador o cliente)
-        $notificacion = Notificacion::create([
-            'usuario_id' => $trabajador,
-            'mensaje' => 'Tienes un nuevo mensaje de ' . $emisorNombre,
-            'fecha_creacion' => now(),
-            'tipo' => 'mensaje',  // Aquí estamos indicando el tipo de la notificación (mensajes, valoraciones, etc.)
+        // 1) Guardar mensaje
+        Chat::create([
+            'trabajo_id' => $trabajo,
+            'emisor'     => Auth::id(),
+            'receptor'   => $trabajador,
+            'contenido'  => $mensaje,
         ]);
 
-        // Emitir el evento de notificación
-        event(new NewNotificacion($notificacion));  // Aquí estamos emitiendo el evento
-        Log::info('Evento de notificación emitido', ['notificacion' => $notificacion]); 
-        Log::info('Nombre del emisor', ['emisorNombre' => $emisorNombre]); // Log para verificar que se emite el evento
-        Log::info('Usuario autenticado', ['usuario' => Auth::user()]);
-        Log::info('Tipo de notificación', ['tipo' => $notificacion->tipo]);
+        // 2) Crear notificación
+        $emisorNombre = Auth::user()->nombre;
+        $notificacion = Notificacion::create([
+            'usuario_id'    => $trabajador,
+            'mensaje'       => "Tienes un nuevo mensaje de {$emisorNombre}",
+            'fecha_creacion'=> now(),
+            'leido'         => false,
+            'tipo'          => 'mensaje',
+            'trabajo_id'    => $trabajo,
+        ]);
 
-    
+        // 3) Inyectar URL al hilo concreto
+        $notificacion->url = route('vista.chat', [
+            'id'        => $trabajo,
+            'trabajador'=> $trabajador,
+        ]);
+
+        event(new NewNotificacion($notificacion));
+
+        // 4) Para que tu JS siga funcionando igual
         return response()->json(['status' => 'success']);
     }
 }

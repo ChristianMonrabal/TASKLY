@@ -1,35 +1,36 @@
 <?php
-
 namespace App\Events;
 
 use App\Models\Notificacion;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-class NewNotificacion
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class NewNotificacion implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $notificacion;
-
-    /**
-     * Crear una nueva instancia de evento.
-     *
-     * @param \App\Models\Notificacion $notificacion
-     * @return void
-     */
+    public $url;
 
     public function __construct(Notificacion $notificacion)
     {
         $this->notificacion = $notificacion;
+        $this->url          = $notificacion->url;
     }
-    
+
     public function broadcastOn()
     {
-        return new PrivateChannel('App.Models.User.' . $this->notificacion->usuario_id);
+        return new Channel('App.Models.User.' . $this->notificacion->usuario_id);
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'notificacion' => $this->notificacion,
+            'url'          => $this->url,
+        ];
     }
 }
-
-
-

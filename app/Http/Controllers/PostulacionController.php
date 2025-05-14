@@ -66,6 +66,7 @@ class PostulacionController extends Controller
              $notificacion = Notificacion::create([
                 'usuario_id' => $postulacion->trabajador_id,  // El trabajador es el receptor
                 'mensaje' => '¡Felicidades! Tu postulación para el trabajo "' . $trabajo->titulo . '" ha sido aceptada.',
+                'fecha_creacion' => now(),
             ]);
             
             // Asegurémonos de que la notificación se crea correctamente
@@ -121,6 +122,7 @@ class PostulacionController extends Controller
         $notificacion = Notificacion::create([
             'usuario_id' => $postulacion->trabajador_id,  // El trabajador es el receptor
             'mensaje' => 'Tu postulación para el trabajo "' . $trabajo->titulo . '" ha sido rechazada.',
+            'fecha_creacion' => now(),
         ]);
         
         // Asegurémonos de que la notificación se crea correctamente
