@@ -10,7 +10,15 @@ function validarMotivo() {
         return true;
     }
 }
+function validarGravedad() {
+    const gravedad = document.getElementById('gravedad').value;
+    const errorDiv = document.getElementById('gravedad-error');
 
-function validarTextarea() {
-    return validarMotivo();
+    if (gravedad === '') {
+        errorDiv.textContent = 'Debe seleccionar un nivel de gravedad.';
+        return false;
+    } else {
+        errorDiv.textContent = '';
+        return true;
+    }
 }
