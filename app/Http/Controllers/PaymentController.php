@@ -222,4 +222,35 @@ class PaymentController extends Controller
             'public_key' => $publicKey ?: null,
         ]);
     }
+    
+    /**
+     * Genera y permite descargar la factura de un trabajo
+     */
+    public function generarFactura(Trabajo $trabajo)
+    {
+        // Buscamos el pago relacionado con este trabajo
+        $pago = Pago::whereHas('postulacion', function($query) use ($trabajo) {
+            $query->where('trabajo_id', $trabajo->id);
+        })->first();
+        
+        if (!$pago) {
+            return redirect()->back()->with('error', 'No se encontró un pago para este trabajo');
+        }
+        
+        // Datos para la factura
+        $datos = [
+            'numero_factura' => 'TASKLY-' . str_pad($pago->id, 6, '0', STR_PAD_LEFT),
+            'fecha' => is_string($pago->fecha_pago) ? $pago->fecha_pago : $pago->fecha_pago->format('d/m/Y'),
+            'cliente' => $trabajo->cliente->nombre,
+            'trabajador' => $pago->postulacion->trabajador->nombre,
+            'concepto' => $trabajo->titulo,
+            'subtotal' => $pago->cantidad,
+            'comision' => $pago->cantidad * 0.1, // 10% de comisión
+            'total' => $pago->cantidad,
+        ];
+        
+        // En un sistema real, aquí generaríamos un PDF
+        // Por ahora, mostramos una vista con los datos
+        return view('facturas.detalle', compact('datos', 'trabajo', 'pago'));
+    }
 }

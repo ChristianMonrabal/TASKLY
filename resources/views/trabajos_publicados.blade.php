@@ -62,9 +62,21 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     
-                                    <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
+                                    @php
+                                        $tienePago = App\Models\Pago::whereHas('postulacion', function($query) use ($trabajo) {
+                                            $query->where('trabajo_id', $trabajo->id);
+                                        })->exists();
+                                    @endphp
+                                    
+                                    @if($tienePago)
+                                        <a href="{{ route('payment.factura', $trabajo->id) }}" title="Descargar factura" class="icon-button" style="background-color: #4CAF50;">
+                                            <i class="fas fa-file-invoice-dollar" style="color: white;"></i>
+                                        </a>
+                                    @else
+                                        <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    @endif
                                     
                                     @php
                                         $postulacion = App\Models\Postulacion::where('trabajo_id', $trabajo->id)

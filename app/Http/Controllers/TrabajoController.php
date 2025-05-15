@@ -48,13 +48,25 @@ public function index()
 
     public function todos()
     {
-        $trabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->get();
+        // Obtener los trabajos que no estén en estado pagado (11) o cancelado
+        // Estado 10 = Aceptado/Asignado, pero aún no pagado
+        $trabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
+            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
         return response()->json($trabajos);
     }
 
     public function nuevos()
     {
-        $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])->orderBy('created_at', 'desc')->take(5)->get();
+        // Obtener los 5 trabajos más recientes que no estén pagados
+        $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
+            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+            
         return response()->json($nuevosTrabajos);
     }
 
@@ -64,6 +76,7 @@ public function index()
             ->whereHas('categoriastipotrabajo', function ($query) use ($categoria_id) {
                 $query->where('categoria_id', $categoria_id);
             })
+            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
             ->orderBy('created_at', 'desc')
             ->get();
         return response()->json($trabajos);
@@ -80,12 +93,15 @@ public function index()
     private function buscarTrabajos($busqueda)
     {
         return Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
-            ->where('titulo', 'LIKE', "%{$busqueda}%")
-            ->orWhere('descripcion', 'LIKE', "%{$busqueda}%")
-            ->orWhere('precio', 'LIKE', "%{$busqueda}%")
-            ->orWhereHas('categoriastipotrabajo', function ($query) use ($busqueda) {
-                $query->where('nombre', 'like', "%{$busqueda}%");
+            ->where(function ($query) use ($busqueda) {
+                $query->where('titulo', 'LIKE', "%{$busqueda}%")
+                    ->orWhere('descripcion', 'LIKE', "%{$busqueda}%")
+                    ->orWhere('precio', 'LIKE', "%{$busqueda}%")
+                    ->orWhereHas('categoriastipotrabajo', function ($q) use ($busqueda) {
+                        $q->where('nombre', 'like', "%{$busqueda}%");
+                    });
             })
+            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
             ->orderBy('created_at', 'desc')
             ->get();
     }

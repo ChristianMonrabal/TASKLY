@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
         return view('payment-complete');
     })->name('payment.complete');
     Route::get('/payment/check-config', [App\Http\Controllers\PaymentController::class, 'checkStripeConfig'])->name('payment.check-config');
+    Route::get('/payment/factura/{trabajo}', [App\Http\Controllers\PaymentController::class, 'generarFactura'])->name('payment.factura');
     
     // Ruta para valoraciones (especialmente después del pago)
     Route::get('/valoraciones/{trabajador_id}', [App\Http\Controllers\ValoracionesController::class, 'mostrarFormularioValoracion'])->name('valoraciones.trabajador');
