@@ -58,9 +58,21 @@
                                         <i class="fas fa-calendar-plus"></i>
                                     </button>
 
-                                    <a href="{{ route('trabajos.editar', $trabajo->id) }}" title="Editar" class="edit-btn icon-button">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    @php
+                                        $trabajoCompletado = App\Models\Pago::whereHas('postulacion', function($query) use ($trabajo) {
+                                            $query->where('trabajo_id', $trabajo->id);
+                                        })->exists();
+                                    @endphp
+                                    
+                                    @if(!$trabajoCompletado)
+                                        <a href="{{ route('trabajos.editar', $trabajo->id) }}" title="Editar" class="edit-btn icon-button">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    @else
+                                        <button class="edit-btn icon-button" style="background-color: #ccc; cursor: not-allowed;" title="No se puede editar un trabajo completado" disabled>
+                                            <i class="fas fa-edit" style="color: #888;"></i>
+                                        </button>
+                                    @endif
                                     
                                     @php
                                         $tienePago = App\Models\Pago::whereHas('postulacion', function($query) use ($trabajo) {

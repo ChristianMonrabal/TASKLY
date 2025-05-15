@@ -61,6 +61,14 @@
                                     <span class="badge bg-success text-white p-2">
                                         <i class="fas fa-check mr-1"></i> Aceptado
                                     </span>
+                                @elseif(isset($trabajoCompletado) && $trabajoCompletado)
+                                    <!-- Trabajo completado, mostramos botones deshabilitados con tooltip -->
+                                    <span class="action-icon mx-1" style="opacity: 0.5; cursor: not-allowed;" title="No se pueden aceptar candidatos en un trabajo ya completado">
+                                        <i class="fas fa-check" style="color: #ccc;"></i>
+                                    </span>
+                                    <span class="action-icon mx-1" style="opacity: 0.5; cursor: not-allowed;" title="No se pueden rechazar candidatos en un trabajo ya completado">
+                                        <i class="fas fa-times" style="color: #ccc;"></i>
+                                    </span>
                                 @else
                                     <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
                                         <i class="fas fa-check"></i>
