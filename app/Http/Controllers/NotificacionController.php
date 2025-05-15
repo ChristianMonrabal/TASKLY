@@ -2,39 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NewNotificacion;
 use App\Models\Notificacion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Events\NewNotificacion;
+use Illuminate\Support\Facades\DB;
+
 class NotificacionController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $userId = $request->user()->id;
-        $notis = Notificacion::where('usuario_id', $userId)
-                    ->orderByDesc('fecha_creacion')
-                    ->get();
-    
-        // Pasar las notificaciones a la vista
-        return view('layouts.app', ['notificaciones' => $notis]);
+        $notificaciones = Notificacion::where('usuario_id', Auth::id())
+            ->orderByDesc('fecha_creacion')
+            ->get();
+
+        return view('notificaciones.index', compact('notificaciones'));
     }
 
-    // Marcar todas como leídas
-    public function markAllRead(Request $request)
+    public function store(Request $request)
     {
-        // Obtener el usuario autenticado
-        $userId = $request->user()->id;
-    
-        // Actualizar todas las notificaciones no leídas a leídas
-        $updated = Notificacion::where('usuario_id', $userId)
-            ->where('leido', 0)  // Solo las notificaciones no leídas
-            ->update(['leido' => 1]);  // Marcamos como leídas
-    
-        // Si no se actualizan filas, logueamos una advertencia
-        if ($updated === 0) {
-            Log::warning('No se actualizaron las notificaciones como leídas para el usuario', ['userId' => $userId]);
+        $userId  = Auth::id();
+        $mensaje = $request->input('mensaje');
+        $trabajo = $request->input('trabajo_id');
+
+        $notificacion = Notificacion::create([
+            'usuario_id'    => $userId,
+            'mensaje'       => $mensaje,
+            'fecha_creacion'=> now(),
+            'leido'         => false,
+            'trabajo_id'    => $trabajo,  // opcional
+        ]);
+
+        if (! $notificacion->trabajo_id) {
+            $notificacion->setAttribute('url', route('vista.chat', $trabajo));
         }
-    
-        return response()->json(['status' => 'success', 'updatedRows' => $updated]);
+
+        event(new NewNotificacion($notificacion));
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function getNewNotifications(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        $notificaciones = Notificacion::where('usuario_id', $userId)
+            ->where('leido', false)
+            ->orderByDesc('fecha_creacion')
+            ->get();
+
+        return response()->json($notificaciones);
+    }
+
+    public function markAllAsRead()
+    {
+        DB::table('notificaciones')
+            ->where('usuario_id', Auth::id())
+            ->where('leido', false)
+            ->update(['leido' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markAsRead($id)
+    {
+        Notificacion::where('id', $id)->update(['leido' => true]);
+        return response()->json(['success' => true]);
     }
 }

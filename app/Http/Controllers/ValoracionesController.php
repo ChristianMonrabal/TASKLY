@@ -10,17 +10,12 @@ use App\Models\Postulacion;
 
 class ValoracionesController extends Controller
 {
-    /**
-     * Muestra la página de valoraciones con datos dinámicos del trabajo y trabajador
-     */
     public function index(Request $request)
     {
-        // Intentamos obtener datos del trabajo y trabajador de la sesión o de la URL
         $trabajoId = $request->input('trabajo_id', session('trabajo_id'));
         $trabajadorId = $request->input('trabajador_id', session('trabajador_id'));
         $postulacionId = $request->input('postulacion_id', session('postulacion_id'));
         
-        // Guardamos en sesión para uso posterior
         if ($trabajoId && $trabajadorId) {
             session(['trabajo_id' => $trabajoId]);
             session(['trabajador_id' => $trabajadorId]);
@@ -28,11 +23,9 @@ class ValoracionesController extends Controller
                 session(['postulacion_id' => $postulacionId]);
             }
             
-            // Cargamos el trabajo y el trabajador
             $trabajo = Trabajo::find($trabajoId);
             $trabajador = User::find($trabajadorId);
             
-            // Registramos para depuración
             \Illuminate\Support\Facades\Log::info("Cargando valoración", [
                 'trabajo_id' => $trabajoId,
                 'trabajador_id' => $trabajadorId,
@@ -47,26 +40,19 @@ class ValoracionesController extends Controller
                     'postulacion_id' => $postulacionId
                 ]);
             } else {
-                // Si no encontramos los objetos, mostramos un error
                 return redirect()->route('trabajos.index')
                     ->with('error', 'No se pudieron cargar los datos del trabajo o del trabajador.');
             }
         }
         
-        // Si llegamos aquí, no hay datos suficientes para mostrar la valoración
         return redirect()->route('trabajos.index')
             ->with('error', 'No hay suficiente información para mostrar esta valoración.');
     }
     
-    /**
-     * Muestra la página para valorar a un trabajador tras completar un pago
-     */
     public function mostrarFormularioValoracion($trabajador_id)
     {
-        // Obtener el trabajador
         $trabajador = User::findOrFail($trabajador_id);
         
-        // Obtener valoraciones previas del trabajador para mostrarlas
         $valoraciones = Valoracion::where('trabajador_id', $trabajador_id)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -81,8 +67,16 @@ class ValoracionesController extends Controller
 {
     $request->validate([
         'comentario' => 'required|string',
-        'puntuacion' => 'required|integer|min:1|max:5', // ahora es requerido
+        'puntuacion' => 'required|integer|min:1|max:5',
         'imagen' => 'nullable|image|max:2048',
+    ], [
+        'comentario.required' => 'El comentario es obligatorio.',
+        'puntuacion.required' => 'La puntuación es obligatoria.',
+        'puntuacion.integer' => 'La puntuación debe ser un número entero.',
+        'puntuacion.min' => 'La puntuación mínima es 1.',
+        'puntuacion.max' => 'La puntuación máxima es 5.',
+        'imagen.image' => 'El archivo debe ser una imagen.',
+        'imagen.max' => 'La imagen no debe superar los 2MB.',
     ]);
 
     $trabajoId = session('trabajo_id');
@@ -110,5 +104,4 @@ class ValoracionesController extends Controller
 
     return redirect()->route('trabajos.index')->with('success', 'Valoración guardada correctamente.');
 }
-
 }

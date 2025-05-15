@@ -95,7 +95,21 @@
         </div>
     </div>
 @endsection
-
 @section('scripts')
+    {{-- Si hay conversación seleccionada por URL, la abrimos --}}
+    @if(! is_null($selectedChatId))
+        <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            // 1) Mostrar la columna de chat
+            document.getElementById('seccionchat').style.display = 'flex';
+            // 2) Marcar el contacto activo
+            const activo = document.getElementById('chatactivo{{ $selectedChatId }}');
+            if (activo) activo.classList.add('active');
+            // 3) Cargar sus mensajes
+            cargamensaje({{ $selectedChatId }});
+        });
+        </script>
+    @endif
+
     <script src="{{ asset('js/chat/cargamensaje.js') }}"></script>
 @endsection

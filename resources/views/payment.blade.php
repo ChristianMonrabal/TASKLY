@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/payment.css') }}">
+@endsection
+
 @section('content')
 <div class="container payment-container py-5">
     <div class="row justify-content-center">
@@ -10,23 +14,12 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="row no-gutters">
-                        <!-- Columna izquierda: Extracto del pago -->
                         <div class="col-md-5 border-right">
                             <div class="payment-summary p-4">
                                 <div class="d-flex align-items-center mb-4">
-                                    <img src="/img/logo.png" alt="TASKLY" height="40" class="mr-3">
                                     <div class="payment-badge">
                                         <i class="fas fa-shield-alt"></i> Pago Seguro
                                     </div>
-                                </div>
-                                
-                                <h4 class="mb-3">{{ $trabajo->titulo }}</h4>
-                                
-                                <div class="worker-info d-flex align-items-center mb-4">
-                                    <div class="avatar mr-2">
-                                        <i class="fas fa-user-circle"></i>
-                                    </div>
-                                    <span>{{ $trabajador->nombre }}</span>
                                 </div>
                                 
                                 <div class="divider my-4"></div>
@@ -71,22 +64,7 @@
                         <!-- Columna derecha: Método de pago -->
                         <div class="col-md-7">
                             <div class="payment-method p-4">
-                                <h4 class="mb-4">Método de Pago</h4>
-                                <div id="payment-message" class="alert d-none"></div>
-                                
-                                <div class="payment-card-header mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <i class="far fa-credit-card text-primary mr-2"></i>
-                                        <h5 class="mb-0">Tarjeta de crédito o débito</h5>
-                                    </div>
-                                    <div class="mt-2 mb-3 accepted-cards">
-                                        <i class="fab fa-cc-visa mx-1"></i>
-                                        <i class="fab fa-cc-mastercard mx-1"></i>
-                                        <i class="fab fa-cc-amex mx-1"></i>
-                                    </div>
-                                </div>
-                                
-                                <form id="payment-form" data-email="{{ $usuario_actual->email }}" data-stripe-key="{{ $stripe_key }}" data-create-intent-url="{{ route('payment.create-intent') }}" data-update-status-url="{{ route('payment.update-status') }}">
+                                <form id="payment-form">
                                     <input type="hidden" id="trabajo_id" value="{{ $trabajo->id }}">
                                     <input type="hidden" id="trabajador_id" value="{{ $trabajador->id }}">
                                     <input type="hidden" id="amount" value="{{ $trabajo->precio }}">
@@ -108,10 +86,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/payment.css') }}">
 @endsection
 
 @section('scripts')

@@ -39,11 +39,16 @@
             <i class="fas fa-star" data-value="5"></i>
         </div>
         <input type="hidden" name="puntuacion" id="puntuacion">
-        <span id="star-error" class="error-message" style="display: none;">Por favor, selecciona una calificación.</span>
+        @error('puntuacion')
+            <span class="error-message text-danger d-block mt-1 center">{{ $message }}</span>
+        @enderror
 
         <div class="form-group">
             <label for="comentario">Añade un comentario:</label>
-            <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu valoración..."></textarea>
+            <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu valoración...">{{ old('comentario') }}</textarea>
+            @error('comentario')
+                <span class="error-message text-danger d-block mt-1">{{ $message }}</span>
+            @enderror
             <span id="comment-error" class="error-message" style="display: none;">El comentario no puede estar vacío.</span>
         </div>
 
@@ -58,17 +63,10 @@
                     <img id="imagen-preview" src="" alt="Vista previa" style="display: none;" onclick="showImageInModal(this)">
                 </div>
             </div>
+            @error('imagen')
+                <span class="error-message text-danger d-block mt-1">{{ $message }}</span>
+            @enderror
         </div>
-        @if ($errors->any())
-    <div class="alert alert-danger">
-        <h5><i class="fas fa-exclamation-circle"></i> Se han producido los siguientes errores:</h5>
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
         <button type="submit" class="btn color w-100">Finalizar trabajo</button>
     </form>

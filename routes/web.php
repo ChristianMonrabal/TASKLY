@@ -95,7 +95,7 @@ Route::middleware('auth')->group(function () {
 
     // Chat
     Route::controller(ChatController::class)->group(function () {
-        Route::get('/chat', 'Vistachat')->name('vista.chat');
+        Route::get('/chat/{id?}', [ChatController::class, 'Vistachat'])->name('vista.chat');
         Route::post('/cargamensajes', 'cargamensajes');
         Route::post('/enviomensaje', 'enviomensaje');
     });
@@ -146,6 +146,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/reportes/{user_id}', [ReporteController::class, 'index'])->name('reportes.index');
     Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
 
+    
+    Route::get('/listareportes', [ReporteController::class, 'listareportes'])->name('listareportes.listareportes');
+
     // Rutas API Admin
     // —— API para el CRUD Admin ——
     // Usuarios:
@@ -191,9 +194,15 @@ Route::get('/mis-trabajos', [JobController::class, 'trabajosPublicados'])->name(
 Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('trabajos.eliminar');
 Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
 
-Route::get('/notificaciones', [NotificacionController::class, 'index'])
-    ->name('notificaciones.index');
-Route::post('/notificaciones/mark-all-read', [NotificacionController::class, 'markAllRead'])
-    ->name('notificaciones.markAllRead');
-Route::post('/notificaciones/sample', [NotificacionController::class, 'storeSample'])
-    ->name('notificaciones.sample');
+Route::middleware('auth')->group(function () {
+    Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
+    // Ruta para crear una notificación (puedes probar esto con Postman o frontend)
+    Route::post('/notificaciones', [NotificacionController::class, 'store']);
+
+    Route::post('/notificaciones/mark-all-read', [NotificacionController::class, 'markAllAsRead']);
+    Route::post('/notificaciones/{id}/mark-read', [NotificacionController::class, 'markAsRead']);
+
+    // Ruta para obtener notificaciones no leídas
+    Route::get('/notificaciones/new', [NotificacionController::class, 'getNewNotifications']);
+});
+
