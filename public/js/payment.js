@@ -215,7 +215,8 @@ async function updatePaymentStatus(trabajo_id, trabajador_id, client_secret) {
             confirmButtonText: 'Continuar a valoraciones'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = data.redirect_url || '/valoraciones/crear';
+                // Redirigir a la página de valoraciones con los parámetros del trabajador y trabajo
+                window.location.href = `/valoraciones/${trabajador_id}?trabajo_id=${trabajo_id}`;
             }
         });
         

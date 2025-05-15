@@ -64,7 +64,7 @@
                         <!-- Columna derecha: Método de pago -->
                         <div class="col-md-7">
                             <div class="payment-method p-4">
-                                <form id="payment-form">
+                                <form id="payment-form" data-stripe-key="{{ $stripe_key }}" data-create-intent-url="{{ route('payment.create-intent') }}" data-update-status-url="{{ route('payment.update-status') }}">
                                     <input type="hidden" id="trabajo_id" value="{{ $trabajo->id }}">
                                     <input type="hidden" id="trabajador_id" value="{{ $trabajador->id }}">
                                     <input type="hidden" id="amount" value="{{ $trabajo->precio }}">
@@ -72,6 +72,8 @@
                                     <div id="payment-element" class="mb-4">
                                         <!-- El elemento de pago de Stripe se insertará aquí -->
                                     </div>
+                                    
+                                    <div id="payment-message" class="alert alert-danger d-none mt-3"></div>
                                     
                                     <button id="submit-button" class="btn btn-primary btn-lg btn-block">
                                         <div class="spinner d-none" id="spinner"></div>
