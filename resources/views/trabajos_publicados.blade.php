@@ -89,7 +89,9 @@
             </div>
             <div class="card-actions">
                 <div class="action-buttons">
-                    <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn" onclick="event.stopPropagation();">Ver candidatos</a>
+                    <a href="/candidatos_trabajo/{{ $trabajo->id }}" class="action-btn" onclick="event.stopPropagation();">
+                        Ver candidatos ({{ $trabajo->postulaciones->count() }})
+                    </a>
                     <br>
                 </div>
             </div>
