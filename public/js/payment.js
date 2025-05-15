@@ -215,8 +215,10 @@ async function updatePaymentStatus(trabajo_id, trabajador_id, client_secret) {
             confirmButtonText: 'Continuar a valoraciones'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Redirigir a la página de valoraciones con los parámetros del trabajador y trabajo
-                window.location.href = `/valoraciones/${trabajador_id}?trabajo_id=${trabajo_id}`;
+                // La ruta de valoraciones es valoraciones.valoraciones (/valoraciones?...)
+                // Según el archivo de rutas web.php
+                const valoracionesUrl = `/valoraciones?trabajo_id=${trabajo_id}&trabajador_id=${trabajador_id}`;
+                window.location.href = data.redirect_url || valoracionesUrl;
             }
         });
         
