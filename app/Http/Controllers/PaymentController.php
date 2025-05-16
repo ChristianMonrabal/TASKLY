@@ -13,6 +13,7 @@ use Stripe\Stripe;
 use Stripe\StripeClient;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
+use App\Models\Estado;
 
 class PaymentController extends Controller
 {
@@ -174,6 +175,13 @@ class PaymentController extends Controller
             
             // Obtener datos del trabajo y del trabajador para la valoración
             $trabajo = Trabajo::find($validated['trabajo_id']);
+            
+            // Actualizar el estado del trabajo a Completado
+            $estadoCompletadoId = Estado::where('nombre', 'Completado')->first()->id;
+            $trabajo->estado_id = $estadoCompletadoId; // Completado
+            $trabajo->save();
+            
+            Log::info('Trabajo ID: ' . $trabajo->id . ' actualizado a estado Completado');
             
             // Registramos el pago en la base de datos usando la relación con postulación
             try {
