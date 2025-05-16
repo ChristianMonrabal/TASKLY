@@ -588,3 +588,27 @@ html, body {
   overscroll-behavior: none;
 }
 
+.categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.categoria-btn {
+  white-space: normal; /* Permite salto de línea en el texto largo */
+  word-break: break-word;
+  flex: 1 1 120px; /* Permite que los botones se ajusten y bajen si no caben */
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: 0;
+}
+
+/* Si quieres que siempre estén en columna en móviles */
+@media (max-width: 480px) {
+  .categorias {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
