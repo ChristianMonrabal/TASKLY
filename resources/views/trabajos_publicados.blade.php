@@ -10,33 +10,6 @@
     <script src="{{ asset('js/eliminar_trabajo.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/filtro_mis_trabajos.js') }}"></script>
-    
-    <style>
-        /* Estilos para el botón de pago */
-        .payment-btn {
-            background-color: #fff;
-            border: 1px solid #EC6A6A;
-        }
-        
-        .payment-btn:hover {
-            background-color: #EC6A6A;
-        }
-        
-        .payment-btn:hover i {
-            color: white !important;
-        }
-        
-        .payment-action-btn {
-            background-color: #EC6A6A;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .payment-action-btn:hover {
-            background-color: #d85555;
-            color: white;
-        }
-    </style>
 @endsection
 
 @section('content')
