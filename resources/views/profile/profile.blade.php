@@ -107,20 +107,32 @@
         <input type="hidden" name="foto_perfil_camera" id="foto_perfil_camera">
 
         @if(session('success'))
-        <div class="green">
-            {{ session('success') }}
-        </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: '{{ session("success") }}',
+                        confirmButtonColor: '#EC6A6A'
+                    });
+                });
+            </script>
         @endif
 
+
         @if($errors->any())
-        <div>
-            <ul>
-                @foreach($errors->all() as $error)
-                <li class="error-message">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al guardar',
+                        text: '{{ $errors->first() }}',
+                        confirmButtonColor: '#EC6A6A'
+                    });
+                });
+            </script>
         @endif
+
 
         <div class="text-center mt-4">
             <button type="submit" class="btn color">Guardar cambios</button>
@@ -154,5 +166,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/camera.js') }}"></script>
     <script src="{{ asset('js/profile.js') }}"></script>
+    <script src="{{ asset('js/profile_alerts.js') }}"></script>
+    <script>
+    window.profileFeedback = {
+        success: {!! json_encode(session('success')) !!},
+        error: {!! json_encode($errors->first()) !!}
+    };
+    </script>
 </body>
 </html>
