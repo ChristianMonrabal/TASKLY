@@ -11,6 +11,7 @@ use App\Models\Chat;
 use App\Models\Notificacion;
 use App\Events\NewNotificacion;
 use Illuminate\Support\Facades\Log;
+use App\Models\Pago;
 class PostulacionController extends Controller
 {
     /**
@@ -35,6 +36,18 @@ class PostulacionController extends Controller
                      'success' => false,
                      'message' => 'No estás autorizado para realizar esta acción'
                  ], 403);
+             }
+             
+             // Verificar si el trabajo ya está completado (tiene un pago asociado)
+             $trabajoCompletado = Pago::whereHas('postulacion', function($query) use ($trabajo) {
+                 $query->where('trabajo_id', $trabajo->id);
+             })->exists();
+             
+             if ($trabajoCompletado) {
+                 return response()->json([
+                     'success' => false,
+                     'message' => 'No se puede aceptar candidatos en un trabajo que ya ha sido completado y pagado'
+                 ], 400);
              }
      
              // Actualizar el estado de la postulación a "aceptada"
@@ -111,6 +124,18 @@ class PostulacionController extends Controller
                 'success' => false,
                 'message' => 'No estás autorizado para realizar esta acción'
             ], 403);
+        }
+        
+        // Verificar si el trabajo ya está completado (tiene un pago asociado)
+        $trabajoCompletado = Pago::whereHas('postulacion', function($query) use ($trabajo) {
+            $query->where('trabajo_id', $trabajo->id);
+        })->exists();
+        
+        if ($trabajoCompletado) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede rechazar candidatos en un trabajo que ya ha sido completado y pagado'
+            ], 400);
         }
 
         // Actualizar el estado de la postulación a "rechazado"

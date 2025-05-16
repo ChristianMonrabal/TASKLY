@@ -75,6 +75,11 @@
         <input type="text" id="inputBusqueda" placeholder="Buscar por título o descripción..." value="{{ $busqueda ?? '' }}">
       </div>
       
+      <div class="postal-box">
+        <i class="fas fa-map-marker-alt postal-icon"></i>
+        <input type="text" id="inputCodigoPostal" placeholder="Código postal">
+      </div>
+      
       <div class="category-box">
         <div class="category-dropdown">
             <div class="dropdown-header" id="dropdownHeader">Selecciona categorías</div>
@@ -96,7 +101,10 @@
   </div>
 
   <section class="todos-trabajos">
-    <h2 class="seccion-titulo">📋 Todos los trabajos</h2>
+    <div class="seccion-header">
+      <h2 class="seccion-titulo">📋 Todos los trabajos</h2>
+      <div id="perPageContainer" class="per-page-container"></div>
+    </div>
     <div class="grid-trabajos" id="gridTrabajos">
       <div class="loading">Cargando trabajos...</div>
     </div>

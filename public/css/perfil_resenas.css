@@ -1,0 +1,80 @@
+/* Estilos específicos para la sección de reseñas en el perfil de usuario */
+
+/* Variables para mantener consistencia */
+:root {
+    --primary: #EC6A6A;
+    --star-color: #FFD700;
+    --text-dark: #333;
+    --text-muted: #777;
+    --shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Grid de reseñas */
+.resenas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Tarjeta de reseña individual */
+.resena-card {
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.resena-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.resena-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.resena-titulo {
+    font-weight: bold;
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+/* Estilos para estrellas - compatible con la clase existente */
+.estrella-amarilla,
+.resena-estrellas {
+    color: var(--star-color);
+}
+
+.resena-comentario {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.resena-fecha {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+    .resenas-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .resenas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .resenas-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

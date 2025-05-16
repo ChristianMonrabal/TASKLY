@@ -37,10 +37,13 @@ function cargarTodosTrabajos() {
 
 /**
  * Función para renderizar todos los trabajos en el grid
- * @param {Array} trabajos - Array de objetos trabajo
+ * @param {Object} data - Objeto paginado con trabajos y metadata
  */
-function renderizarTodosTrabajos(trabajos) {
-  if (trabajos.length === 0) {
+function renderizarTodosTrabajos(data) {
+  // Verificar si los datos vienen en formato paginado
+  const trabajos = data.data || data;
+  
+  if (!trabajos || trabajos.length === 0) {
     gridTrabajos.innerHTML = '<div class="no-trabajos">No se encontraron trabajos que coincidan con tus filtros.</div>';
     return;
   }

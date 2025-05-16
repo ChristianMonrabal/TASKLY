@@ -43,28 +43,52 @@
                                             <i class="fas fa-calendar-plus"></i>
                                         </button>
 
+                                    @php
+                                        $trabajoCompletado = App\Models\Pago::whereHas('postulacion', function($query) use ($trabajo) {
+                                            $query->where('trabajo_id', $trabajo->id);
+                                        })->exists();
+                                    @endphp
+                                    
+                                    @if(!$trabajoCompletado)
                                         <a href="{{ route('trabajos.editar', $trabajo->id) }}" title="Editar" class="edit-btn icon-button">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        
+                                    @else
+                                        <button class="edit-btn icon-button" style="background-color: #ccc; cursor: not-allowed;" title="No se puede editar un trabajo completado" disabled>
+                                            <i class="fas fa-edit" style="color: #888;"></i>
+                                        </button>
+                                    @endif
+                                    
+                                    @php
+                                        $tienePago = App\Models\Pago::whereHas('postulacion', function($query) use ($trabajo) {
+                                            $query->where('trabajo_id', $trabajo->id);
+                                        })->exists();
+                                    @endphp
+                                    
+                                    @if($tienePago)
+                                        <a href="{{ route('payment.factura', $trabajo->id) }}" title="Descargar factura" class="icon-button" style="background-color: #4CAF50;">
+                                            <i class="fas fa-file-invoice-dollar" style="color: white;"></i>
+                                        </a>
+                                    @else
                                         <a href="#" onclick="event.preventDefault(); confirmDeleteTrabajo({{ $trabajo->id }});" title="Eliminar" class="icon-button">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
-                                        
-                                        @php
-                                            $postulacion = App\Models\Postulacion::where('trabajo_id', $trabajo->id)
-                                                ->where('estado_id', 10) // Estado aceptado
-                                                ->first();
-                                        @endphp
-                                        
-                                        @if($postulacion)
-                                            <a href="{{ route('payment.show', $trabajo->id) }}" title="Realizar pago" class="icon-button payment-btn">
-                                                <i class="fas fa-credit-card" style="color:#EC6A6A;"></i>
-                                            </a>
-                                        @endif
-                                    </div>
+                                    @endif
+                                    
+                                    @php
+                                        $postulacion = App\Models\Postulacion::where('trabajo_id', $trabajo->id)
+                                            ->where('estado_id', 10) // Estado aceptado
+                                            ->first();
+                                    @endphp
+                                    
+                                    @if($postulacion)
+                                        <a href="{{ route('payment.show', $trabajo->id) }}" title="Realizar pago" class="icon-button payment-btn">
+                                            <i class="fas fa-credit-card" style="color:#EC6A6A;"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
+                        </div>
 
                             <br/>
                             <div class="card-body">
