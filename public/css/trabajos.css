@@ -17,6 +17,13 @@
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  .simple-search {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
 .search-box {
   flex: 1;
   min-width: 200px;
@@ -28,8 +35,20 @@
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .postal-box {
+    width: 100%;
+  }
+}
+
 .category-box {
   width: 200px;
+}
+
+@media (max-width: 768px) {
+  .category-box {
+    width: 100%;
+  }
 }
 
 .search-icon,
@@ -90,6 +109,13 @@
   gap: 5px;
 }
 
+@media (max-width: 768px) {
+  .clear-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .clear-btn:hover {
   background-color: #f3f3f3;
   color: var(--primary);
@@ -141,6 +167,18 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+@media (max-width: 576px) {
+  .seccion-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .per-page-container {
+    align-self: flex-end;
+  }
 }
 
 /* Selector de elementos por página */

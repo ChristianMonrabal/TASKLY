@@ -77,7 +77,7 @@
       
       <div class="postal-box">
         <i class="fas fa-map-marker-alt postal-icon"></i>
-        <input type="text" id="inputCodigoPostal" placeholder="Código postal" value="{{ Auth::user() ? Auth::user()->codigo_postal : '' }}">
+        <input type="text" id="inputCodigoPostal" placeholder="Código postal">
       </div>
       
       <div class="category-box">
