@@ -496,26 +496,50 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: white;
-    z-index: 1000;
+    z-index: 50; /* Debe ser menor que el z-index de la navbar */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .category-dropdown .dropdown-option {
     display: flex;
     align-items: center;
-    padding: 10px;
-    font-size: 14px;
-    color: #333;
+    padding: 10px 14px;
+    font-size: 1rem;
+    color: var(--text);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f3f3f3;
+    background: #fff;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 0;
 }
 
-.category-dropdown .dropdown-option:hover {
-    background-color: #f1f1f1;
+.category-dropdown .dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.category-dropdown .dropdown-option:hover,
+.category-dropdown .dropdown-option.active {
+    background: linear-gradient(90deg, #ec6a6a 60%, #f8b6b6 100%);
+    color: #fff;
 }
 
 .category-dropdown .dropdown-option input[type="checkbox"] {
+    accent-color: #ec6a6a;
     margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #ec6a6a;
+    cursor: pointer;
+    transition: border 0.2s;
+}
+
+.category-dropdown .dropdown-option label {
+    cursor: pointer;
+    flex: 1;
+    font-weight: 500;
+    margin-bottom: 0;
+    user-select: none;
 }
 
 /* Responsivo */
