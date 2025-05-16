@@ -4,7 +4,7 @@
     --text: #333;
     --card-bg: white;
     --shadow: rgba(0, 0, 0, 0.1);
-    --radius: 15px;
+    --radius: 6px;
     --radius-lg: 25px;
     --transition: 0.3s ease;
     --font-main: 'Segoe UI', sans-serif;
@@ -31,7 +31,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
-    margin: 0 auto;
+    margin: 25px auto 0 auto; /* Aumenta el margen superior para bajar las cajas */
     width: 100%;
 }
 
@@ -173,10 +173,27 @@ h1 {
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Sobrescribe los estilos de layout.css solo para la página de postulaciones */
 .postulaciones-page .card {
-    border: none; /* Elimina el borde rojo global */
-    box-shadow: 0 4px 12px var(--shadow); /* Aplica un nuevo estilo */
+    border: none;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.filtro-postulaciones-container {
+    position: absolute;
+    top: 95px;
+    right: 180px;
+    width: 150px;
+    z-index: 10;
+    font-size: 0.95rem;
+}
+
+.filtro-postulaciones-select {
+    font-size: 0.95rem;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #333;
 }
 
 @media (max-width: 768px) {

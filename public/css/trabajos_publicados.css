@@ -426,9 +426,10 @@ h1 {
 }
 
 @media (max-width: 768px) {
-    .filtro-trabajos-container {
+    .buscador-container {
         position: static;
+        width: 100%;
         margin-bottom: 15px;
-        text-align: right;
+        min-width: unset;
     }
 }
