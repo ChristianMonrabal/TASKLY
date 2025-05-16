@@ -30,28 +30,14 @@ public function index()
 }
 
 
-    public function filtrarPorCategoria($categoria_id)
-    {
-        $categorias = Categoria::all();
-        $categoriaActual = $categoria_id;
-
-        return view('index', compact('categorias', 'categoriaActual'));
-    }
-
-    public function buscar(Request $request)
-    {
-        $busqueda = $request->input('busqueda');
-        $categorias = Categoria::all();
-
-        return view('index', compact('categorias', 'busqueda'));
-    }
+    // Los métodos filtrarPorCategoria() y buscar() han sido eliminados porque no se utilizan en la aplicación
 
     public function todos()
     {
-        // Obtener los trabajos que no estén en estado pagado (11) o cancelado
-        // Estado 10 = Aceptado/Asignado, pero aún no pagado
+        // Obtener solo los trabajos disponibles para postulación
+        // Excluir trabajos completados (3), pagados (6), cancelados (4) u otros estados no disponibles
         $trabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
-            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
+            ->whereNotIn('estado_id', [3, 4]) // Excluir solo completados y cancelados
             ->orderBy('created_at', 'desc')
             ->get();
             
@@ -60,9 +46,9 @@ public function index()
 
     public function nuevos()
     {
-        // Obtener los 5 trabajos más recientes que no estén pagados
+        // Obtener los 5 trabajos más recientes disponibles para postulación
         $nuevosTrabajos = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
-            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
+            ->whereNotIn('estado_id', [3, 4]) // Excluir solo completados y cancelados
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
@@ -76,7 +62,7 @@ public function index()
             ->whereHas('categoriastipotrabajo', function ($query) use ($categoria_id) {
                 $query->where('categoria_id', $categoria_id);
             })
-            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
+            ->whereNotIn('estado_id', [3, 4]) // Excluir solo completados y cancelados
             ->orderBy('created_at', 'desc')
             ->get();
         return response()->json($trabajos);
@@ -101,83 +87,17 @@ public function index()
                         $q->where('nombre', 'like', "%{$busqueda}%");
                     });
             })
-            ->whereNotIn('estado_id', [11]) // No mostrar trabajos pagados
+            ->whereNotIn('estado_id', [3, 4]) // Excluir solo completados y cancelados
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
-    public function filtrar(Request $request)
-    {
-        $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones']);
-
-        if ($request->has('busqueda') && !empty($request->busqueda)) {
-            $busqueda = $request->busqueda;
-            $query->where(function ($q) use ($busqueda) {
-                $q->where('titulo', 'like', "%{$busqueda}%")
-                    ->orWhere('descripcion', 'like', "%{$busqueda}%")
-                    ->orWhereHas('categoriastipotrabajo', function ($query) use ($busqueda) {
-                        $query->where('nombre', 'like', "%{$busqueda}%");
-                    });
-            });
-        }
-
-        if ($request->has('categorias') && is_array($request->categorias) && count($request->categorias) > 0) {
-            $query->whereHas('categoriastipotrabajo', function ($q) use ($request) {
-                $q->whereIn('categoria_id', $request->categorias);
-            });
-        }
-
-        if ($request->has('precio') && !empty($request->precio) && $request->precio != 'todos') {
-            $rangoPrecio = explode('-', $request->precio);
-
-            if (count($rangoPrecio) == 2) {
-                $min = $rangoPrecio[0] !== '' ? floatval($rangoPrecio[0]) : null;
-                $max = $rangoPrecio[1] !== '' ? floatval($rangoPrecio[1]) : null;
-
-                if ($min !== null && $max !== null) {
-                    $query->whereBetween('precio', [$min, $max]);
-                } elseif ($min !== null) {
-                    $query->where('precio', '>=', $min);
-                } elseif ($max !== null) {
-                    $query->where('precio', '<=', $max);
-                }
-            }
-        }
-
-        if ($request->has('ubicacion') && !empty($request->ubicacion) && $request->ubicacion != 'todos') {
-            if ($request->ubicacion == 'remoto') {
-                $query->where('es_remoto', true);
-            }
-        }
-
-        if ($request->has('orden') && !empty($request->orden)) {
-            switch ($request->orden) {
-                case 'precio-asc':
-                    $query->orderBy('precio', 'asc');
-                    break;
-                case 'precio-desc':
-                    $query->orderBy('precio', 'desc');
-                    break;
-                case 'valoracion':
-                    $query->orderBy('valoracion', 'desc');
-                    break;
-                case 'reciente':
-                default:
-                    $query->orderBy('created_at', 'desc');
-                    break;
-            }
-        } else {
-            $query->orderBy('created_at', 'desc');
-        }
-
-        $trabajos = $query->get();
-
-        return response()->json($trabajos);
-    }
+    // El método filtrar() ha sido eliminado porque no se utiliza en la aplicación
 
     public function filtrarSimple(Request $request)
     {
-        $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones']);
+        $query = Trabajo::with(['categoriastipotrabajo', 'imagenes', 'valoraciones'])
+            ->whereNotIn('estado_id', [3, 4]); // Excluir solo completados y cancelados
 
         // Filtrar por búsqueda (nombre o descripción)
         if ($request->has('busqueda') && !empty($request->busqueda)) {
@@ -195,11 +115,22 @@ public function index()
                 $q->whereIn('categoria_id', $categorias);
             });
         }
+        
+        // Filtrar por código postal
+        if ($request->has('codigo_postal') && !empty($request->codigo_postal)) {
+            $codigoPostal = $request->codigo_postal;
+            $query->where('direccion', $codigoPostal);
+        }
 
+        // Ordenación por fecha de creación descendente
         $query->orderBy('created_at', 'desc');
-
-        $trabajos = $query->get();
-
+        
+        // Número de elementos por página (puede ser personalizado desde el request)
+        $perPage = $request->has('per_page') ? $request->per_page : 10;
+        
+        // Aplicar paginación
+        $trabajos = $query->paginate($perPage);
+        
         return response()->json($trabajos);
     }
 
