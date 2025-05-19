@@ -16,6 +16,7 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
+        "darkmode-js": "^1.5.7",
         "moment": "^2.30.1"
     }
 }
