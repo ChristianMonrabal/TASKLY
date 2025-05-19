@@ -15,8 +15,6 @@
 
                 {{-- Información del perfil --}}
                 <div class="card-body text-center">
-            {{-- Información del perfil --}}
-                <div class="card-body text-center">
 
                     {{-- Foto de perfil --}}
                     <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; border: 3px solid #dc3545; box-shadow: 0 0 10px rgba(0,0,0,0.2); margin: 0 auto;">
@@ -44,12 +42,14 @@
                     @endif
 
                     {{-- Botón de chat & reporte de usuario --}}
-                    <a href="{{ route('vista.chat', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
-                        <i class="fas fa-comments"></i> Enviar mensaje
-                    </a>
-                    <a href="{{ route('reportes.index', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
-                        <i class="fas fa-exclamation-triangle"></i> Reportar usuario
-                    </a>
+                    @if(Auth::id() !== $usuario->id)
+                        <a href="{{ route('vista.chat', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
+                            <i class="fas fa-comments"></i> Enviar mensaje
+                        </a>
+                        <a href="{{ route('reportes.index', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
+                            <i class="fas fa-exclamation-triangle"></i> Reportar usuario
+                        </a>
+                    @endif
                 </div>
                 
                 {{-- Línea de separación entre la información del usuario y las valoraciones --}}
