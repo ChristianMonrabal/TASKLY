@@ -2,11 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const filtro = document.getElementById('filtroTrabajos');
     const trabajos = document.querySelectorAll('.trabajo-item');
 
-    // Mostrar todos por defecto
+    // Mostrar solo activos por defecto
     if (filtro && trabajos.length) {
-        filtro.value = 'todos';
+        filtro.value = 'activos';
         trabajos.forEach(function(item) {
-            item.style.display = '';
+            if (item.dataset.estado === 'activos') {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
         });
 
         filtro.addEventListener('change', function() {
