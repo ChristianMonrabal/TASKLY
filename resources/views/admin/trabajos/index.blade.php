@@ -39,6 +39,9 @@
                 <!-- Se llenará dinámicamente mediante JS -->
             </tbody>
         </table>
+        <nav aria-label="Paginación">
+            <ul id="trabajos-pagination" class="pagination justify-content-center"></ul>
+        </nav>
     </div>
 
     <!-- Modal: Editar Trabajo -->

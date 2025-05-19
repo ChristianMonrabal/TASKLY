@@ -32,6 +32,7 @@
                     <th>DNI</th>
                     <th>Rol</th>
                     <th>Descripción</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -39,6 +40,9 @@
                 <!-- Se llenará dinámicamente mediante JS -->
             </tbody>
         </table>
+        <nav aria-label="Paginación">
+            <ul id="usuarios-pagination" class="pagination justify-content-center"></ul>
+        </nav>
     </div>
 
     <!-- Modal: Editar Usuario -->

@@ -20,7 +20,7 @@ class LogroController extends Controller
         if ($request->filled('nombre')) {
             $query->where('nombre', 'like', "%{$request->nombre}%");
         }
-        return response()->json($query->get());
+        return $query->orderBy('nombre')->paginate(10);
     }
 
     public function show(Logro $logro)

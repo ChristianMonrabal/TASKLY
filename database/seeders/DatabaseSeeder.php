@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             PagosSeeder::class,
             CalendarioSeeder::class,
             TrabajoFinalizadosSeeder::class,
+            ReporteSeeder::class,
         ]);
     }
 }

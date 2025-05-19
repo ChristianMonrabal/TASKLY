@@ -77,7 +77,7 @@ class CategoriaController extends Controller
         if ($request->filled('sort') && in_array($request->sort, ['asc','desc'])) {
             $query->orderBy('nombre', $request->sort);
         }
-        return response()->json($query->get());
+        return $query->paginate(10);
     }
 
     public function destroy(Categoria $categoria)
