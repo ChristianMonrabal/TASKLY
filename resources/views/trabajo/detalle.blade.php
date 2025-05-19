@@ -30,15 +30,8 @@
                             <div class="meta-info">
                                 <div class="meta-item">
                                     <i class="fas fa-calendar"></i>
-                                    <span>Publicado: {{ $trabajo->created_at->format('d/m/Y') }}</span>
+                                    <span>{{ $trabajo->created_at->format('d/m/Y') }}</span>
                                 </div>
-
-                                @if ($trabajo->fecha_expiracion)
-                                    <div class="meta-item">
-                                        <i class="fas fa-hourglass-end"></i>
-                                        <span>Expira: {{ date('d/m/Y', strtotime($trabajo->fecha_expiracion)) }}</span>
-                                    </div>
-                                @endif
 
                                 @if ($trabajo->alta_responsabilidad === 'Sí')
                                     <div class="meta-item">
@@ -60,7 +53,12 @@
 
                                 <div class="meta-item precio-destacado">
                                     <i class="fas fa-euro-sign"></i>
-                                    <span>Precio: {{ $trabajo->precio }}€</span>
+                                    <span>{{ $trabajo->precio }}</span>
+                                </div>
+
+                                <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ $trabajo->direccion}}</span>
                                 </div>
                             </div>
                         </div>
@@ -134,8 +132,8 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
-                                                <button type="button" class="btn btn-cancelar" onclick="confirmarCancelacion()">
-                                                    <i class="fas fa-times"></i> Cancelar postulación
+                                                <button type="button" class="btn btn-postular" onclick="confirmarCancelacion()">
+                                                    <i class="fas fa-times"></i> Cancelar
                                                 </button>
                                             @endif
                                         @else

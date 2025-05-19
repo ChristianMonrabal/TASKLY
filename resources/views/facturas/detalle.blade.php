@@ -28,11 +28,11 @@
         
         <div class="factura-info">
             <div class="factura-info-item">
-                <div class="factura-info-label">Cliente:</div>
+                <div class="factura-info-label">Pagador</div>
                 <div>{{ $datos['cliente'] }}</div>
             </div>
             <div class="factura-info-item">
-                <div class="factura-info-label">Trabajador:</div>
+                <div class="factura-info-label">Beneficiario</div>
                 <div>{{ $datos['trabajador'] }}</div>
             </div>
         </div>

@@ -89,7 +89,6 @@
                                 </div>
                             </div>
                         </div>
-
                             <br/>
                             <div class="card-body">
                                 <h2 class="card-title">{{ $trabajo->titulo }}</h2>

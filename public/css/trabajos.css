@@ -775,7 +775,7 @@ html, body {
 /* Si quieres que siempre estén en columna en móviles */
 @media (max-width: 480px) {
   .categorias {
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 4px;
   }
 }

@@ -94,20 +94,28 @@
 .factura-totals {
     margin-left: auto;
     width: 300px;
+    /* Para que los textos no se salgan y se adapten */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
+/* Cada fila con display flex para alinear importe a la derecha */
 .factura-totals .row {
     display: flex;
     justify-content: space-between;
     padding: 5px 0;
+    word-break: break-word;
 }
 
+/* Total destacado */
 .factura-totals .total {
     font-weight: bold;
     color: #EC6A6A;
     font-size: 18px;
 }
 
+/* Footer de la factura */
 .factura-footer {
     text-align: center;
     margin-top: 10px;
@@ -128,4 +136,38 @@
 
 .btn-imprimir:hover {
     background-color: #d85555;
+}
+
+/* Ajustes para móviles */
+@media (max-width: 576px) {
+    .factura-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .factura-totals {
+        width: 100%;
+    }
+
+    .factura-totals .row {
+        flex-wrap: wrap;
+    }
+
+    .factura-totals .row > div {
+        width: 50%;
+        box-sizing: border-box;
+        /* Para que el texto no se desborde */
+        white-space: normal;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .factura-totals .row div:first-child {
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .factura-totals .row div:last-child {
+        text-align: right;
+    }
 }

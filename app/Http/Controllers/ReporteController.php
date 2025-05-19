@@ -10,40 +10,48 @@ use Illuminate\Support\Facades\Auth;
 
 class ReporteController extends Controller
 {
-public function index($user_id)
-{
-    $usuarioReportado = User::findOrFail($user_id);
+    public function index($user_id)
+    {
+        // Evita que el usuario se reporte a sí mismo
+        if (Auth::id() == $user_id) {
+            return redirect()->back()->with('error', 'No puedes reportarte a ti mismo.');
+        }
 
-    $nivelesGravedad = Estado::whereIn('id', [12, 13, 14])->get();
+        $usuarioReportado = User::findOrFail($user_id);
+        $nivelesGravedad = Estado::whereIn('id', [12, 13, 14])->get();
 
-    return view('report.reportes', compact('usuarioReportado', 'nivelesGravedad'));
-}
+        return view('report.reportes', compact('usuarioReportado', 'nivelesGravedad'));
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'motivo' => 'required|string|max:500',
-        'gravedad' => 'required|in:12,13,14',
-    ], [
-        'motivo.required' => 'El motivo no puede estar vacío.',
-        'motivo.string' => 'El motivo debe ser un texto válido.',
-        'motivo.max' => 'El motivo no puede tener más de 500 caracteres.',
-        'gravedad.required' => 'El nivel de gravedad es obligatorio.',
-        'gravedad.in' => 'Seleccione un nivel de gravedad válido.',
-    ]);
+    public function store(Request $request)
+    {
+        // Evita que el usuario se reporte a sí mismo también en backend por seguridad
+        if (Auth::id() == $request->user_id) {
+            return redirect()->back()->with('error', 'No puedes reportarte a ti mismo.');
+        }
 
-    reportes::create([
-        'motivo' => $request->motivo,
-        'id_usuario' => $request->user_id,
-        'gravedad' => $request->gravedad,
-        'estado' => 1,
-        'reportado_Por' => Auth::id(),
-    ]);
+        $request->validate([
+            'motivo' => 'required|string|max:500',
+            'gravedad' => 'required|in:12,13,14',
+        ], [
+            'motivo.required' => 'El motivo no puede estar vacío.',
+            'motivo.string' => 'El motivo debe ser un texto válido.',
+            'motivo.max' => 'El motivo no puede tener más de 500 caracteres.',
+            'gravedad.required' => 'El nivel de gravedad es obligatorio.',
+            'gravedad.in' => 'Seleccione un nivel de gravedad válido.',
+        ]);
 
-    return redirect()->route('reportes.index', ['user_id' => $request->user_id])
-        ->with('success', 'El reporte ha sido enviado a nuestro administrador.');
-}
+        reportes::create([
+            'motivo' => $request->motivo,
+            'id_usuario' => $request->user_id,
+            'gravedad' => $request->gravedad,
+            'estado' => 1,
+            'reportado_Por' => Auth::id(),
+        ]);
 
+        return redirect()->route('reportes.index', ['user_id' => $request->user_id])
+            ->with('success', 'El reporte ha sido enviado a nuestro administrador.');
+    }
 
     public function listareportes()
     {

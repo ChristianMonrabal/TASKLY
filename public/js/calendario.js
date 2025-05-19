@@ -44,7 +44,7 @@ function renderCalendar(date) {
         daysEl.innerHTML += `
             <div class="${classes}" data-date="${dateStr}">
                 <span class="day-number">${d}</span>
-                <span class="day-weekday mobile-only">${weekdayShort}</span>
+                <b class="day-weekday mobile-only">${weekdayShort}</b>
                 ${workIcons}
             </div>
         `;
