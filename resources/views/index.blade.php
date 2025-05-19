@@ -8,13 +8,13 @@
 
 @section('content')
   @if(Auth::check() && count($trabajosCercanos) > 0)
-    <section class="trabajos-cercanos">
-        <h2 class="seccion-titulo"><i class="fas fa-globe" style="color: #4A90E2;"></i> Trabajos cercanos a ti ({{ Auth::user()->codigo_postal }})</h2>
+    <section class="trabajos-cercanos" data-aos="fade-up">
+        <h2 class="seccion-titulo" data-aos="fade-right" data-aos-delay="200"><i class="fas fa-globe" style="color: #4A90E2;"></i> Trabajos cercanos a ti ({{ Auth::user()->codigo_postal }})</h2>
         <div class="scroll-wrapper">
             <button class="scroll-btn" id="btn-left-cercanos"><i class="fas fa-chevron-left"></i></button>
             <div class="scroll-container" id="cardScrollCercanos">
                 @foreach($trabajosCercanos as $trabajo)
-                    <div class="card" onclick="window.location.href='{{ route('trabajos.detalle', $trabajo->id) }}'">
+                    <div class="card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}" onclick="window.location.href='{{ route('trabajos.detalle', $trabajo->id) }}'">
                         <div class="card-img">
                             <img src="{{ $trabajo->imagenes->isNotEmpty() ? asset('img/trabajos/' . $trabajo->imagenes->first()->ruta_imagen) : asset('img/trabajos/default.png') }}" alt="{{ $trabajo->titulo }}">
                         </div>
@@ -57,8 +57,8 @@
     </section>
   @endif
 
-  <section class="nuevos-trabajos">
-    <h2 class="seccion-titulo">🆕 Nuevos trabajos</h2>
+  <section class="nuevos-trabajos" data-aos="fade-up" data-aos-anchor-placement="top-center">
+    <h2 class="seccion-titulo" data-aos="fade-right" data-aos-delay="100">🆕 Nuevos trabajos</h2>
     <div class="scroll-wrapper">
       <button class="scroll-btn" id="btn-left-nuevos"><i class="fas fa-chevron-left"></i></button>
       <div class="scroll-container" id="cardScrollNuevos">
@@ -68,19 +68,19 @@
     </div>
   </section>
 
-  <div class="buscador-container">
+  <div class="buscador-container" data-aos="fade-up" data-aos-duration="1000">
     <div class="simple-search">
-      <div class="search-box">
+      <div class="search-box" data-aos="fade-right" data-aos-delay="300">
         <i class="fas fa-search search-icon"></i>
         <input type="text" id="inputBusqueda" placeholder="Buscar por título o descripción..." value="{{ $busqueda ?? '' }}">
       </div>
       
-      <div class="postal-box">
+      <div class="postal-box" data-aos="fade-right" data-aos-delay="400">
         <i class="fas fa-map-marker-alt postal-icon"></i>
         <input type="text" id="inputCodigoPostal" placeholder="Código postal">
       </div>
       
-      <div class="category-box">
+      <div class="category-box" data-aos="fade-right" data-aos-delay="500">
         <div class="category-dropdown">
             <div class="dropdown-header" id="dropdownHeader">Selecciona categorías</div>
             <div class="dropdown-options" id="dropdownOptions">
@@ -94,7 +94,7 @@
         </div>
       </div>
       
-      <button id="clearFilters" class="clear-btn">
+      <button id="clearFilters" class="clear-btn" data-aos="fade-left" data-aos-delay="600">
         <i class="fas fa-times"></i> Borrar filtros
       </button>
     </div>
