@@ -150,6 +150,12 @@ body {
     .table-logros tbody td:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(6)) {
         display: none;
     }
+
+    /* En mobile: en table-reportes solo mostramos Reporta (col 3), Gravedad (col 5) y Acciones (col 8) */
+    .table-reportes thead th:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(7)),
+    .table-reportes tbody td:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(7)) {
+        display: none;
+    }
 }
 
 /* Mejoras para móviles */
@@ -179,5 +185,12 @@ body {
     .outer-border {
         padding: 10px;
         margin: 10px;
+    }
+    .form-select{
+        width: 100% !important;
+    }
+    .form-control{
+        width: 100% !important;
+
     }
 }

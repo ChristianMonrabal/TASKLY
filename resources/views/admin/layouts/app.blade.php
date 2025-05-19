@@ -31,6 +31,7 @@
                             <li><a href="{{ route('admin.valoraciones.index') }}" class="nav-link"><i class="fas fa-star"></i> Valoraciones</a></li>
                             <li><a href="{{ route('admin.categorias.index') }}" class="nav-link"><i class="fas fa-layer-group"></i> Categorias</a></li>
                             <li><a href="{{ route('admin.logros.index') }}" class="nav-link"><i class="fas fa-medal"></i> Logros</a></li>
+                            <li><a href="{{ route('admin.reportes.index') }}" class="nav-link"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                         </ul>
                     </nav>
                     <div class="user-actions">

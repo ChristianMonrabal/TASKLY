@@ -41,6 +41,9 @@
                 <!-- Se llenará dinámicamente mediante JS -->
             </tbody>
         </table>
+        <nav aria-label="Paginación">
+          <ul id="categorias-pagination" class="pagination justify-content-center"></ul>
+        </nav>
     </div>
 
     <!-- CREATE MODAL -->

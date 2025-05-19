@@ -1,271 +1,217 @@
 // public/js/admin-trabajos.js
 
-// Validaciones onblur
+let currentPage = 1; // Página actual del paginador
 
+// Validaciones onblur
 function validateNonEmpty(fieldId, message) {
-    let field = document.getElementById(fieldId);
-    let errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-    if (field.value.trim() === '') {
+    const field = document.getElementById(fieldId);
+    const errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
+    if (!field.value.trim()) {
         errorDiv.textContent = message;
         return false;
-    } else {
-        errorDiv.textContent = '';
-        return true;
     }
-}
-
-function validateEmail(fieldId) {
-    let field = document.getElementById(fieldId);
-    let errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (field.value.trim() === '') {
-        errorDiv.textContent = "El campo Correo es obligatorio.";
-        return false;
-    } else if (!emailRegex.test(field.value.trim())) {
-        errorDiv.textContent = "El formato del Correo es inválido.";
-        return false;
-    } else {
-        errorDiv.textContent = "";
-        return true;
-    }
-}
-
-function validateOptionalPassword() {
-    let password = document.getElementById('editPassword').value;
-    let confirmation = document.getElementById('editPasswordConfirmation').value;
-    let errorPass = document.getElementById('errorEditPassword');
-    let errorConf = document.getElementById('errorEditPasswordConfirmation');
-
-    if (password === '' && confirmation === '') {
-        errorPass.textContent = "";
-        errorConf.textContent = "";
-        return true;
-    }
-
-    if (password.length < 6) {
-        errorPass.textContent = "La nueva contraseña debe tener al menos 6 caracteres.";
-        return false;
-    } else {
-        errorPass.textContent = "";
-    }
-
-    if (password !== confirmation) {
-        errorConf.textContent = "Las contraseñas no coinciden.";
-        return false;
-    } else {
-        errorConf.textContent = "";
-    }
-
+    errorDiv.textContent = '';
     return true;
 }
 
-// Función para limpiar el contenedor de errores del modal de trabajos.
+// Limpia errores del modal de edición
 function clearEditTrabajoErrors() {
-    let errorsDiv = document.getElementById('editErrors');
+    const errorsDiv = document.getElementById('editErrors');
     if (errorsDiv) {
         errorsDiv.classList.add('d-none');
         errorsDiv.innerHTML = '<ul></ul>';
     }
 }
 
-// Función para cargar estados para el filtro (para el select de filtro en la vista)
+// Carga las opciones de estado para el filtro principal
 function loadEstadosFiltro() {
     fetch('/api/estados/trabajos')
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             const select = document.getElementById('filterEstado');
             select.innerHTML = '<option value="">Seleccione un Estado</option>';
-            data.forEach(estado => {
-                const option = document.createElement('option');
-                option.value = estado.nombre; // Puedes cambiar a estado.id si lo prefieres.
-                option.textContent = estado.nombre;
-                select.appendChild(option);
+            data.forEach(e => {
+                const opt = new Option(e.nombre, e.nombre);
+                select.add(opt);
             });
         })
-        .catch(error => console.error('Error al cargar estados para filtro:', error));
+        .catch(err => console.error('Error al cargar estados de filtro:', err));
 }
 
-// Función para cargar estados para el modal de edición de trabajos (únicamente estados de tipo "trabajos")
+// Carga los estados en el modal de edición, marcando el seleccionado
 function loadEstadosTrabajo(selectedId) {
     fetch('/api/estados/trabajos')
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
-            const select = document.getElementById('editEstadoId');
-            select.innerHTML = '<option value="">Seleccione un estado</option>';
-            data.forEach(estado => {
-                const option = document.createElement('option');
-                option.value = estado.id;
-                option.textContent = estado.nombre;
-                if (estado.id == selectedId) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
+            const sel = document.getElementById('editEstadoId');
+            sel.innerHTML = '<option value="">Seleccione un estado</option>';
+            data.forEach(e => {
+                const opt = new Option(e.nombre, e.id);
+                if (e.id == selectedId) opt.selected = true;
+                sel.add(opt);
             });
         })
-        .catch(error => console.error('Error al cargar estados para edición:', error));
+        .catch(err => console.error('Error al cargar estados para edición:', err));
 }
 
-// Función para renderizar la tabla de trabajos.
-function renderTrabajos(data) {
-    const container = document.getElementById('trabajos-container');
-    container.innerHTML = '';
-    data.forEach(trabajo => {
+// Renderiza la tabla de trabajos
+function renderTrabajos(items) {
+    const tbody = document.getElementById('trabajos-container');
+    tbody.innerHTML = '';
+    items.forEach(t => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${trabajo.titulo}</td>
-            <td>${trabajo.descripcion ? trabajo.descripcion.substring(0,50) : ''}</td>
-            <td>${trabajo.precio}</td>
-            <td>${trabajo.direccion}</td>
-            <td>${trabajo.cliente ? (trabajo.cliente.nombre + ' ' + trabajo.cliente.apellidos) : ''}</td>
-            <td>${trabajo.estado ? trabajo.estado.nombre : 'N/A'}</td>
+            <td>${t.titulo}</td>
+            <td>${t.descripcion?.substring(0,50) || ''}</td>
+            <td>${t.precio}</td>
+            <td>${t.direccion}</td>
+            <td>${t.cliente ? t.cliente.nombre + ' ' + t.cliente.apellidos : ''}</td>
+            <td>${t.estado?.nombre || 'N/A'}</td>
             <td>
-                <button class="btn btn-primary btn-sm" onclick="openEditModalTrabajo(${trabajo.id})">
-                    <i class="fa fa-edit"></i>
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrabajo(${trabajo.id})">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        `;
-        container.appendChild(tr);
+              <button class="btn btn-primary btn-sm" onclick="openEditModalTrabajo(${t.id})">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrabajo(${t.id})">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>`;
+        tbody.appendChild(tr);
     });
 }
 
-// Función para obtener trabajos filtrados y renderizarlos.
-function filterTrabajos() {
-    const filterCliente = document.getElementById('filterCliente').value.trim();
-    const filterEstado = document.getElementById('filterEstado').value.trim();
-
-    let params = new URLSearchParams();
-    if (filterCliente !== "") {
-        params.append('cliente', filterCliente);
-    }
-    if (filterEstado !== "") {
-        params.append('estado', filterEstado);
-    }
-    const queryString = params.toString() ? '?' + params.toString() : '';
-
-    fetch('/api/trabajos' + queryString)
-        .then(response => response.json())
-        .then(data => {
-            renderTrabajos(data);
-        })
-        .catch(error => console.error('Error al filtrar trabajos:', error));
+// Renderiza la paginación
+function renderPagination(meta) {
+    const ul = document.getElementById('trabajos-pagination');
+    if (!ul) return; // Si no existe en el DOM, salimos
+    ul.innerHTML = '';
+    meta.links.forEach(link => {
+        const li = document.createElement('li');
+        li.className = 'page-item' +
+            (link.active ? ' active' : '') +
+            (!link.url   ? ' disabled' : '');
+        const a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = '#';
+        a.innerHTML = link.label;
+        if (link.url) {
+            const url = new URL(link.url);
+            const page = url.searchParams.get('page') || 1;
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                filterTrabajos(Number(page));
+            });
+        }
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
 }
 
-// Función para abrir el modal de edición y cargar datos de un trabajo.
-function openEditModalTrabajo(trabajoId) {
+// Obtiene y refresca la lista (respetando la página actual)
+function filterTrabajos(page = currentPage) {
+    currentPage = page;
+    const params = new URLSearchParams();
+    const cliente = document.getElementById('filterCliente').value.trim();
+    const estado  = document.getElementById('filterEstado').value.trim();
+    if (cliente) params.append('cliente', cliente);
+    if (estado)  params.append('estado', estado);
+    params.append('page', currentPage);
+
+    fetch(`/api/trabajos?${params}`, { headers: { Accept: 'application/json' } })
+        .then(r => r.json())
+        .then(json => {
+            renderTrabajos(json.data);
+            renderPagination(json);
+        })
+        .catch(err => console.error('Error al filtrar trabajos:', err));
+}
+
+// Abre modal y carga datos de un trabajo
+function openEditModalTrabajo(id) {
     clearEditTrabajoErrors();
-    fetch('/api/trabajos/' + trabajoId)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('editTrabajoId').value = data.id;
-            document.getElementById('editTitulo').value = data.titulo;
-            document.getElementById('editDescripcion').value = data.descripcion;
-            document.getElementById('editPrecio').value = data.precio;
-            document.getElementById('editDireccion').value = data.direccion;
-            if (data.cliente) {
-                document.getElementById('editCliente').value = data.cliente.nombre + ' ' + data.cliente.apellidos;
-            } else {
-                document.getElementById('editCliente').value = '';
-            }
-            // Usamos la función loadEstadosTrabajo para cargar solo estados de tipo "trabajos" y marcar el actual.
-            loadEstadosTrabajo(data.estado_id);
-            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            editModal.show();
+    fetch(`/admin/trabajos/${id}`)
+        .then(r => r.json())
+        .then(t => {
+            document.getElementById('editTrabajoId').value    = t.id;
+            document.getElementById('editTitulo').value       = t.titulo;
+            document.getElementById('editDescripcion').value = t.descripcion;
+            document.getElementById('editPrecio').value      = t.precio;
+            document.getElementById('editDireccion').value   = t.direccion;
+            document.getElementById('editCliente').value     = t.cliente ? `${t.cliente.nombre} ${t.cliente.apellidos}` : '';
+            loadEstadosTrabajo(t.estado_id);
+            new bootstrap.Modal(document.getElementById('editModal')).show();
         })
-        .catch(error => console.error('Error al cargar datos del trabajo:', error));
+        .catch(err => console.error('Error al cargar trabajo:', err));
 }
 
-// Función para enviar el formulario de edición mediante fetch.
+// Envía formulario de edición
 function submitEditTrabajo() {
-    if (!validateNonEmpty('editTitulo', 'El campo Título es obligatorio') ||
-        !validateNonEmpty('editDescripcion', 'El campo Descripción es obligatorio') ||
-        !validateNonEmpty('editPrecio', 'El campo Precio es obligatorio') ||
-        !validateNonEmpty('editDireccion', 'El campo Dirección es obligatorio') ||
+    if (!validateNonEmpty('editTitulo', 'Título obligatorio') ||
+        !validateNonEmpty('editDescripcion', 'Descripción obligatoria') ||
+        !validateNonEmpty('editPrecio', 'Precio obligatorio') ||
+        !validateNonEmpty('editDireccion', 'Dirección obligatoria') ||
         !validateNonEmpty('editEstadoId', 'Seleccione un estado')) {
-        return;
+      return;
     }
-    let form = document.getElementById('editTrabajoForm');
-    let trabajoId = document.getElementById('editTrabajoId').value;
-    let formData = new FormData(form);
-    fetch('/admin/trabajos/' + trabajoId, {
+    const id = document.getElementById('editTrabajoId').value;
+    const formData = new FormData(document.getElementById('editTrabajoForm'));
+    fetch(`/admin/trabajos/${id}`, {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'X-HTTP-Method-Override': 'PUT',
-            'Accept': 'application/json'
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          'X-HTTP-Method-Override': 'PUT',
+          'Accept':'application/json'
         },
         body: formData
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.json().then(data => { throw data; });
-        }
-    })
-    .then(data => {
-        document.activeElement.blur();
-        clearEditTrabajoErrors();
-        var editModalEl = document.getElementById('editModal');
-        var modal = bootstrap.Modal.getInstance(editModalEl);
-        modal.hide();
+    .then(r => r.ok ? r.json() : r.json().then(e => { throw e; }))
+    .then(_ => {
+        bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
         filterTrabajos();
-        Swal.fire('Éxito', data.message, 'success');
+        Swal.fire('¡Éxito!','Trabajo actualizado.','success');
     })
-    .catch(error => {
-        let errorsDiv = document.getElementById('editErrors');
-        errorsDiv.classList.remove('d-none');
-        errorsDiv.innerHTML = '<ul>' + Object.values(error.errors || {}).map(err => `<li>${err}</li>`).join('') + '</ul>';
+    .catch(err => {
+        const d = document.getElementById('editErrors');
+        d.classList.remove('d-none');
+        d.querySelector('ul').innerHTML =
+          Object.values(err.errors||{}).flat().map(m=>`<li>${m}</li>`).join('');
     });
 }
 
-// Función para confirmar eliminación con SweetAlert.
-function confirmDeleteTrabajo(trabajoId) {
+// Confirmar y eliminar
+function confirmDeleteTrabajo(id) {
     Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción no se podrá revertir",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sí, eliminar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteTrabajo(trabajoId);
-        }
-    });
+      title: '¿Eliminar?',
+      text:  'No podrás revertir',
+      icon:  'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar'
+    }).then(res => { if (res.isConfirmed) deleteTrabajo(id); });
+}
+function deleteTrabajo(id) {
+    fetch(`/admin/trabajos/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept':'application/json'
+      }
+    })
+    .then(async r => {
+      const data = await r.json();
+      if (!r.ok) throw data;
+      return data;
+    })
+    .then(_ => {
+      filterTrabajos(); 
+      Swal.fire('Eliminado','Trabajo eliminado.','success');
+    })
+    .catch(err => Swal.fire('Error', err.message || 'No se pudo eliminar','error'));
 }
 
-// Función para eliminar un trabajo mediante fetch.
-function deleteTrabajo(trabajoId) {
-    fetch('/admin/trabajos/' + trabajoId, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
-        }
-    })
-    .then(async response => {
-        const data = await response.json();
-        if (!response.ok) throw data;
-        return data;
-    })
-    .then(data => {
-        filterTrabajos(); // o la función que recargue la lista
-        Swal.fire('Eliminado', data.message, 'success');
-    })
-    .catch(error => {
-        Swal.fire('Error', error.message || 'No se pudo eliminar el trabajo.', 'error');
-    });
-}
-
-// Al cargar la página, obtener la lista de trabajos y cargar el select del filtro de estados.
-document.addEventListener('DOMContentLoaded', function() {
+// Al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
     loadEstadosFiltro();
     filterTrabajos();
 });
 
-// Actualizar la lista cada 1 segundo.
-setInterval(filterTrabajos, 1000);
+// Refrescar cada 10 segundos sin perder la página seleccionada
+setInterval(() => filterTrabajos(currentPage), 10000);
