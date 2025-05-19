@@ -62,11 +62,6 @@
                                     <i class="fas fa-euro-sign"></i>
                                     <span>Precio: {{ $trabajo->precio }}€</span>
                                 </div>
-
-                                <div class="meta-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Código postal: {{ $trabajo->direccion ?? 'No especificado' }}</span>
-                                </div>
                             </div>
                         </div>
 
