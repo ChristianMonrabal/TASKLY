@@ -13,6 +13,7 @@ use Stripe\Stripe;
 use Stripe\StripeClient;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
+use App\Models\Estado;
 
 class PaymentController extends Controller
 {
@@ -175,6 +176,13 @@ class PaymentController extends Controller
             // Obtener datos del trabajo y del trabajador para la valoración
             $trabajo = Trabajo::find($validated['trabajo_id']);
             
+            // Actualizar el estado del trabajo a Completado
+            $estadoCompletadoId = Estado::where('nombre', 'Completado')->first()->id;
+            $trabajo->estado_id = $estadoCompletadoId; // Completado
+            $trabajo->save();
+            
+            Log::info('Trabajo ID: ' . $trabajo->id . ' actualizado a estado Completado');
+            
             // Registramos el pago en la base de datos usando la relación con postulación
             try {
                 // Usamos el ID de la postulación directamente
@@ -221,5 +229,36 @@ class PaymentController extends Controller
             'configured' => ! empty($publicKey) && ! empty($secretKey),
             'public_key' => $publicKey ?: null,
         ]);
+    }
+    
+    /**
+     * Genera y permite descargar la factura de un trabajo
+     */
+    public function generarFactura(Trabajo $trabajo)
+    {
+        // Buscamos el pago relacionado con este trabajo
+        $pago = Pago::whereHas('postulacion', function($query) use ($trabajo) {
+            $query->where('trabajo_id', $trabajo->id);
+        })->first();
+        
+        if (!$pago) {
+            return redirect()->back()->with('error', 'No se encontró un pago para este trabajo');
+        }
+        
+        // Datos para la factura
+        $datos = [
+            'numero_factura' => 'TASKLY-' . str_pad($pago->id, 6, '0', STR_PAD_LEFT),
+            'fecha' => is_string($pago->fecha_pago) ? $pago->fecha_pago : $pago->fecha_pago->format('d/m/Y'),
+            'cliente' => $trabajo->cliente->nombre,
+            'trabajador' => $pago->postulacion->trabajador->nombre,
+            'concepto' => $trabajo->titulo,
+            'subtotal' => $pago->cantidad,
+            'comision' => $pago->cantidad * 0.1, // 10% de comisión
+            'total' => $pago->cantidad,
+        ];
+        
+        // En un sistema real, aquí generaríamos un PDF
+        // Por ahora, mostramos una vista con los datos
+        return view('facturas.detalle', compact('datos', 'trabajo', 'pago'));
     }
 }

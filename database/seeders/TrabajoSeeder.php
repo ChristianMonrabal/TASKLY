@@ -16,9 +16,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'El grifo pierde agua',
             'descripcion' => 'Ayer empezo a perderme agua el grifo de la cocina, necesito que venga un fontanero a repararlo.',
             'precio' => 10,
-            'direccion' => 'av da de la libertad, 13',
+            'direccion' => '08905',
             'cliente_id' => 3,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -26,9 +26,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Instalación de enchufes',
             'descripcion' => 'Necesito un electricista para instalar 3 enchufes en mi casa.',
             'precio' => 10,
-            'direccion' => 'Av. de la libertad, 13',
+            'direccion' => '08905',
             'cliente_id' => 3,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -36,9 +36,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Reparación de puerta',
             'descripcion' => 'La puerta de la habitación no cierra bien, necesito un carpintero para repararla.',
             'precio' => 10,
-            'direccion' => 'Calle de la paz, 13',
+            'direccion' => '08906',
             'cliente_id' => 3,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -46,9 +46,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Instalación de grifo',
             'descripcion' => 'Necesito un fontanero para instalar un grifo en la cocina.',
             'precio' => 10,
-            'direccion' => 'Calle de la paz, 13',
+            'direccion' => '08906',
             'cliente_id' => 4,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -56,9 +56,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Instalación de lámpara',
             'descripcion' => 'Necesito un electricista para instalar una lámpara en el salón.',
             'precio' => 10,
-            'direccion' => 'Calle de la paz, 13',
+            'direccion' => '08904',
             'cliente_id' => 4,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -66,18 +66,18 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Reparación de ventana',
             'descripcion' => 'La ventana del salón no cierra bien, necesito un carpintero para repararla.',
             'precio' => 10,
-            'direccion' => 'Calle de la paz, 13',
+            'direccion' => '08904',
             'cliente_id' => 4,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
         Trabajo::create([
             'titulo' => 'Colocación de cortinas',
             'descripcion' => 'Necesito ayuda para instalar cortinas en el salón y dormitorio.',
             'precio' => 18,
-            'direccion' => 'Calle Jardines, 3',
+            'direccion' => '08903',
             'cliente_id' => 4,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -85,9 +85,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Limpieza de garaje',
             'descripcion' => 'Busco alguien que pueda limpiar mi garaje de 20m².',
             'precio' => 25,
-            'direccion' => 'Calle Roble, 44',
+            'direccion' => '08903',
             'cliente_id' => 5,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -95,9 +95,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Reparación de persiana',
             'descripcion' => 'La persiana del dormitorio está atascada, necesito repararla.',
             'precio' => 14,
-            'direccion' => 'Av. del Mar, 9',
+            'direccion' => '08907',
             'cliente_id' => 5,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -105,9 +105,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Mantenimiento de jardín',
             'descripcion' => 'Cortar césped y podar setos en un jardín pequeño.',
             'precio' => 35,
-            'direccion' => 'Calle Romero, 21',
+            'direccion' => '08907',
             'cliente_id' => 5,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 
@@ -115,9 +115,9 @@ class TrabajoSeeder extends Seeder
             'titulo' => 'Instalación de espejo grande',
             'descripcion' => 'Quiero colgar un espejo grande en el recibidor, se necesita taladro y nivel.',
             'precio' => 22,
-            'direccion' => 'Plaza del Carmen, 10',
+            'direccion' => '08905',
             'cliente_id' => 5,
-            'estado_id' => 2,
+            'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
 

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Pago;
 
 class JobController extends Controller
 {
@@ -124,12 +125,29 @@ public function store(Request $request)
             return redirect()->route('trabajos.publicados')->with('error', 'No tienes permiso para ver los candidatos de este trabajo.');
         }
         
-        return view('candidatos_trabajo', compact('trabajo'));
+        // Verificar si el trabajo está completado (tiene pago asociado)
+        $trabajoCompletado = Pago::whereHas('postulacion', function($query) use ($trabajo) {
+            $query->where('trabajo_id', $trabajo->id);
+        })->exists();
+        
+        return view('candidatos_trabajo', compact('trabajo', 'trabajoCompletado'));
     }
 
     public function editar($id)
     {
         $trabajo = Trabajo::with('imagenes')->findOrFail($id);
+        
+        // Verificar si el trabajo está completado (tiene pago asociado)
+        $trabajoCompletado = Pago::whereHas('postulacion', function($query) use ($trabajo) {
+            $query->where('trabajo_id', $trabajo->id);
+        })->exists();
+        
+        // Si el trabajo está completado, redirigir con mensaje de error
+        if ($trabajoCompletado) {
+            return redirect()->route('trabajos.publicados')
+                ->with('error', 'No se puede editar un trabajo que ya ha sido completado y pagado.');
+        }
+        
         $categorias = Categoria::all();
         return view('editar_trabajo', compact('trabajo', 'categorias'));
     }

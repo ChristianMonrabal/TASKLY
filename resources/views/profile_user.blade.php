@@ -3,12 +3,7 @@
 @section('title', 'Perfil de ' . $usuario->nombre)
 
 @section('styles')
-{{-- <link rel="stylesheet" href="{{ asset('css/profile_user.css') }}"> --}}
-    <style>
-        .estrella-amarilla {
-            color: #FFD700;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/perfil_resenas.css') }}">
 @endsection
 
 @section('content')
@@ -19,8 +14,6 @@
             <div class="card shadow rounded-lg border border-danger p-4">
 
                 {{-- Información del perfil --}}
-                <div class="card-body text-center">
-            {{-- Información del perfil --}}
                 <div class="card-body text-center">
 
                     {{-- Foto de perfil --}}
@@ -49,12 +42,14 @@
                     @endif
 
                     {{-- Botón de chat & reporte de usuario --}}
-                    <a href="{{ route('vista.chat', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
-                        <i class="fas fa-comments"></i> Enviar mensaje
-                    </a>
-                    <a href="{{ route('reportes.index', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
-                        <i class="fas fa-exclamation-triangle"></i> Reportar usuario
-                    </a>
+                    @if(Auth::id() !== $usuario->id)
+                        <a href="{{ route('vista.chat', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
+                            <i class="fas fa-comments"></i> Enviar mensaje
+                        </a>
+                        <a href="{{ route('reportes.index', ['user_id' => $usuario->id]) }}" class="btn btn-outline-primary mt-3">
+                            <i class="fas fa-exclamation-triangle"></i> Reportar usuario
+                        </a>
+                    @endif
                 </div>
                 
                 {{-- Línea de separación entre la información del usuario y las valoraciones --}}
@@ -91,15 +86,14 @@
                         </div>
                     @endif
 
-                    {{-- Contenedor para cada valoración individual --}}
+                    {{-- Contenedor grid para las valoraciones --}}
                     @if($usuario->valoracionesRecibidas->count())
-                        @foreach($usuario->valoracionesRecibidas as $valoracion)
-                            <div class="mb-3">
-                                <div class="border border-danger rounded p-3 mb-3">
-                                    {{-- Título y estrellas --}}
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h5 class="mb-0"><strong>{{ $valoracion->trabajo->titulo ?? 'Trabajo desconocido' }}</strong></h5>
-                                        <span class="estrella-amarilla">
+                        <div class="resenas-grid">
+                            @foreach($usuario->valoracionesRecibidas as $valoracion)
+                                <div class="resena-card">
+                                    <div class="resena-header">
+                                        <h5 class="resena-titulo">{{ $valoracion->trabajo->titulo ?? 'Trabajo desconocido' }}</h5>
+                                        <span class="resena-estrellas">
                                             @for ($i = 1; $i <= 5; $i++)
                                                 <i class="fas fa-star{{ $i <= $valoracion->puntuacion ? '' : '-o' }} estrella-amarilla"></i>
                                             @endfor
@@ -108,15 +102,17 @@
 
                                     {{-- Comentario --}}
                                     @if ($valoracion->comentario)
-                                        <p class="mb-2"><strong>Comentario:</strong> {{ $valoracion->comentario }}</p>
+                                        <div class="resena-comentario">
+                                            <p><strong>Comentario:</strong> {{ $valoracion->comentario }}</p>
+                                        </div>
                                     @endif
 
-                                    <small class="text-muted">
+                                    <div class="resena-fecha">
                                         Valorado el {{ \Carbon\Carbon::parse($valoracion->fecha_valoracion)->format('d/m/Y') }}
-                                    </small>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @else
                         <p class="text-muted">Este usuario aún no ha recibido valoraciones.</p>
                     @endif

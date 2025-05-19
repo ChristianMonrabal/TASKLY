@@ -8,10 +8,23 @@
 
 @section('content')
     <div class="container-fluid py-5 postulaciones-page">
+        <!-- Filtro de estado -->
+        <div class="filtro-postulaciones-container" style="margin-bottom: 20px;">
+            <select id="filtroPostulaciones" class="filtro-postulaciones-select">
+                <option value="todos">Todos</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="aceptada">Aceptada</option>
+                <option value="rechazada">Rechazada</option>
+            </select>
+        </div>
         @if ($postulaciones->count() > 0)
             <div class="trabajos-grid">
                 @foreach ($postulaciones as $postulacion)
-                <div class="trabajo-item">
+                @php
+                    $estado = $postulacion->estado_id;
+                    $estadoTexto = $estado == 9 ? 'pendiente' : ($estado == 10 ? 'aceptada' : ($estado == 11 ? 'rechazada' : 'otros'));
+                @endphp
+                <div class="trabajo-item" data-estado="{{ $estadoTexto }}">
                     <div class="card">
                         <div class="card-img-container">
                             <div class="image-wrapper">
@@ -45,3 +58,5 @@
         @endif
     </div>
 @endsection
+
+<script src="{{ asset('js/filtro_postulaciones.js') }}"></script>

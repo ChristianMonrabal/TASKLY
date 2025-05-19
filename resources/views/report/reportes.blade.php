@@ -10,6 +10,12 @@
 <div class="container">
     <h2>Reportar a {{ $usuarioReportado->nombre }} {{ $usuarioReportado->apellidos }}</h2>
 
+    @if(session('error'))
+        <div style="color: red; border: 1px solid #f5c6cb; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <form action="{{ route('reportes.store') }}" method="POST" onsubmit="return validarTextarea()">
         @csrf
         <input type="hidden" name="user_id" value="{{ $usuarioReportado->id }}">
@@ -40,11 +46,10 @@
         </div>
 
         @if(session('success'))
-            <div  style="color: green; border: 1px solid #c3e6cb; background-color: #d4edda; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+            <div style="color: green; border: 1px solid #c3e6cb; background-color: #d4edda; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
                 {{ session('success') }}
             </div>
         @endif
-
 
         <div class="center">
             <button type="submit">Enviar reporte</button>

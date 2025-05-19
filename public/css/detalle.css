@@ -102,7 +102,6 @@
   padding: 15px;
   border: 1px solid #e9ecef;
   margin-bottom: 25px;
-  margin-top: 65px;
 }
 
 .usuario-avatar {
@@ -331,6 +330,37 @@
   cursor: pointer;
   z-index: 10000;
 }
+
+
+
+.modal-nav.prev {
+  left: 20px;
+}
+
+.modal-nav.next {
+  right: 20px;
+}
+
+.contador-imagen {
+  position: absolute;
+  bottom: 30px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .imagen-principal {
+    height: 300px;
+  }
+}
+
 
 
 
