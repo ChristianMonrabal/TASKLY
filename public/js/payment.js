@@ -2,6 +2,7 @@
 let stripe;
 let elements;
 let clientSecretToPush;
+let paymentIntent;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Capturar email y stripe_key desde data attributes
@@ -208,8 +209,21 @@ async function updatePaymentStatus(trabajo_id, trabajador_id, client_secret) {
         
         // Mostramos mensaje de éxito y redirigimos
         Swal.fire({
-            title: 'Pago completado con éxito!',
-            html: 'El pago se ha procesado correctamente.<br>A continuación podrás valorar el trabajo realizado.',
+            title: '¡Pago completado con éxito!',
+            html: `
+              <div class="payment-success-container">
+                <div class="payment-success-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="payment-details">
+                  <p>El pago de <strong>€${document.getElementById('amount').value}</strong> se ha procesado correctamente.</p>
+                  <p class="payment-small">El 90% ha sido transferido al trabajador y el 10% corresponde a la comisión de TASKLY.</p>
+                </div>
+                <div class="taskly-tagline">
+                  <p>¡Gracias por usar TASKLY!</p>
+                </div>
+              </div>
+            `,
             icon: 'success',
             confirmButtonColor: '#EC6A6A',
             confirmButtonText: 'Continuar a valoraciones'
@@ -232,6 +246,15 @@ async function updatePaymentStatus(trabajo_id, trabajador_id, client_secret) {
 function showError(message, details) {
     console.error('Error en el proceso de pago:', message, details || '');
     
+    // Mostrar error con SweetAlert para mejor experiencia de usuario
+    Swal.fire({
+        title: 'Error en el pago',
+        text: message,
+        icon: 'error',
+        confirmButtonColor: '#EC6A6A'
+    });
+    
+    // También mostrar en el formulario
     const messageDiv = document.getElementById("payment-message");
     messageDiv.textContent = message;
     messageDiv.classList.remove("d-none");
