@@ -94,4 +94,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Valoracion::class, 'trabajador_id');
     }
+
+    public function logrosCompletados()
+{
+    return $this->hasMany(\App\Models\LogroCompleto::class, 'usuario_id');
+}
 }

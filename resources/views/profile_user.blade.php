@@ -116,6 +116,32 @@
                     @else
                         <p class="text-muted">Este usuario aún no ha recibido valoraciones.</p>
                     @endif
+
+                    {{-- Insignias / Logros --}}
+                    @if($usuario->logrosCompletados->count())
+                        <hr class="my-4">
+                        <div class="card-body text-center">
+                            <h2 class="mb-4 text-danger"><strong>Insignias obtenidas</strong></h2>
+                            <div class="d-flex flex-wrap justify-content-center gap-4">
+                                @foreach($usuario->logrosCompletados as $logroCompleto)
+                                    @php
+                                        $logro = $logroCompleto->logro;
+                                    @endphp
+                                    @if($logro)
+                                        <div class="text-center" style="max-width: 120px;">
+                                            <div class="position-relative" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $logro->descripcion }}">
+                                                <img src="{{ asset('img/insignias/' . $logro->foto_logro) }}" 
+                                                    alt="{{ $logro->nombre }}" 
+                                                    class="img-thumbnail shadow"
+                                                    style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #dc3545; border-radius: 10px;">
+                                            </div>
+                                            <p class="mt-2 text-dark"><strong>{{ $logro->nombre }}</strong></p>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -8,5 +8,15 @@ class LogroCompleto extends Model
 {
     protected $table = 'logros_completos';
 
-    protected $fillable = ['usuario_id', 'logro_id', 'fecha_completado'];
+    protected $fillable = ['logro_id', 'usuario_id'];
+
+    public function logro()
+    {
+        return $this->belongsTo(Logro::class, 'logro_id');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
+    }
 }

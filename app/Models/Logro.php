@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Logro extends Model
 {
-    protected $fillable = ['nombre', 'descripcion', 'descuento'];
+    protected $fillable = ['nombre', 'descripcion', 'foto_logro'];
 
     public function logrosCompletos()
     {

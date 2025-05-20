@@ -10,8 +10,6 @@ class LogrosCompletadosSeeder extends Seeder
     public function run(): void
     {
         LogroCompleto::create([
-            'codigo' => 'LOGRO-001',
-            'estado' => true,
             'logro_id' => 1,
             'usuario_id' => 3,
         ]);

@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('logros_completos', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo', 100)->unique();
-            $table->boolean('estado')->default(true);
             $table->foreignId('logro_id')->constrained('logros');
             $table->foreignId('usuario_id')->constrained('users');
             $table->timestamps();
