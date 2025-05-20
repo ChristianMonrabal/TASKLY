@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
             PostulacionesSeeder::class,
             ValoracionesSeeder::class,
             PagosSeeder::class,
+            CalendarioSeeder::class,
+            TrabajoFinalizadosSeeder::class,
+            ReporteSeeder::class,
         ]);
     }
 }

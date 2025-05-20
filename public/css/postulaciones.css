@@ -1,0 +1,209 @@
+:root {
+    --primary: #EC6A6A;
+    --bg: #ffffff;
+    --text: #333;
+    --card-bg: white;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --radius: 6px;
+    --radius-lg: 25px;
+    --transition: 0.3s ease;
+    --font-main: 'Segoe UI', sans-serif;
+    --img-height: 200px; /* Altura fija para las imágenes */
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.trabajos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 25px auto 0 auto; /* Aumenta el margen superior para bajar las cajas */
+    width: 100%;
+}
+
+.trabajo-item {
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform var(--transition), box-shadow var(--transition);
+    border: 1px solid rgba(236, 106, 106, 0.1);
+}
+
+.trabajo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenedor de la imagen */
+.card-img-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+}
+
+.card-img-container .image-wrapper {
+    position: relative;
+}
+
+/* Imagen dentro de la tarjeta */
+.card-img-container img {
+    width: 100%;
+    height: var(--img-height);
+    object-fit: cover;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-title {
+    color: var(--primary);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.card-actions {
+    margin-top: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px 12px;
+    text-align: center;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+.action-btn:hover {
+    background-color: #d55a5a;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Asegúrate de que los estilos solo afecten a la página de postulaciones */
+.postulaciones-page .trabajo-item {
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform var(--transition), box-shadow var(--transition);
+    border: 2px solid var(--primary); /* Borde rojo siempre visible */
+}
+
+.postulaciones-page .trabajo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    /* No cambies el color del borde en hover */
+}
+
+/* Contenedor de la imagen */
+.postulaciones-page .card-img-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+}
+
+/* Imagen dentro de la tarjeta */
+.postulaciones-page .card-img-container img {
+    width: 100%;
+    height: var(--img-height);
+    object-fit: cover;
+    border-radius: var(--radius);
+}
+
+/* Botones de acción */
+.postulaciones-page .action-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+.postulaciones-page .action-btn:hover {
+    background-color: #d55a5a;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.postulaciones-page .card {
+    border: none;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.filtro-postulaciones-container {
+    position: absolute;
+    top: 95px;
+    right: 180px;
+    width: 150px;
+    z-index: 10;
+    font-size: 0.95rem;
+}
+
+.filtro-postulaciones-select {
+    font-size: 0.95rem;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .trabajos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .trabajos-grid {
+        grid-template-columns: 1fr;
+    }
+}

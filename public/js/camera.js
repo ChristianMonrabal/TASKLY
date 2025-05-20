@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    cameraModal = document.getElementById('cameraModal');
-    cameraPreview = document.getElementById('camera-preview');
-    captureButton = document.getElementById('capture-button');
-    photoCanvas = document.getElementById('photo-canvas');
-    fotoPerfilInput = document.getElementById('foto_perfil_camera');
-    photoPreview = document.getElementById('photo-preview');
-    photoPreviewContainer = document.getElementById('photo-preview-container');
+    const cameraModal = document.getElementById('cameraModal');
+    const cameraPreview = document.getElementById('camera-preview');
+    const captureButton = document.getElementById('capture-button');
+    const photoCanvas = document.getElementById('photo-canvas');
+    const fotoPerfilInput = document.getElementById('foto_perfil_camera');
+    const currentPhoto = document.getElementById('current-photo');
     
-    stream = null;
+    let stream = null;
 
     cameraModal.addEventListener('shown.bs.modal', () => {
         startCamera();
@@ -46,23 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     captureButton.addEventListener('click', () => {
-        context = photoCanvas.getContext('2d');
-        width = cameraPreview.videoWidth;
-        height = cameraPreview.videoHeight;
+        const context = photoCanvas.getContext('2d');
+        const width = cameraPreview.videoWidth;
+        const height = cameraPreview.videoHeight;
 
         photoCanvas.width = width;
         photoCanvas.height = height;
 
         context.drawImage(cameraPreview, 0, 0, width, height);
 
-        photoDataUrl = photoCanvas.toDataURL('image/jpeg', 0.8);
+        const photoDataUrl = photoCanvas.toDataURL('image/jpeg', 0.8);
 
         fotoPerfilInput.value = photoDataUrl;
+        currentPhoto.src = photoDataUrl;
 
-        photoPreview.src = photoDataUrl;
-        photoPreviewContainer.style.display = 'block';
-
-        modal = bootstrap.Modal.getInstance(cameraModal);
+        const modal = bootstrap.Modal.getInstance(cameraModal);
         modal.hide();
     });
 

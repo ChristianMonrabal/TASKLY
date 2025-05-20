@@ -1,21 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'TASKLY - Plataforma de Trabajos Freelance')</title>
-    
+    <link rel="icon" href="{{ asset('img/icon.png') }}" type="image/png" />
+
     <!-- Estilos principales -->
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}"/>
-    
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}" />
+
     <!-- FontAwesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
+    <!-- AOS - Animate On Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.27.2/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
+    <script type="module" src="{{ asset('js/notifications.js') }}"></script>
+
+
     <!-- Estilos específicos de la página -->
     @yield('styles')
+    
+    <!-- Scripts en el head -->
+    @yield('head_scripts')
+
 </head>
+
 <body>
     <div class="app-container">
         <!-- Cabecera principal -->
@@ -24,95 +41,115 @@
                 <div class="header-content">
                     <div class="logo">
                         <a href="{{ route('trabajos.index') }}">
-                            <h1>TASKLY</h1>
+                            <img src="{{ asset('img/icon.png') }}" alt="TASKLY Logo" class="logo-img">
                         </a>
                     </div>
-                    
+        
                     <nav class="main-nav">
                         <ul>
-                            <li><a href="{{ route('trabajos.index') }}" class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}">Trabajos</a></li>
-                            <li><a href="#" class="nav-link">Mis Proyectos</a></li>
-                            <li><a href="#" class="nav-link">Mensajes</a></li>
+                            <li>
+                                <a href="{{ route('trabajos.index') }}"
+                                    class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}">
+                                    <i class="fas fa-briefcase"></i> Inicio
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('trabajos_publicados') }}"
+                                    class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}">
+                                    <i class="fas fa-project-diagram"></i> Mis trabajos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/postulaciones') }}"
+                                    class="nav-link {{ request()->is('postulaciones') ? 'active' : '' }}">
+                                    <i class="fas fa-file-alt"></i> Mis postulaciones
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('vista.chat') }}"
+                                    class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}">
+                                    <i class="fas fa-envelope"></i> Mensajes
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('calendario.index') }}"
+                                    class="nav-link {{ request()->is('calendario*') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar-alt"></i> Calendario
+                                </a>
+                            </li>
+                            @if(Auth::check() && Auth::user()->rol_id == 1)
+                                <li>
+                                    <a href="{{ url('/admin/usuarios') }}"
+                                        class="nav-link {{ request()->is('admin/usuarios*') ? 'active' : '' }}">
+                                        <i class="fas fa-user-shield"></i> Panel de administración
+                                    </a>
+                                </li>
+                            @endif  
                         </ul>
                     </nav>
-                    
+        
                     <div class="user-actions">
-                        <!-- Si el usuario está autenticado, mostrar notificaciones -->
                         @auth
-                        <!-- Botón de notificaciones -->
-                        <div class="notification-bell">
-                            <button class="notification-btn" id="notificationBtn">
-                                <i class="fas fa-bell"></i>
-                                <span class="notification-badge">3</span>
-                            </button>
-                            <div class="notification-dropdown" id="notificationDropdown">
-                                <div class="notification-header">
-                                    <h3>Notificaciones</h3>
-                                    <a href="#" class="mark-all-read">Marcar todas como leídas</a>
-                                </div>
-                                <div class="notification-list">
-                                    <div class="notification-item unread">
-                                        <div class="notification-icon">
-                                            <i class="fas fa-comment"></i>
-                                        </div>
-                                        <div class="notification-content">
-                                            <p>Tienes un nuevo mensaje de <strong>Juan Pérez</strong></p>
-                                            <span class="notification-time">Hace 5 minutos</span>
-                                        </div>
+                            <div class="trabajo-icon">
+                                <a href="/crear_trabajo" class="trabajo-btn" title="Añadir nuevo trabajo">
+                                    <i class="fas fa-plus-circle"></i>
+                                </a>
+                            </div>
+        
+                            @auth
+                                @include('partials.notifications')
+                            @endauth
+        
+                            <div class="user-dropdown">
+                                <button class="dropdown-btn">
+                                    <div class="user-avatar">
+                                        <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'perfil_default.png')) }}"
+                                            class="current-photo">
                                     </div>
-                                    <div class="notification-item unread">
-                                        <div class="notification-icon">
-                                            <i class="fas fa-heart"></i>
-                                        </div>
-                                        <div class="notification-content">
-                                            <p>Tu proyecto ha recibido una nueva valoración</p>
-                                            <span class="notification-time">Hace 1 hora</span>
-                                        </div>
+                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                    <span class="icon">▼</span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
+                                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                                        @csrf
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                        </a>
+                                    </form>
+        
+                                    <!-- Opciones adicionales solo visibles en móvil -->
+                                    <div class="mobile-only">
+                                        <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                        <a href="{{ url('/trabajos_publicados') }}"><i class="fas fa-project-diagram"></i> Mis Trabajos</a>
+                                        <a href="{{ route('vista.chat') }}"><i class="fas fa-envelope"></i> Mensajes</a>
+                                        <a href="{{ route('calendario.index') }}"><i class="fas fa-calendar-alt"></i> Calendario</a>
+                                        @if(Auth::user()->rol_id == 1)
+                                            <a href="{{ url('/admin/usuarios') }}"><i class="fas fa-user-shield"></i> Panel de administración</a>
+                                        @endif
                                     </div>
-                                    <div class="notification-item">
-                                        <div class="notification-icon">
-                                            <i class="fas fa-check-circle"></i>
-                                        </div>
-                                        <div class="notification-content">
-                                            <p>Tu postulación para "Diseño web" ha sido aceptada</p>
-                                            <span class="notification-time">Ayer</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="notification-footer">
-                                    <a href="#" class="view-all">Ver todas</a>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="user-dropdown">
-                            <button class="dropdown-btn">
-                                <div class="user-avatar">
-                                    <img src="{{ asset('img/avatar-default.png') }}" alt="Avatar de usuario">
-                                </div>
-                                <span class="user-name">{{ Auth::user()->name }}</span>
-                                <span class="icon">▼</span>
-                            </button>
-                            <div class="dropdown-content">
-                                <a href="#"><i class="fas fa-user"></i> Mi Perfil</a>
-                                <a href="#"><i class="fas fa-cog"></i> Configuración</a>
-                                <form action="#" method="POST" id="logout-form">
-                                    @csrf
-                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                                    </a>
-                                </form>
-                            </div>
-                        </div>
                         @else
-                            <!-- Si el usuario no está autenticado -->
                             <div class="auth-buttons">
                                 <a href="{{ route('signin.auth') }}" class="btn btn-outline">Iniciar Sesión</a>
                                 <a href="{{ route('signup.auth') }}" class="btn btn-primary">Registrarse</a>
                             </div>
+        
+                            <div class="mobile-menu-no-auth">
+                                <button class="mobile-dropdown-btn">
+                                    <span class="icon">▼</span>
+                                </button>
+                                <div class="mobile-dropdown-content">
+                                    <a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
+                                    <a href="{{ route('signin.auth') }}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+                                    <a href="{{ route('signup.auth') }}"><i class="fas fa-user-plus"></i> Registrarse</a>
+                                </div>
+                            </div>
                         @endauth
                     </div>
-                    
+        
                     <button class="mobile-menu-btn" id="mobileMenuBtn">
                         <span></span>
                         <span></span>
@@ -122,41 +159,13 @@
             </div>
         </header>
         
-        <!-- Menú móvil - visible solo en pantallas pequeñas -->
-        <div class="mobile-menu" id="mobileMenu">
-            <nav>
-                <ul>
-                    <li><a href="{{ route('trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a></li>
-                    <li><a href="#"><i class="fas fa-project-diagram"></i> Mis Proyectos</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> Mensajes</a></li>
-                    @auth
-                        <li><a href="#"><i class="fas fa-bell"></i> Notificaciones</a></li>
-                        <li><a href="#"><i class="fas fa-user"></i> Mi Perfil</a></li>
-                        <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
-                        <li>
-                            <form action="#" method="POST">
-                                @csrf
-                                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">
-                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                                </a>
-                            </form>
-                        </li>
-                    @else
-                        <li><a href="#"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
-                        <li><a href="#"><i class="fas fa-user-plus"></i> Registrarse</a></li>
-                    @endauth
-                </ul>
-            </nav>
-        </div>
-        
-        <!-- Contenido principal -->
+
         <main class="main-content">
             <div class="container">
                 @yield('content')
             </div>
         </main>
-        
-        <!-- Pie de página -->
+
         <footer class="main-footer">
             <div class="container">
                 <div class="footer-content">
@@ -164,7 +173,7 @@
                         <h2>TASKLY</h2>
                         <p>La plataforma para encontrar y ofrecer servicios freelance</p>
                     </div>
-                    
+
                     <div class="footer-links">
                         <div class="footer-column">
                             <h3>Explorar</h3>
@@ -174,16 +183,16 @@
                                 <li><a href="#">Categorías</a></li>
                             </ul>
                         </div>
-                        
+
                         <div class="footer-column">
                             <h3>Acerca de</h3>
                             <ul>
-                                <li><a href="#">Sobre Nosotros</a></li>
+                                <li><a href="/footer/sobre_nosotros">Sobre Nosotros</a></li>
                                 <li><a href="#">Cómo Funciona</a></li>
                                 <li><a href="#">Contacto</a></li>
                             </ul>
                         </div>
-                        
+
                         <div class="footer-column">
                             <h3>Legal</h3>
                             <ul>
@@ -194,7 +203,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="footer-bottom">
                     <p>&copy; {{ date('Y') }} TASKLY. Todos los derechos reservados.</p>
                     <div class="social-links">
@@ -207,11 +216,16 @@
             </div>
         </footer>
     </div>
-    
-    <!-- Scripts comunes -->
+
     <script src="{{ asset('js/layout.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Scripts específicos de la página -->
+    <!-- AOS - Animate On Scroll Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="{{ asset('js/aos.js') }}"></script>
+    
     @yield('scripts')
+    @vite(['resources/js/app.js'])
 </body>
 </html>

@@ -1,0 +1,196 @@
+/* public/css/admin-usuarios.css */
+
+/* Fondo rojo de la página */
+body {
+    background-color: #EC6A6A;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor blanco */
+.outer-border {
+    min-height: 94vh;
+    padding: 20px;
+    background-color: #ffffff;
+    margin: 20px auto;
+    max-width: 1500px;
+    overflow-y: auto;
+    border-radius: 4px;
+}
+
+/* Título centrado */
+.outer-border h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Estilos para la tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+}
+
+.table thead {
+    background-color: #f0f0f0;
+}
+
+.table thead th {
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 12px;
+}
+
+.table tbody td {
+    padding: 12px;
+}
+
+.table-bordered {
+    border: 1px solid #ddd;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #ddd !important;
+}
+
+/* Botones de acción */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
+
+.btn-primary.btn-sm i,
+.btn-danger.btn-sm i {
+    color: #fff;
+}
+
+.btn-primary.btn-sm {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-danger.btn-sm {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* Estilos para mensajes de error onblur */
+.error-message {
+    font-size: 0.8rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+}
+
+/* logout button styling */
+.logout-btn {
+    font-weight: 600;
+    border-width: 2px;
+    transition: background-color .2s, color .2s;
+  }
+  
+  .logout-btn:hover,
+  .logout-btn:focus {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  /* Responsive para inputs de filtro */
+@media (max-width: 768px) {
+    #filterNombre,
+    #filterApellidos,
+    #filterCorreo,
+    #filterDni,
+    #filterCodigoPostal {
+      display: block !important;
+      width: 100% !important;
+      margin-bottom: 0.75rem;
+    }
+  }
+/* public/css/admin-usuarios.css */
+
+/* ... (mantén todos los estilos existentes) ... */
+
+/* Responsive para cada tipo de CRUD */
+@media (max-width: 768px) {
+    /* GESTIÓN DE USUARIOS - Mostrar solo Correo y Acciones */
+    .table-usuarios thead th:not(:nth-child(3)):not(:nth-child(9)),
+    .table-usuarios tbody td:not(:nth-child(3)):not(:nth-child(9)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE CATEGORÍAS - Mostrar solo Nombre y Acciones */
+    .table-categorias thead th:not(:nth-child(1)):not(:nth-child(2)),
+    .table-categorias tbody td:not(:nth-child(1)):not(:nth-child(2)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE TRABAJOS - Mostrar solo Título y Acciones */
+    .table-trabajos thead th:not(:nth-child(1)):not(:nth-child(7)),
+    .table-trabajos tbody td:not(:nth-child(1)):not(:nth-child(7)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE VALORACIONES - Mostrar solo Puntuación y Acciones */
+    .table-valoraciones thead th:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(6)),
+    .table-valoraciones tbody td:not(:nth-child(1)):not(:nth-child(3)):not(:nth-child(6)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE COMPLETADOS - Mostrar solo Titulo y Acciones */
+    .table-completados thead th:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(6)),
+    .table-completados tbody td:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(6)) {
+        display: none;
+    }
+
+    /* GESTIÓN DE LOGROS - Mostrar solo Nombre y Acciones */
+    .table-logros thead th:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(6)),
+    .table-logros tbody td:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(6)) {
+        display: none;
+    }
+
+    /* En mobile: en table-reportes solo mostramos Reporta (col 3), Gravedad (col 5) y Acciones (col 8) */
+    .table-reportes thead th:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(7)),
+    .table-reportes tbody td:not(:nth-child(1)):not(:nth-child(4)):not(:nth-child(7)) {
+        display: none;
+    }
+}
+
+/* Mejoras para móviles */
+@media (max-width: 768px) {
+    /* Ajustar padding en celdas para móviles */
+    .table thead th,
+    .table tbody td {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+    }
+    
+    /* Ajustar tamaño de botones */
+    .btn-sm {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+    }
+    
+    /* Ajustar márgenes en los filtros */
+    #filterNombre, #filterApellidos, #filterCorreo,
+    #filterCodigoPostal, #filterDni, #filterCliente,
+    #filterTrabajador, #filterEstado {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Ajustar el outer-border */
+    .outer-border {
+        padding: 10px;
+        margin: 10px;
+    }
+    .form-select{
+        width: 100% !important;
+    }
+    .form-control{
+        width: 100% !important;
+
+    }
+}

@@ -7,16 +7,32 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;               
+use App\Mail\WelcomeRegistered;       
 
 class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.signin');
+        if (Auth::check()) {
+                if (Auth::user()->rol_id == 1) {
+                    return redirect()->route('admin.usuarios.index');
+                } else {
+                    return redirect()->route('trabajos.index');
+                }
+            }
+            return view('auth.signin');
     }
 
     public function showSignupForm()
     {
+        if (Auth::check()) {
+            if (Auth::user()->rol_id == 1) {
+                return redirect()->route('admin.usuarios.index');
+            } else {
+                return redirect()->route('trabajos.index');
+            }
+        }
         return view('auth.signup');
     }
 
@@ -30,7 +46,7 @@ class AuthController extends Controller
             if (Auth::user()->rol_id == 1) {
                 return redirect()->route('admin.usuarios.index');
             } else {
-                return redirect()->route('welcome');
+                return redirect()->route('trabajos.index');
             }
         }
     
@@ -88,20 +104,23 @@ class AuthController extends Controller
         }
     
         $user = User::create([
-            'nombre' => $data['name'],
-            'apellidos' => $data['surname'],
-            'telefono' => $data['phone'],
+            'nombre'        => $data['name'],
+            'apellidos'     => $data['surname'],
+            'telefono'      => $data['phone'],
             'codigo_postal' => $data['postcode'],
             'dni' => strtoupper($data['dni']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'rol_id' => 2,
         ]);
-    
+
+        // Iniciamos sesión
         Auth::login($user);
         $request->session()->regenerate();
-    
+
+        // **Enviamos el correo de bienvenida**
+        Mail::to($user->email)->send(new WelcomeRegistered($user));
+
         return redirect()->route('profile');
     }
 }
-

@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Trabajo extends Model
-{
+    {
     protected $fillable = [
         'titulo',
         'descripcion',
         'precio',
         'direccion',
         'cliente_id',
-        'estado_id'
+        'estado_id',
+        'alta_responsabilidad'
     ];
 
     public function cliente()
@@ -23,6 +24,12 @@ class Trabajo extends Model
     public function estado()
     {
         return $this->belongsTo(Estado::class, 'estado_id');
+    }
+
+    // Trabajo.php
+    public function categorias()
+    {
+        return $this->belongsToMany(Categoria::class, 'categorias_tipo_trabajo', 'trabajo_id', 'categoria_id');
     }
 
     public function categoriastipotrabajo()

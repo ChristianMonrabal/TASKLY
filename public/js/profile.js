@@ -1,14 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const inputs = form.querySelectorAll('input, textarea');
-    
+document.addEventListener('DOMContentLoaded', function () {
+    form = document.querySelector('form');
+    inputs = form.querySelectorAll('input, textarea');
+
     inputs.forEach(input => {
-        input.addEventListener('blur', function() {
+        input.addEventListener('blur', function () {
             validateField(this);
         });
     });
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         let isValid = true;
         inputs.forEach(input => {
             if (!validateField(input)) {
@@ -23,9 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function validateField(field) {
+        if (field.readOnly) return true;
+
         clearError(field);
 
-        switch(field.name) {
+        switch (field.name) {
             case 'nombre':
             case 'apellidos':
                 return validateRequired(field) && validateLength(field, 2, 50);
@@ -40,8 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'fecha_nacimiento':
                 if (field.value) return validateBirthDate(field);
                 return true;
-            case 'dni':
-                return validateRequired(field) && validateDNI(field);
             case 'descripcion':
                 return true;
             default:
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validateEmail(field) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(field.value)) {
             showError(field, 'Ingresa un email válido');
             return false;
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validatePhone(field) {
-        const phoneRegex = /^\d{9}$/;
+        phoneRegex = /^\d{9}$/;
         if (!phoneRegex.test(field.value)) {
             showError(field, 'El teléfono debe tener 9 dígitos');
             return false;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validatePostalCode(field) {
-        const postalRegex = /^\d{5}$/;
+        postalRegex = /^\d{5}$/;
         if (!postalRegex.test(field.value)) {
             showError(field, 'El código postal debe tener 5 dígitos');
             return false;
@@ -93,11 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validateBirthDate(field) {
-        const birthDate = new Date(field.value);
-        const today = new Date();
-        const minAgeDate = new Date(
-            today.getFullYear() - 18, 
-            today.getMonth(), 
+        birthDate = new Date(field.value);
+        today = new Date();
+        minAgeDate = new Date(
+            today.getFullYear() - 18,
+            today.getMonth(),
             today.getDate()
         );
 
@@ -108,45 +108,73 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    function validateDNI(field) {
-        const dniRegex = /^\d{8}[A-Za-z]$/;
-        if (!dniRegex.test(field.value)) {
-            showError(field, 'El DNI debe tener 8 números y 1 letra');
-            return false;
-        }
-        
-        const dniLetters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-        const numbers = field.value.substr(0, 8);
-        const letter = field.value.substr(8, 1).toUpperCase();
-        const calculatedLetter = dniLetters[numbers % 23];
-        
-        if (letter !== calculatedLetter) {
-            showError(field, 'La letra del DNI no es válida');
-            return false;
-        }
-        
-        return true;
-    }
-
     function showError(field, message) {
         field.style.borderColor = '#EC6A6A';
-        
-        const errorDiv = document.createElement('div');
+
+        errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.style.color = '#EC6A6A';
         errorDiv.style.fontSize = '0.8rem';
         errorDiv.style.marginTop = '5px';
         errorDiv.textContent = message;
-        
+
         field.parentNode.appendChild(errorDiv);
     }
 
     function clearError(field) {
         field.style.borderColor = '';
-        
-        const errorDiv = field.parentNode.querySelector('.error-message');
+
+        errorDiv = field.parentNode.querySelector('.error-message');
         if (errorDiv) {
             field.parentNode.removeChild(errorDiv);
         }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    fields = [
+        'input[name="nombre"]',
+        'input[name="apellidos"]',
+        'input[name="email"]',
+        'input[name="telefono"]',
+        'input[name="codigo_postal"]',
+        'input[name="fecha_nacimiento"]',
+        'textarea[name="descripcion"]'
+    ];
+
+    anyEmpty = fields.some(selector => {
+        element = document.querySelector(selector);
+        return !element || !element.value.trim();
+    });
+
+    hasPhoto = document.querySelector('img.current-photo') !== null;
+
+    if (anyEmpty || !hasPhoto) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Completa tu perfil',
+            text: 'Debes completar todos los campos del perfil y subir una foto para usar Taskly.',
+            confirmButtonColor: '#EC6A6A'
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    select = document.getElementById('habilidades');
+
+    if (select) {
+        Array.from(select.options).forEach(option => {
+            option.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+
+                scrollTop = select.scrollTop;
+
+                option.selected = !option.selected;
+
+                setTimeout(() => {
+                    select.scrollTop = scrollTop;
+                }, 0); 
+            });
+        });
     }
 });

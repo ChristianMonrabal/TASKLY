@@ -9,120 +9,49 @@ class CategoriasSeeder extends Seeder
 {
     public function run(): void
     {
+        $categorias = [
+            'Electricidad',
+            'Fontanería',
+            'Carpintería',
+            'Pintura',
+            'Mantenimiento',
+            'Reparación de electrodomésticos',
+            'Cerrajería',
+            'Mudanzas',
+            'Reformas',
+            'Desatascos',
+            'Climatización',
+            'Jardinería',
+            'Limpieza',
+            'Construcción',
+            'Pavimentación',
+            'Albañilería',
+            'Decoración',
+            'Reparación de ordenadores',
+            'Reparación de móviles',
+            'Fotografía',
+            'Diseño gráfico',
+            'Marketing digital',
+            'Asesoría legal',
+            'Contabilidad',
+            'Clases particulares',
+            'Cuidado de mascotas',
+            'Cuidado de personas mayores',
+            'Cuidado de niños',
+            'Entrenamiento personal',
+            'Cuidado del hogar',
+            'Cuidado del jardín',
+            'Cuidado del coche',
+            'Cuidado de la salud',
+            'Cuidado de la belleza',
+            'Cuidado de la imagen personal',
+            'Cuidado de la ropa',
+            'Cuidado de la casa',
+            'Cuidado de la familia'
+        ];
 
-        Categoria::create([
-            'nombre' => 'Electricidad',
-        ]);
-        Categoria::create([
-            'nombre' => 'Fontanería',
-        ]);
-        Categoria::create([
-            'nombre' => 'Carpintería',
-        ]);
-        Categoria::create([
-            'nombre' => 'Pintura',
-        ]);
-        Categoria::create([
-            'nombre' => 'Mantenimiento',
-        ]);
-        Categoria::create([
-            'nombre' => 'Reparación de electrodomésticos',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cerrajería',
-        ]);
-        Categoria::create([
-            'nombre' => 'Mudanzas',
-        ]);
-        Categoria::create([
-            'nombre' => 'Reformas',
-        ]);
-        Categoria::create([
-            'nombre' => 'Desatascos',
-        ]);
-        Categoria::create([
-            'nombre' => 'Climatización',
-        ]);
-        Categoria::create([
-            'nombre' => 'Jardinería',
-        ]);
-        Categoria::create([
-            'nombre' => 'Limpieza',
-        ]);
-        Categoria::create([
-            'nombre' => 'Construcción',
-        ]);
-        Categoria::create([
-            'nombre' => 'Pavimentación',
-        ]);
-        Categoria::create([
-            'nombre' => 'Albañilería',
-        ]);
-        Categoria::create([
-            'nombre' => 'Decoración',
-        ]);
-        Categoria::create([
-            'nombre' => 'Reparación de ordenadores',
-        ]);
-        Categoria::create([
-            'nombre' => 'Reparación de móviles',
-        ]);
-        Categoria::create([
-            'nombre' => 'Fotografía',
-        ]);
-        Categoria::create([
-            'nombre' => 'Diseño gráfico',
-        ]);
-        Categoria::create([
-            'nombre' => 'Marketing digital',
-        ]);
-        Categoria::create([
-            'nombre' => 'Asesoría legal',
-        ]);
-        Categoria::create([
-            'nombre' => 'Contabilidad',
-        ]);
-        Categoria::create([
-            'nombre' => 'Clases particulares',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de mascotas',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de personas mayores',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de niños',
-        ]);
-        Categoria::create([
-            'nombre' => 'Entrenamiento personal',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado del hogar',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado del jardín',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado del coche',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de la salud',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de la belleza',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de la imagen personal',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de la ropa',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de la casa',
-        ]);
-        Categoria::create([
-            'nombre' => 'Cuidado de la familia',
-        ]);
+        foreach ($categorias as $categoria) {
+            Categoria::create(['nombre' => $categoria]);
+        }
     }
 }
