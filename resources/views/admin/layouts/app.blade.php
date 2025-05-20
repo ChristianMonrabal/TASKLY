@@ -38,14 +38,16 @@
                         @auth
                         <div class="user-dropdown">
                             <button class="dropdown-btn">
-                                <div class="user-avatar">
+                                <div class="user-avatar" style="position: relative;">
                                     <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}" class="current-photo">
                                 </div>
                                 <span class="user-name">{{ Auth::user()->name }}</span>
                                 <span class="icon">▼</span>
                             </button>
                             <div class="dropdown-content">
-                                <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
+                                <a href="{{ route('perfil.usuario', ['nombre' => str(Auth::user()->nombre . ' ' . Auth::user()->apellidos)->slug('-')]) }}">
+                                    <i class="fas fa-user"></i> Mi Perfil
+                                </a>
                                 <a href="{{ route('admin.usuarios.index') }}"><i class="fas fa-users"></i> Usuarios</a>
                                 <a href="{{ route('admin.trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
                                 <a href="{{ route('admin.valoraciones.index') }}"><i class="fas fa-star"></i> Valoraciones</a>

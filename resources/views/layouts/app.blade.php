@@ -110,7 +110,9 @@
                                     <span class="icon">▼</span>
                                 </button>
                                 <div class="dropdown-content">
-                                    <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
+                                    <a href="{{ route('perfil.usuario', ['nombre' => str(Auth::user()->nombre . ' ' . Auth::user()->apellidos)->slug('-')]) }}">
+                                        <i class="fas fa-user"></i> Mi Perfil
+                                    </a>
                                     <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                         @csrf
                                         <a href="{{ route('logout') }}"

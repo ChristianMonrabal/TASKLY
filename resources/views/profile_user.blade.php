@@ -17,12 +17,19 @@
                 <div class="card-body text-center">
 
                     {{-- Foto de perfil --}}
-                    <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; border: 3px solid #dc3545; box-shadow: 0 0 10px rgba(0,0,0,0.2); margin: 0 auto;">
+                    <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; border: 3px solid #dc3545; box-shadow: 0 0 10px rgba(0,0,0,0.2); margin: 0 auto; position: relative;">
                         <img src="{{ $usuario->foto_perfil 
                             ? asset('img/profile_images/' . $usuario->foto_perfil) 
                             : asset('img/perfil_default.png') }}" 
                             alt="Foto de perfil"
                             style="width: 100%; height: 100%; object-fit: cover;">
+                        @auth
+                            @if(Auth::id() === $usuario->id)
+                                <a href="{{ route('profile') }}" class="camera-icon-btn" title="Editar perfil">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            @endif
+                        @endauth
                     </div>
                     <br>
 
