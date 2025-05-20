@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Editar perfil de Taskly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 </head>
 
@@ -69,8 +69,11 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label for="dni">DNI:</label>
-                <input type="text" name="dni" value="{{ old('dni', $user->dni) }}" readonly>
+                <label for="new-password">Contraseña:</label>
+                <div class="password-container">
+                    <input type="password" id="new-password" name="password" class="input-field">
+                    <i class="fas fa-eye password-toggle" id="toggle-password2" data-target="new-password"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label for="descripcion">Descripción:</label>
@@ -119,7 +122,6 @@
             </script>
         @endif
 
-
         @if($errors->any())
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
@@ -132,7 +134,6 @@
                 });
             </script>
         @endif
-
 
         <div class="text-center mt-4">
             <button type="submit" class="btn color">Guardar cambios</button>
@@ -164,14 +165,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/toogle_password_profile.js') }}"></script>
     <script src="{{ asset('js/camera.js') }}"></script>
     <script src="{{ asset('js/profile.js') }}"></script>
     <script src="{{ asset('js/profile_alerts.js') }}"></script>
     <script>
-    window.profileFeedback = {
-        success: {!! json_encode(session('success')) !!},
-        error: {!! json_encode($errors->first()) !!}
-    };
+        window.profileFeedback = {
+            success: {!! json_encode(session('success')) !!},
+            error: {!! json_encode($errors->first()) !!}
+        };
     </script>
 </body>
 </html>
