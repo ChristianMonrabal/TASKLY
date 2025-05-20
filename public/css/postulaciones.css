@@ -196,6 +196,10 @@ h1 {
     color: #333;
 }
 
+.buscador-container {
+    margin-top: -30px;
+}
+
 @media (max-width: 768px) {
     .trabajos-grid {
         grid-template-columns: repeat(2, 1fr);

@@ -450,6 +450,10 @@ h1 {
     color: white;
 }
 
+.buscador-container {
+    margin-top: 40px;
+}
+
 @media (max-width: 768px) {
     .buscador-container {
         position: static;
