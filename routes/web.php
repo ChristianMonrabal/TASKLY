@@ -59,7 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/update-status', [PaymentController::class, 'updatePaymentStatus'])->name('payment.update-status');
     Route::get('/payment/complete', function() {return view('payment-complete');})->name('payment.complete');
     Route::get('/payment/check-config', [PaymentController::class, 'checkStripeConfig'])->name('payment.check-config');
-    
+    Route::get('/payment/factura/{trabajo}', [App\Http\Controllers\PaymentController::class, 'generarFactura'])->name('payment.factura');
+
     // Ruta para valoraciones (especialmente después del pago)
     Route::get('/valoraciones/{trabajador_id}', [ValoracionesController::class, 'mostrarFormularioValoracion'])->name('valoraciones.trabajador');
 
