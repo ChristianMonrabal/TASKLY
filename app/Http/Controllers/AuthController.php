@@ -16,7 +16,7 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
                 if (Auth::user()->rol_id == 1) {
-                    return redirect()->route('admin.usuarios.index');
+                    return redirect()->route('admin.dashboard.index');
                 } else {
                     return redirect()->route('trabajos.index');
                 }
@@ -28,7 +28,7 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             if (Auth::user()->rol_id == 1) {
-                return redirect()->route('admin.usuarios.index');
+                return redirect()->route('admin.dashboard.index');
             } else {
                 return redirect()->route('trabajos.index');
             }
@@ -53,7 +53,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             if (Auth::user()->rol_id == 1) {
-                return redirect()->route('admin.usuarios.index');
+                return redirect()->route('admin.dashboard.index');
             } else {
                 return redirect()->route('trabajos.index');
             }
@@ -65,6 +65,7 @@ class AuthController extends Controller
             ])
             ->withInput();
     }
+    
 
     public function register(Request $request)
     {

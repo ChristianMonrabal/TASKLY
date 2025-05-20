@@ -81,7 +81,7 @@
                                 <li>
                                     <a href="{{ url('/admin/dashboard') }}"
                                         class="nav-link {{ request()->is('admin/dashboard*') ? 'active' : '' }}">
-                                        <i class="fas fa-user-shield"></i> Panel de administración
+                                        <i class="fas fa-user-shield"></i> Administración
                                     </a>
                                 </li>
                             @endif  
