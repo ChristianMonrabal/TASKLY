@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'input[name="telefono"]',
         'input[name="codigo_postal"]',
         'input[name="fecha_nacimiento"]',
-        'input[name="dni"]',
         'textarea[name="descripcion"]'
     ];
 

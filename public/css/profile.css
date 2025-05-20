@@ -229,3 +229,20 @@ input:invalid, textarea:invalid {
     background-color: #fff !important;
     color: #EC6A6A;
 }
+
+.password-container input {
+    padding-right: 40px;
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
