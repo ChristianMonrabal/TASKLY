@@ -68,9 +68,7 @@
                                 @endphp
                                 @if($logro)
                                     <div class="logro-card" style="--index: {{ $index }}">
-                                        @if($logro->descuento > 0)
-                                            <div class="logro-badge">{{ $logro->descuento }}% descuento</div>
-                                        @endif
+                                       
                                         <img src="{{ asset('img/insignias/' . ($logro->foto_logro ?? 'Insignia1.png')) }}" 
                                             alt="{{ $logro->nombre }}" 
                                             class="logro-imagen">
