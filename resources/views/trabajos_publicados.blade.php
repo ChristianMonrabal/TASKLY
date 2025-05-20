@@ -70,17 +70,6 @@
                 </button>
             </div>
         </div>
-
-        <div id="mensajeFinalizados" style="display:none; color: var(--primary); margin-top: 15px;">
-            <h5>No has finalizado ningún trabajo.</h5>
-        </div>
-
-        <div id="mensajeActivos" style="display:none; color: var(--primary); margin-top: 15px;">
-            <h5>No tienes trabajos activos.</h5>
-        </div>
-
-
-
         @if ($trabajos->count() > 0)
             <div class="trabajos-grid">
                 @foreach ($trabajos as $trabajo)
@@ -176,8 +165,8 @@
                 @endif
             </div>
         @else
-            <div class="alert" style=" color: var(--primary);">
-                <h5>No has publicado ningún trabajo.</h5>
+            <div class="alert">
+                <p>No has publicado ningún trabajo.</p>
             </div>
         @endif
         
