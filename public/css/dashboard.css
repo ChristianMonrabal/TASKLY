@@ -1,0 +1,71 @@
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .kpis-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  
+  .kpi-box {
+    flex: 1 1 150px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .kpi-box:hover {
+    background-color: #d0e2ff;
+  }
+  
+  .kpi-number {
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .kpi-label {
+    font-size: 1em;
+    color: #555;
+  }
+  
+  .growth-positive {
+    color: #28a745;
+    font-weight: 700;
+  }
+  
+  .growth-negative {
+    color: #dc3545;
+    font-weight: 700;
+  }
+  
+  .charts-row {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .chart-box {
+    flex: 1 1 48%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    min-width: 320px;
+  }
+  
+  .chart-box h3 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ValoracionController;
 use App\Http\Controllers\Admin\CategoriaController;
 use App\Http\Controllers\Admin\ReporteController as AdminReporteController;
 use App\Http\Controllers\Admin\UsuarioController as AdminUsuarioController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrabajoController;
@@ -97,7 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', function () {Auth::logout();request()->session()->invalidate();request()->session()->regenerateToken();return redirect('/');})->name('logout');
 
     Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-        
+
         Route::get('trabajos/completados', [AdminJobController::class, 'completadosIndex'])->name('trabajos.completados');
         Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])->name('trabajos.completados.json');
         Route::get('usuarios/json', [UsuarioController::class,'apiIndex'])->name('admin.usuarios.json');
@@ -121,6 +122,15 @@ Route::middleware('auth')->group(function () {
         Route::post('usuarios/{id}/notify',[AdminUsuarioController::class, 'notify'])->name('usuarios.notify');
 
 });
+Route::prefix('admin/dashboard')->name('admin.dashboard.')->middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+    Route::get('kpis', [DashboardController::class, 'kpis'])->name('kpis');
+    Route::get('jobsByStatus', [DashboardController::class, 'jobsByStatus'])->name('jobsByStatus');
+    Route::get('userGrowth', [DashboardController::class, 'userGrowth'])->name('userGrowth');
+    Route::get('topWorkers', [DashboardController::class, 'topWorkers'])->name('topWorkers');
+    Route::get('reportsBySeverity', [DashboardController::class, 'reportsBySeverity'])->name('reportsBySeverity');
+});
+
 
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');

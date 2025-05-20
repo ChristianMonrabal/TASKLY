@@ -26,6 +26,7 @@
                     
                     <nav class="main-nav">
                         <ul>
+                            <li><a href="{{ route('admin.dashboard.index') }}" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                             <li><a href="{{ route('admin.usuarios.index') }}" class="nav-link"><i class="fas fa-users"></i> Usuarios</a></li>
                             <li><a href="{{ route('admin.trabajos.index') }}" class="nav-link"><i class="fas fa-briefcase"></i> Trabajos</a></li>
                             <li><a href="{{ route('admin.valoraciones.index') }}" class="nav-link"><i class="fas fa-star"></i> Valoraciones</a></li>
