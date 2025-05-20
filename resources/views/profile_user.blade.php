@@ -4,6 +4,7 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/perfil_resenas.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/logros.css') }}">
 @endsection
 
 @section('content')
@@ -25,21 +26,21 @@
                             style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <br>
-
+                    
                     {{-- Nombre completo --}}
                     <h3 class="mb-0">{{ $usuario->nombre }} {{ $usuario->apellidos }}</h3>
-
+                    {{-- Descripción (opcional) --}}
+                    @if (!empty($usuario->descripcion))
+                        <p class="mt-3">{{ $usuario->descripcion }}</p>
+                    @endif
                     {{-- Información personal --}}
                     <div class="mt-4 text-start">
                         <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ $usuario->email }}</p>
                         <p><i class="fas fa-map-marker-alt"></i> <strong>Código postal:</strong> {{ $usuario->codigo_postal ?? 'No disponible' }}</p>
                         <p><i class="fas fa-calendar-alt"></i> <strong>Miembro desde:</strong> {{ $usuario->created_at->format('d/m/Y') }}</p>
                     </div>
-
-                    {{-- Descripción (opcional) --}}
-                    @if (!empty($usuario->descripcion))
-                        <p class="mt-3">{{ $usuario->descripcion }}</p>
-                    @endif
+                    <br>
+                    
 
                     {{-- Botón de chat & reporte de usuario --}}
                     @if(Auth::id() !== $usuario->id)
@@ -52,9 +53,49 @@
                     @endif
                 </div>
                 
-                {{-- Línea de separación entre la información del usuario y las valoraciones --}}
+                {{-- Línea de separación entre la información del usuario y los logros --}}
                 <hr class="my-4">   
 
+                {{-- Insignias / Logros --}}
+                <div class="logros-seccion">
+                    <h2 class="text-center text-danger mb-4"><i class="fas fa-award me-2"></i><strong>  Logros conseguidos</strong></h2>
+                    
+                    @if($usuario->logrosCompletados->count())
+                        <div class="logros-grid">
+                            @foreach($usuario->logrosCompletados as $index => $logroCompleto)
+                                @php
+                                    $logro = $logroCompleto->logro;
+                                @endphp
+                                @if($logro)
+                                    <div class="logro-card" style="--index: {{ $index }}">
+                                        @if($logro->descuento > 0)
+                                            <div class="logro-badge">{{ $logro->descuento }}% descuento</div>
+                                        @endif
+                                        <img src="{{ asset('img/insignias/' . ($logro->foto_logro ?? 'Insignia1.png')) }}" 
+                                            alt="{{ $logro->nombre }}" 
+                                            class="logro-imagen">
+                                        <h3 class="logro-titulo">{{ $logro->nombre }}</h3>
+                                        {{-- <p class="logro-descripcion">{{ $logro->descripcion }}</p> --}}
+                                        <div class="logro-meta">
+                                            <span class="logro-tiempo">{{ \Carbon\Carbon::parse($logroCompleto->created_at)->format('d/m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="sin-logros">
+                            <i class="fas fa-medal fa-2x mb-3 text-muted"></i>
+                            <p>{{ $usuario->nombre }} aún no ha conseguido logros.</p>
+                            <p class="small">Los logros se obtienen al completar tareas especiales en TASKLY.</p>
+                        </div>
+                    @endif
+                </div>
+                <br>
+
+                {{-- Línea de separación entre los logros y las valoraciones --}}
+                <hr class="my-4">
+                
                 {{-- Valoraciones recibidas --}}
                 <div class="card-body">
                     {{-- Título "Valoraciones recibidas" centrado y en color rojo --}}
@@ -115,32 +156,6 @@
                         </div>
                     @else
                         <p class="text-muted">Este usuario aún no ha recibido valoraciones.</p>
-                    @endif
-
-                    {{-- Insignias / Logros --}}
-                    @if($usuario->logrosCompletados->count())
-                        <hr class="my-4">
-                        <div class="card-body text-center">
-                            <h2 class="mb-4 text-danger"><strong>Insignias obtenidas</strong></h2>
-                            <div class="d-flex flex-wrap justify-content-center gap-4">
-                                @foreach($usuario->logrosCompletados as $logroCompleto)
-                                    @php
-                                        $logro = $logroCompleto->logro;
-                                    @endphp
-                                    @if($logro)
-                                        <div class="text-center" style="max-width: 120px;">
-                                            <div class="position-relative" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $logro->descripcion }}">
-                                                <img src="{{ asset('img/insignias/' . $logro->foto_logro) }}" 
-                                                    alt="{{ $logro->nombre }}" 
-                                                    class="img-thumbnail shadow"
-                                                    style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #dc3545; border-radius: 10px;">
-                                            </div>
-                                            <p class="mt-2 text-dark"><strong>{{ $logro->nombre }}</strong></p>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
                     @endif
                 </div>
             </div>
