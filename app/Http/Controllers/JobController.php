@@ -104,9 +104,10 @@ public function store(Request $request)
     public function trabajosPublicados()
     {
         $user = Auth::user();
-        $trabajos = Trabajo::with('imagenes')->where('cliente_id', $user->id)->get();
+        $trabajos = Trabajo::with(['imagenes', 'categoriastipotrabajo'])->where('cliente_id', $user->id)->get();
+        $categorias = Categoria::where('visible', 'Sí')->get();
 
-        return view('trabajos_publicados', compact('trabajos'));
+        return view('trabajos_publicados', compact('trabajos', 'categorias'));
     }
 
     public function show($id)

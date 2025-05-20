@@ -211,10 +211,13 @@ class PostulacionController extends Controller
      */
     public function misPostulaciones()
     {
-        $postulaciones = Postulacion::with(['trabajo.imagenes', 'trabajo.cliente', 'estado'])
+        $postulaciones = Postulacion::with(['trabajo.imagenes', 'trabajo.cliente', 'trabajo.categoriastipotrabajo', 'estado'])
             ->where('trabajador_id', Auth::id())
             ->get();
 
-        return view('postulaciones', compact('postulaciones'));
+        // Obtener las categorías para el filtro
+        $categorias = \App\Models\Categoria::where('visible', 'Sí')->get();
+
+        return view('postulaciones', compact('postulaciones', 'categorias'));
     }
 }
