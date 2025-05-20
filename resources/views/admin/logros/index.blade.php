@@ -28,6 +28,9 @@
     </thead>
     <tbody id="logros-container"></tbody>
   </table>
+  <nav aria-label="Paginación">
+    <ul id="logros-pagination" class="pagination justify-content-center"></ul>
+  </nav>
 </div>
 
 <!-- Modal Crear -->

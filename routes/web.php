@@ -6,6 +6,8 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\ValoracionController;
 use App\Http\Controllers\Admin\CategoriaController;
+use App\Http\Controllers\Admin\ReporteController as AdminReporteController;
+use App\Http\Controllers\Admin\UsuarioController as AdminUsuarioController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrabajoController;
@@ -21,6 +23,7 @@ use App\Http\Controllers\Admin\LogroController;
 use App\Http\Controllers\ValoracionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\PaymentController;
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -30,9 +33,7 @@ Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.au
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.auth');
 Route::post('/signup', [AuthController::class, 'register'])->name('signup.store');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/login', function () {
-    return redirect('/signin');
-})->name('login');
+Route::get('/login', function () {return redirect('/signin');})->name('login');
 Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 
@@ -53,28 +54,21 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     
     // Rutas para el sistema de pagos con Stripe
-    Route::get('/payment/{trabajo}', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
-    Route::post('/payment/intent', [App\Http\Controllers\PaymentController::class, 'createIntent'])->name('payment.create-intent');
-    Route::post('/payment/update-status', [App\Http\Controllers\PaymentController::class, 'updatePaymentStatus'])->name('payment.update-status');
-    Route::get('/payment/complete', function() {
-        return view('payment-complete');
-    })->name('payment.complete');
-    Route::get('/payment/check-config', [App\Http\Controllers\PaymentController::class, 'checkStripeConfig'])->name('payment.check-config');
+    Route::get('/payment/{trabajo}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/intent', [PaymentController::class, 'createIntent'])->name('payment.create-intent');
+    Route::post('/payment/update-status', [PaymentController::class, 'updatePaymentStatus'])->name('payment.update-status');
+    Route::get('/payment/complete', function() {return view('payment-complete');})->name('payment.complete');
+    Route::get('/payment/check-config', [PaymentController::class, 'checkStripeConfig'])->name('payment.check-config');
     Route::get('/payment/factura/{trabajo}', [App\Http\Controllers\PaymentController::class, 'generarFactura'])->name('payment.factura');
-    
+
     // Ruta para valoraciones (especialmente después del pago)
-    Route::get('/valoraciones/{trabajador_id}', [App\Http\Controllers\ValoracionesController::class, 'mostrarFormularioValoracion'])->name('valoraciones.trabajador');
+    Route::get('/valoraciones/{trabajador_id}', [ValoracionesController::class, 'mostrarFormularioValoracion'])->name('valoraciones.trabajador');
 
     // Ruta para la página de mensajes
-    Route::get('/mensajes', function () {
-        return view('mensajes.index');
-    })->name('mensajes');
+    Route::get('/mensajes', function () {return view('mensajes.index');})->name('mensajes');
 
     // Ruta para mostrar todos los usuarios
-    Route::get('/usuarios', function () {
-        $users = User::with('rol')->get();
-        return view('usuarios.index', compact('users'));
-    })->name('usuarios.index');
+    Route::get('/usuarios', function () {$users = User::with('rol')->get();return view('usuarios.index', compact('users'));})->name('usuarios.index');
 
     // Rutas de trabajos protegidas
     Route::post('/trabajos/{id}/postular', [TrabajoController::class, 'postular'])->name('trabajos.postular');
@@ -101,35 +95,32 @@ Route::middleware('auth')->group(function () {
     });
 
     // Logout
-    Route::post('/logout', function () {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('/');
-    })->name('logout');
+    Route::post('/logout', function () {Auth::logout();request()->session()->invalidate();request()->session()->regenerateToken();return redirect('/');})->name('logout');
 
-    Route::prefix('admin')
-    ->name('admin.')
-    ->middleware('auth')
-    ->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         
-        // listado/­vista de completados
-        Route::get('trabajos/completados', [AdminJobController::class, 'completadosIndex'])
-            ->name('trabajos.completados');
-
-        // 2) Endpoint JSON para fetch + filtros
-        Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])
-            ->name('trabajos.completados.json');
-
+        Route::get('trabajos/completados', [AdminJobController::class, 'completadosIndex'])->name('trabajos.completados');
+        Route::get('trabajos/completados/json', [AdminJobController::class, 'apiCompletados'])->name('trabajos.completados.json');
+        Route::get('usuarios/json', [UsuarioController::class,'apiIndex'])->name('admin.usuarios.json');
+        Route::get('trabajos/json', [AdminJobController::class,'apiIndex'])->name('admin.trabajos.json');
+        Route::get('trabajos/api-estados', [AdminJobController::class,'apiEstadosTrabajo'])->name('admin.trabajos.estados');
+        Route::get('valoraciones/json', [ValoracionController::class, 'apiIndex'])->name('admin.valoraciones.json');
+        Route::get('categorias/json', [CategoriaController::class, 'apiIndex'])->name('admin.categorias.json');
+        Route::get('logros/json', [LogroController::class, 'apiIndex'])->name('admin.logros.json');
         Route::resource('logros', LogroController::class);
-        // resto de recursos
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('trabajos', AdminJobController::class);
-        Route::resource('valoraciones', ValoracionController::class)
-            ->parameters(['valoraciones' => 'valoracion']);
+        Route::resource('valoraciones', ValoracionController::class)->parameters(['valoraciones' => 'valoracion']);
         Route::resource('categorias', CategoriaController::class);
-        Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
-            ->name('categorias.toggleVisible');
+        Route::patch('categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])->name('categorias.toggleVisible');
+        Route::get('reportes',        [AdminReporteController::class, 'index'])->name('reportes.index');
+        Route::get('reportes/json',   [AdminReporteController::class, 'json'])->name('reportes.json');
+        Route::get('reportes/{id}',   [AdminReporteController::class, 'show'])->name('reportes.show');
+        Route::put('reportes/{id}',   [AdminReporteController::class, 'update'])->name('reportes.update');
+        Route::delete('reportes/{id}',[AdminReporteController::class, 'destroy'])->name('reportes.destroy');
+        Route::post('usuarios/{id}/toggle-active',[AdminUsuarioController::class, 'toggleActive'])->name('usuarios.toggleActive');
+        Route::post('usuarios/{id}/notify',[AdminUsuarioController::class, 'notify'])->name('usuarios.notify');
+
 });
 
     // Calendario
@@ -145,8 +136,6 @@ Route::middleware('auth')->group(function () {
     // Reportes
     Route::get('/reportes/{user_id}', [ReporteController::class, 'index'])->name('reportes.index');
     Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
-
-    
     Route::get('/listareportes', [ReporteController::class, 'listareportes'])->name('listareportes.listareportes');
 
     // Rutas API Admin
@@ -165,7 +154,6 @@ Route::middleware('auth')->group(function () {
     // Categorías:
     Route::get('api/categorias',    [CategoriaController::class, 'apiIndex']);
     Route::get('api/categorias/{categoria}', [CategoriaController::class, 'show']);
-
     // Logros:
     Route::get('api/logros',      [LogroController::class, 'apiIndex']);
     Route::get('api/logros/{logro}', [LogroController::class, 'show']);
@@ -174,12 +162,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
-Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])
-    ->name('admin.categorias.toggleVisible');
+Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])->name('admin.categorias.toggleVisible');
 
-Route::get('/footer/sobre_nosotros', function () {
-    return view('/footer/sobre_nosotros');
-});
+Route::get('/footer/sobre_nosotros', function () {return view('/footer/sobre_nosotros');});
 
 // Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
 Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'perfilPorNombre'])->name('perfil.usuario');
@@ -195,6 +180,7 @@ Route::delete('/trabajos/{id}', [JobController::class, 'eliminar'])->name('traba
 Route::put('/trabajos/actualizar/{id}', [JobController::class, 'actualizar'])->name('trabajos.actualizar');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
     // Ruta para crear una notificación (puedes probar esto con Postman o frontend)
     Route::post('/notificaciones', [NotificacionController::class, 'store']);

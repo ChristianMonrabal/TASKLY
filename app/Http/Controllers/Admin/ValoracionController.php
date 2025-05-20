@@ -84,7 +84,7 @@ class ValoracionController extends Controller
             );
         }
 
-        return response()->json($query->get());
+        return $query->orderByDesc('created_at')->paginate(10);
     }
 
     /**

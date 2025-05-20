@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Categoria;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -64,6 +65,14 @@ class ProfileController extends Controller
             }
         }
 
+        if (!empty($data['password'])) {
+            if (strlen($data['password']) < 8) {
+                return back()->withErrors(['general' => 'La nueva contraseña debe tener al menos 8 caracteres'])->withInput();
+            }
+
+            $user->password = Hash::make($data['password']);
+        }
+
         if (!empty($data['descripcion']) && strlen($data['descripcion']) > 500) {
             return back()->withErrors(['general' => 'La descripción no puede exceder los 500 caracteres'])->withInput();
         }
@@ -85,7 +94,6 @@ class ProfileController extends Controller
 
                 file_put_contents($directory . '/' . $fileName, $imageData);
 
-                // No eliminar la imagen si es la predeterminada
                 $defaultPhoto = 'perfil_default.png';
                 if (
                     $user->foto_perfil &&

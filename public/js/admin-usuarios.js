@@ -1,246 +1,221 @@
 // public/js/admin-usuarios.js
 
+// Mantener la página actual
+let currentPage = 1;
+
+// ————————————————————————————————
 // Validaciones onblur
-
+// ————————————————————————————————
 function validateNonEmpty(fieldId, message) {
-    let field = document.getElementById(fieldId);
-    let errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-    if (field.value.trim() === '') {
-        errorDiv.textContent = message;
-        return false;
-    } else {
-        errorDiv.textContent = '';
-        return true;
-    }
+  const f = document.getElementById(fieldId),
+        e = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
+  if (!f.value.trim()) { e.textContent = message; return false; }
+  e.textContent = ''; return true;
 }
-
 function validateEmail(fieldId) {
-    let field = document.getElementById(fieldId);
-    let errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (field.value.trim() === '') {
-        errorDiv.textContent = "El campo Correo es obligatorio.";
-        return false;
-    } else if (!emailRegex.test(field.value.trim())) {
-        errorDiv.textContent = "El formato del Correo es inválido.";
-        return false;
-    } else {
-        errorDiv.textContent = "";
-        return true;
-    }
+  const f = document.getElementById(fieldId),
+        e = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1)),
+        emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!f.value.trim()) {
+    e.textContent = "El campo Correo es obligatorio."; return false;
+  } else if (!emailRegex.test(f.value.trim())) {
+    e.textContent = "El formato del Correo es inválido."; return false;
+  }
+  e.textContent = ''; return true;
 }
-
 function validateOptionalPassword() {
-    let password = document.getElementById('editPassword').value;
-    let confirmation = document.getElementById('editPasswordConfirmation').value;
-    let errorPass = document.getElementById('errorEditPassword');
-    let errorConf = document.getElementById('errorEditPasswordConfirmation');
-
-    if (password === '' && confirmation === '') {
-        errorPass.textContent = "";
-        errorConf.textContent = "";
-        return true;
-    }
-
-    if (password.length < 6) {
-        errorPass.textContent = "La nueva contraseña debe tener al menos 6 caracteres.";
-        return false;
-    } else {
-        errorPass.textContent = "";
-    }
-
-    if (password !== confirmation) {
-        errorConf.textContent = "Las contraseñas no coinciden.";
-        return false;
-    } else {
-        errorConf.textContent = "";
-    }
-
-    return true;
+  const pwd = document.getElementById('editPassword').value,
+        conf= document.getElementById('editPasswordConfirmation').value,
+        e1 = document.getElementById('errorEditPassword'),
+        e2 = document.getElementById('errorEditPasswordConfirmation');
+  if (!pwd && !conf) { e1.textContent = ''; e2.textContent = ''; return true; }
+  if (pwd.length < 6) { e1.textContent = "Mínimo 6 caracteres."; return false; }
+  e1.textContent = '';
+  if (pwd !== conf) { e2.textContent = "No coinciden."; return false; }
+  e2.textContent = ''; return true;
 }
 
-// Función para limpiar el contenedor de errores del modal.
+// ————————————————————————————————
+// Limpia errores del modal
+// ————————————————————————————————
 function clearEditUsuarioErrors() {
-    let errorsDiv = document.getElementById('editErrors');
-    if (errorsDiv) {
-        errorsDiv.classList.add('d-none');
-        errorsDiv.innerHTML = '<ul></ul>';
-    }
+  const d = document.getElementById('editErrors');
+  if (d) { d.classList.add('d-none'); d.querySelector('ul').innerHTML = ''; }
 }
 
-// Función para renderizar la tabla de usuarios.
-function renderUsuarios(data) {
-    const container = document.getElementById('usuarios-container');
-    container.innerHTML = '';
-    data.forEach(usuario => {
-        const rolNombre = usuario.rol ? (usuario.rol.nombre || usuario.rol.name || '') : '';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${usuario.nombre}</td>
-            <td>${usuario.apellidos}</td>
-            <td>${usuario.email}</td>
-            <td>${usuario.telefono || ''}</td>
-            <td>${usuario.fecha_nacimiento ? new Date(usuario.fecha_nacimiento).toLocaleDateString() : ''}</td>
-            <td>${usuario.dni || ''}</td>
-            <td>${rolNombre}</td>
-            <td>${usuario.descripcion || ''}</td>
-            <td>
-                <button class="btn btn-primary btn-sm" onclick="openEditModal(${usuario.id})">
-                    <i class="fa fa-edit"></i>
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="confirmDeleteUsuario(${usuario.id})">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        `;
-        container.appendChild(tr);
+// ————————————————————————————————
+// Renderiza la tabla de usuarios
+// ————————————————————————————————
+function renderUsuarios(items) {
+  const tbody = document.getElementById('usuarios-container');
+  tbody.innerHTML = '';
+  items.forEach(u => {
+    const rol = u.rol?.nombre || '',
+          activoLabel = u.activo === 'si' ? 'Activo' : 'Inactivo';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.nombre}</td>
+      <td>${u.apellidos}</td>
+      <td>${u.email}</td>
+      <td>${u.telefono || ''}</td>
+      <td>${u.fecha_nacimiento ? new Date(u.fecha_nacimiento).toLocaleDateString() : ''}</td>
+      <td>${u.dni || ''}</td>
+      <td>${rol}</td>
+      <td>${u.descripcion || ''}</td>
+      <td>${activoLabel}</td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick="openEditModal(${u.id})">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUsuario(${u.id})">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ————————————————————————————————
+// Renderiza la paginación
+// ————————————————————————————————
+function renderPagination(paginated) {
+  const ul = document.getElementById('usuarios-pagination');
+  if (!ul) return;
+  ul.innerHTML = '';
+  paginated.links.forEach(link => {
+    const li = document.createElement('li');
+    li.className = 'page-item' +
+      (link.active ? ' active' : '') +
+      (!link.url   ? ' disabled' : '');
+    const a = document.createElement('a');
+    a.className = 'page-link';
+    a.href = '#';
+    a.innerHTML = link.label;
+    if (link.url) {
+      const page = new URL(link.url).searchParams.get('page');
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        filterUsuarios(Number(page));
+      });
+    }
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+}
+
+// ————————————————————————————————
+// Obtiene usuarios filtrados y renderiza la tabla + paginación
+// ————————————————————————————————
+function filterUsuarios(page = currentPage) {
+  currentPage = page;
+  const params = new URLSearchParams();
+  ['filterNombre','filterApellidos','filterCorreo','filterDni','filterCodigoPostal']
+    .forEach(id => {
+      const v = document.getElementById(id).value.trim();
+      if (v) params.append(id.replace('filter','').toLowerCase(), v);
+    });
+  params.append('page', currentPage);
+
+  fetch(`/admin/usuarios/json?${params}`, {
+    headers: { 'Accept': 'application/json' }
+  })
+    .then(r => r.ok ? r.json() : Promise.reject('No se pudo cargar usuarios'))
+    .then(json => {
+      renderUsuarios(json.data);
+      renderPagination(json);
+    })
+    .catch(err => {
+      console.error('Error al cargar usuarios:', err);
+      Swal.fire('Error', err.toString(), 'error');
     });
 }
 
-// Función para obtener usuarios filtrados y renderizarlos.
-function filterUsuarios() {
-    const filterNombre = document.getElementById('filterNombre').value.trim();
-    const filterApellidos = document.getElementById('filterApellidos').value.trim();
-    const filterCorreo = document.getElementById('filterCorreo').value.trim();
-    const filterDni = document.getElementById('filterDni').value.trim();
-    const filterCodigoPostal = document.getElementById('filterCodigoPostal').value.trim();
-
-    let params = new URLSearchParams();
-    if (filterNombre !== "") {
-        params.append('nombre', filterNombre);
-    }
-    if (filterApellidos !== "") {
-        params.append('apellidos', filterApellidos);
-    }
-    if (filterCorreo !== "") {
-        params.append('correo', filterCorreo);
-    }
-    if (filterDni !== "") {
-        params.append('dni', filterDni);
-    }
-    if (filterCodigoPostal !== "") {
-        params.append('codigo_postal', filterCodigoPostal);
-    }
-    const queryString = params.toString() ? '?' + params.toString() : '';
-
-    // Usamos el endpoint de filtrado definido en web.php (/usuarios con filtros)
-    fetch('/usuarios' + queryString)
-        .then(response => response.json())
-        .then(data => {
-            renderUsuarios(data);
-        })
-        .catch(error => console.error('Error al filtrar usuarios:', error));
-}
-
-// Función para abrir el modal de edición y cargar datos del usuario.
+// ————————————————————————————————
+// Código para editar/eliminar (idéntico al tuyo)
+// ————————————————————————————————
 function openEditModal(usuarioId) {
-    clearEditUsuarioErrors();
-    fetch('/api/usuarios/' + usuarioId)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('editUsuarioId').value = data.id;
-            document.getElementById('editNombre').value = data.nombre;
-            document.getElementById('editApellidos').value = data.apellidos;
-            document.getElementById('editEmail').value = data.email;
-            document.getElementById('editTelefono').value = data.telefono || '';
-            document.getElementById('editCodigoPostal').value = data.codigo_postal || '';
-            document.getElementById('editFechaNacimiento').value = data.fecha_nacimiento || '';
-            document.getElementById('editDni').value = data.dni || '';
-            document.getElementById('editDescripcion').value = data.descripcion || '';
-            // No se puede prellenar el input file por seguridad.
-            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            editModal.show();
-        })
-        .catch(error => console.error('Error al cargar datos del usuario:', error));
+  clearEditUsuarioErrors();
+  fetch(`/admin/usuarios/${usuarioId}`, { headers: { Accept: 'application/json' } })
+    .then(r => r.json())
+    .then(u => {
+      document.getElementById('editUsuarioId').value = u.id;
+      document.getElementById('editNombre').value    = u.nombre;
+      document.getElementById('editApellidos').value = u.apellidos;
+      document.getElementById('editEmail').value     = u.email;
+      document.getElementById('editTelefono').value  = u.telefono || '';
+      document.getElementById('editCodigoPostal').value = u.codigo_postal || '';
+      document.getElementById('editFechaNacimiento').value = u.fecha_nacimiento || '';
+      document.getElementById('editDni').value       = u.dni || '';
+      document.getElementById('editDescripcion').value = u.descripcion || '';
+      new bootstrap.Modal(document.getElementById('editModal')).show();
+    })
+    .catch(console.error);
 }
-
-// Función para enviar el formulario de edición mediante fetch.
 function submitEditUsuario() {
-    if (!validateNonEmpty('editNombre', 'El campo Nombre es obligatorio') ||
-        !validateNonEmpty('editApellidos', 'El campo Apellidos es obligatorio') ||
-        !validateEmail('editEmail') ||
-        !validateOptionalPassword()) {
-        return;
-    }
-    let form = document.getElementById('editUsuarioForm');
-    let usuarioId = document.getElementById('editUsuarioId').value;
-    let formData = new FormData(form);
-    fetch('/admin/usuarios/' + usuarioId, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'X-HTTP-Method-Override': 'PUT',
-            'Accept': 'application/json'
-        },
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.json().then(data => { throw data; });
-        }
-    })
-    .then(data => {
-        document.activeElement.blur();
-        clearEditUsuarioErrors();
-        var editModalEl = document.getElementById('editModal');
-        var modal = bootstrap.Modal.getInstance(editModalEl);
-        modal.hide();
-        filterUsuarios(); // Actualiza la lista filtrada según los filtros activos.
-        Swal.fire('Éxito', data.message, 'success');
-    })
-    .catch(error => {
-        let errorsDiv = document.getElementById('editErrors');
-        errorsDiv.classList.remove('d-none');
-        errorsDiv.innerHTML = '<ul>' + Object.values(error.errors || {}).map(err => `<li>${err}</li>`).join('') + '</ul>';
-    });
-}
+  if (!validateNonEmpty('editNombre','Obligatorio') ||
+      !validateNonEmpty('editApellidos','Obligatorio') ||
+      !validateEmail('editEmail') ||
+      !validateOptionalPassword()) return;
 
-// Función para confirmar eliminación con SweetAlert.
-function confirmDeleteUsuario(usuarioId) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción no se podrá revertir",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sí, eliminar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteUsuario(usuarioId);
-        }
-    });
-}
-
-// Función para eliminar un usuario mediante fetch.
-function deleteUsuario(usuarioId) {
-    fetch('/admin/usuarios/' + usuarioId, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Error al eliminar el usuario.');
-        }
-    })
-    .then(data => {
-        filterUsuarios();
-        Swal.fire('Eliminado', data.message, 'success');
-    })
-    .catch(error => console.error('Error en la petición DELETE:', error));
-}
-
-// Al cargar la página, obtener la lista de usuarios filtrados (por defecto, sin filtro)
-document.addEventListener('DOMContentLoaded', function() {
+  const id = document.getElementById('editUsuarioId').value;
+  const fd = new FormData(document.getElementById('editUsuarioForm'));
+  fetch(`/admin/usuarios/${id}`, {
+    method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      'X-HTTP-Method-Override': 'PUT',
+      'Accept': 'application/json'
+    },
+    body: fd
+  })
+  .then(r => r.ok ? r.json() : r.json().then(e=>Promise.reject(e)))
+  .then(res => {
+    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
     filterUsuarios();
+    Swal.fire('¡Éxito!','Usuario actualizado.','success');
+  })
+  .catch(e => {
+    const d = document.getElementById('editErrors');
+    d.classList.remove('d-none');
+    d.querySelector('ul').innerHTML =
+      Object.values(e.errors||{}).flat().map(m=>`<li>${m}</li>`).join('');
+  });
+}
+function confirmDeleteUsuario(id) {
+  Swal.fire({
+    title:'¿Eliminar?',
+    text:'No podrás revertir',
+    icon:'warning',
+    showCancelButton:true,
+    confirmButtonText:'Sí, eliminar'
+  }).then(r => { if(r.isConfirmed) deleteUsuario(id); });
+}
+function deleteUsuario(id) {
+  fetch(`/admin/usuarios/${id}`, {
+    method:'DELETE',
+    headers:{
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      'Accept':'application/json'
+    }
+  })
+  .then(r=>r.ok? r.json(): r.json().then(e=>Promise.reject(e)))
+  .then(res => {
+    filterUsuarios();
+    Swal.fire('Eliminado', res.message, 'success');
+  })
+  .catch(err => Swal.fire('Error', err.message||'No se pudo eliminar','error'));
+}
+
+// ————————————————————————————————
+// Inicialización y refresco automático
+// ————————————————————————————————
+document.addEventListener('DOMContentLoaded', () => {
+  ['filterNombre','filterApellidos','filterCorreo','filterDni','filterCodigoPostal']
+    .forEach(id => document.getElementById(id)
+      .addEventListener('input', () => filterUsuarios(1))
+    );
+  filterUsuarios();
 });
 
-setInterval(filterUsuarios, 1000);
+// Refrescar cada 10 seg sin perder la página
+setInterval(() => filterUsuarios(currentPage), 10000);

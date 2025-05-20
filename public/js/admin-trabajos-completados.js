@@ -1,16 +1,25 @@
-// inputs y tabla
+// public/js/admin-trabajos-completados.js
+
+// Página actual (se conserva en el refresco automático)
+let currentPage = 1;
+
+// Referencias a inputs y contenedor de filas
 const inputCliente = document.getElementById('filterCliente');
 const inputFecha   = document.getElementById('filterFecha');
 const tbody        = document.getElementById('completados-container');
 
-// Función para renderizar filas
-function renderCompletados(data) {
+// Dibuja las filas de la tabla
+function renderCompletados(items) {
   tbody.innerHTML = '';
-  if (data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No se encontraron trabajos.</td></tr>';
+  if (items.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="text-center">No se encontraron trabajos.</td>
+      </tr>
+    `;
     return;
   }
-  data.forEach(t => {
+  items.forEach(t => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${t.titulo}</td>
@@ -27,33 +36,73 @@ function renderCompletados(data) {
   });
 }
 
-// Petición con filtros
-function loadCompletados() {
+// Dibuja la paginación
+function renderPagination(meta) {
+  const ul = document.getElementById('completados-pagination');
+  if (!ul) return;
+  ul.innerHTML = '';
+  meta.links.forEach(link => {
+    const li = document.createElement('li');
+    li.className = 'page-item' +
+      (link.active ? ' active' : '') +
+      (!link.url   ? ' disabled' : '');
+    const a = document.createElement('a');
+    a.className = 'page-link';
+    a.href = '#';
+    a.innerHTML = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
+    if (link.url) {
+      const p = new URL(link.url).searchParams.get('page');
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        loadCompletados(Number(p));
+      });
+    }
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+}
+
+// Carga datos (con filtros y página), y refresca tabla + paginación
+function loadCompletados(page = currentPage) {
+  currentPage = page;
   const params = new URLSearchParams();
-  if (inputCliente.value) params.append('cliente', inputCliente.value);
-  if (inputFecha.value)   params.append('fecha', inputFecha.value);
+  if (inputCliente.value.trim()) params.append('cliente', inputCliente.value.trim());
+  if (inputFecha.value)           params.append('fecha',   inputFecha.value);
+  params.append('page', currentPage);
 
   fetch(`/admin/trabajos/completados/json?${params.toString()}`, {
-    headers: { 'Accept':'application/json' }
+    headers: { 'Accept': 'application/json' }
   })
-    .then(r => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     })
-    .then(renderCompletados)
+    .then(json => {
+      // Si tu controlador devuelve paginate(), json.data es el array,
+      // y json.meta / json.links contienen la info de paginación.
+      renderCompletados(json.data || json);
+      renderPagination(json);
+    })
     .catch(err => {
       console.error('Error al cargar completados:', err);
-      tbody.innerHTML = `<tr><td colspan="6" class="text-danger text-center">Error cargando datos.</td></tr>`;
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-danger text-center">
+            Error cargando datos.
+          </td>
+        </tr>
+      `;
     });
 }
 
-// Listeners
-inputCliente.addEventListener('input', () => loadCompletados());
-inputFecha.addEventListener('change', () => loadCompletados());
+// Listeners de filtros
+inputCliente.addEventListener('input', () => loadCompletados(1));
+inputFecha.addEventListener('change',  () => loadCompletados(1));
 
-// Inicial
-document.addEventListener('DOMContentLoaded', loadCompletados);
+// Al inicio
+document.addEventListener('DOMContentLoaded', () => {
+  loadCompletados();
+});
 
-// Actualizar la lista cada 1 segundo.
-setInterval(loadCompletados, 1000);
-
+// Refresco automático cada 10s, conserva la página actual
+setInterval(() => loadCompletados(currentPage), 10000);
