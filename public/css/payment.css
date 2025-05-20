@@ -213,3 +213,35 @@
         }
     }
 
+/* Estilos para SweetAlert de pago exitoso */
+.payment-success-container {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.payment-success-icon {
+    font-size: 48px;
+    color: var(--payment-primary);
+    margin-bottom: 15px;
+}
+
+.payment-details {
+    margin: 15px 0;
+}
+
+.payment-details p {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.payment-small {
+    font-size: 14px !important;
+    color: #777;
+}
+
+.taskly-tagline {
+    margin-top: 20px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--payment-primary);
+}
