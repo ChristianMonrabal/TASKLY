@@ -42,4 +42,12 @@ class Postulacion extends Model
     {
         return $this->belongsTo(Estado::class, 'estado_id');
     }
+    
+    /**
+     * Relación con la tabla pagos
+     */
+    public function pago()
+    {
+        return $this->hasOne(Pago::class, 'postulacion_id');
+    }
 }
