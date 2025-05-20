@@ -79,9 +79,9 @@
                             </li>
                             @if(Auth::check() && Auth::user()->rol_id == 1)
                                 <li>
-                                    <a href="{{ url('/admin/usuarios') }}"
-                                        class="nav-link {{ request()->is('admin/usuarios*') ? 'active' : '' }}">
-                                        <i class="fas fa-user-shield"></i> Panel de administración
+                                    <a href="{{ url('/admin/dashboard') }}"
+                                        class="nav-link {{ request()->is('admin/dashboard*') ? 'active' : '' }}">
+                                        <i class="fas fa-user-shield"></i> Administración
                                     </a>
                                 </li>
                             @endif  
