@@ -13,24 +13,20 @@ class ValoracionObserver
      */
     public function created(Valoracion $valoracion)
     {
-        // 1) Calcula la media de todas las valoraciones del trabajador
-        $media = $valoracion
-            ->trabajador
-            ->valoracionesRecibidas()
-            ->avg('puntuacion');
-
-        // 2) Si la media es exactamente 5, busca el logro "Valoración perfecta" (con p minúscula)
-        if ((float)$media === 5.0) {
+        // 1) Verificar si esta valoración tiene puntuación 5
+        if ((int) $valoracion->puntuacion === 5) {
+            // 2) Buscar el logro "Valoración perfecta"
             $logro = Logro::where('nombre', 'Valoración perfecta')->first();
+
             if ($logro) {
-                // 3) Evita duplicados y lo crea
                 $trabajador = $valoracion->trabajador;
+
+                // 3) Evita duplicados
                 $yaLoTiene = $trabajador->logrosCompletados()
-                                       ->where('logro_id', $logro->id)
-                                       ->exists();
+                                        ->where('logro_id', $logro->id)
+                                        ->exists();
 
                 if (! $yaLoTiene) {
-                    // Usar directamente el modelo LogroCompleto para crear la relación
                     LogroCompleto::create([
                         'logro_id' => $logro->id,
                         'usuario_id' => $trabajador->id
