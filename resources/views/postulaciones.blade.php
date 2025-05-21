@@ -120,3 +120,19 @@
 @endsection
 
 <script src="{{ asset('js/filtro_postulaciones.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const header = document.getElementById('dropdownHeaderPostulaciones');
+    const options = document.getElementById('dropdownOptionsPostulaciones');
+    
+    header.addEventListener('click', function() {
+        // Alterna la visibilidad; si está oculto, lo muestra y viceversa.
+        if (options.style.display === 'block') {
+            options.style.display = 'none';
+        } else {
+            options.style.display = 'block';
+        }
+    });
+});
+</script>
