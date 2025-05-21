@@ -79,8 +79,8 @@
                             </li>
                             @if(Auth::check() && Auth::user()->rol_id == 1)
                                 <li>
-                                    <a href="{{ url('/admin/dashboard') }}"
-                                        class="nav-link {{ request()->is('admin/dashboard*') ? 'active' : '' }}">
+                                    <a href="{{ url('/admin/usuarios') }}"
+                                        class="nav-link {{ request()->is('admin/usuarios*') ? 'active' : '' }}">
                                         <i class="fas fa-user-shield"></i> Administración
                                     </a>
                                 </li>
@@ -110,7 +110,9 @@
                                     <span class="icon">▼</span>
                                 </button>
                                 <div class="dropdown-content">
-                                    <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
+                                    <a href="{{ route('perfil.usuario', ['nombre' => str(Auth::user()->nombre . ' ' . Auth::user()->apellidos)->slug('-')]) }}">
+                                        <i class="fas fa-user"></i> Mi Perfil
+                                    </a>
                                     <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                         @csrf
                                         <a href="{{ route('logout') }}"
@@ -126,7 +128,7 @@
                                         <a href="{{ route('vista.chat') }}"><i class="fas fa-envelope"></i> Mensajes</a>
                                         <a href="{{ route('calendario.index') }}"><i class="fas fa-calendar-alt"></i> Calendario</a>
                                         @if(Auth::user()->rol_id == 1)
-                                            <a href="{{ url('/admin/usuarios') }}"><i class="fas fa-user-shield"></i> Panel de administración</a>
+                                            <a href="{{ url('/admin/usuarios') }}"><i class="fas fa-user-shield"></i> Administración</a>
                                         @endif
                                     </div>
                                 </div>

@@ -35,22 +35,6 @@ h1 {
     width: 100%;
 }
 
-.trabajo-item {
-    background-color: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px var(--shadow);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    transition: transform var(--transition), box-shadow var(--transition);
-    border: 1px solid rgba(236, 106, 106, 0.1);
-}
-
-.trabajo-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
 
 /* Contenedor de la imagen */
 .card-img-container {
@@ -120,23 +104,23 @@ h1 {
 }
 
 /* Asegúrate de que los estilos solo afecten a la página de postulaciones */
-.postulaciones-page .trabajo-item {
-    background-color: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px var(--shadow);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    transition: transform var(--transition), box-shadow var(--transition);
-    border: 2px solid var(--primary); /* Borde rojo siempre visible */
-}
+/* .postulaciones-page .trabajo-item { */
+    /* background-color: var(--card-bg); */
+    /* border-radius: var(--radius); */
+    /* box-shadow: 0 4px 12px var(--shadow); */
+    /* padding: 20px; */
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: flex-start; */
+    /* transition: transform var(--transition), box-shadow var(--transition); */
+    /* border: 2px solid var(--primary); Borde rojo siempre visible */
+/* } */
 
-.postulaciones-page .trabajo-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+/* .postulaciones-page .trabajo-item:hover { */
+    /* transform: translateY(-5px); */
+    /* box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); */
     /* No cambies el color del borde en hover */
-}
+/* } */
 
 /* Contenedor de la imagen */
 .postulaciones-page .card-img-container {
@@ -174,8 +158,10 @@ h1 {
 }
 
 .postulaciones-page .card {
-    border: none;
+    border: 2px solid var(--primary) !important;
     box-shadow: 0 4px 12px var(--shadow);
+    border-radius: var(--radius);
+    background: var(--card-bg);
 }
 
 .filtro-postulaciones-container {
@@ -197,7 +183,7 @@ h1 {
 }
 
 .buscador-container {
-    margin-top: -30px;
+    margin-top: -35px;
 }
 
 @media (max-width: 768px) {
