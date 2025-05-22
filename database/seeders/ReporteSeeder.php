@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\reportes;    // tu modelo
+use App\Models\reportes;
 use App\Models\User;
 use App\Models\Estado;
 use Illuminate\Support\Str;

@@ -63,20 +63,7 @@ function renderizarNuevosTrabajos(trabajos) {
       valoracionPromedio = valoracionPromedio.toFixed(1); // Redondear a 1 decimal
     }
     
-    // Generar estrellas HTML basadas en la valoración
-    let estrellasHTML = '';
-    for (let i = 1; i <= 5; i++) {
-      if (i <= Math.floor(valoracionPromedio)) {
-        // Estrella completa
-        estrellasHTML += '<i class="fas fa-star"></i>';
-      } else if (i - 0.5 <= valoracionPromedio) {
-        // Media estrella
-        estrellasHTML += '<i class="fas fa-star-half-alt"></i>';
-      } else {
-        // Estrella vacía
-        estrellasHTML += '<i class="far fa-star"></i>';
-      }
-    }
+
     
     // Crear el HTML de la tarjeta
     html += `
@@ -88,10 +75,6 @@ function renderizarNuevosTrabajos(trabajos) {
           <h2>${trabajo.titulo}</h2>
           <p>${limitarTexto(trabajo.descripcion, 100)}</p>
           <div class="precio">€${trabajo.precio}</div>
-          <div class="valoracion">
-            <div class="estrellas">${estrellasHTML}</div>
-            <span class="num-valoraciones">(${numValoraciones})</span>
-          </div>
           <div class="categorias">
             ${
               trabajo.categoriastipotrabajo && trabajo.categoriastipotrabajo.length > 0
