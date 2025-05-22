@@ -8,6 +8,8 @@ use App\Models\Categoria;
 use App\Models\Postulacion;
 use App\Models\Valoracion;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notificacion;
+use App\Events\NewNotificacion;
 
 class TrabajoController extends Controller
 {
@@ -195,6 +197,17 @@ public function index()
             $postulacion->trabajador_id = $usuario->id;
             $postulacion->estado_id = 9;
             $postulacion->save();
+
+            // Crear notificación
+            $noti = Notificacion::create([
+                'usuario_id'    => $trabajo->cliente_id,
+                'mensaje'       => 'Nuevo postulante para tu trabajo "' . $trabajo->titulo . '"',
+                'leido'         => false,
+                'fecha_creacion'=> now(),
+                'trabajo_id'    => $trabajo->id,
+                'tipo'          => 'postulacion',
+            ]);
+            event(new NewNotificacion($noti));
 
             return response()->json([
                 'success' => true,
