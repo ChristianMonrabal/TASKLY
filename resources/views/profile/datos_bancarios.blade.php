@@ -85,20 +85,3 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/validacion_datos_bancarios.js') }}"></script>
-
-<style>
-    .error-message {
-        color: #dc3545;
-        font-size: 0.8rem;
-        margin-top: 5px;
-    }
-    
-    input.invalid {
-        border-color: #dc3545 !important;
-    }
-    
-    button.disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-    }
-</style>

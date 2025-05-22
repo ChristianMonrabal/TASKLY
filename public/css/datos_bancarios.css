@@ -65,6 +65,22 @@
     transition: all 0.3s ease;
 }
 
+/* Mensajes de error y validación */
+.error-message {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+input.invalid {
+    border-color: #dc3545 !important;
+}
+
+button.disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
 /* Estilos para la página de configuración de datos bancarios */
 .info-card {
     border-color: #EC6A6A;

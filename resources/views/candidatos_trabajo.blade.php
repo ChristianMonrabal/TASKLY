@@ -33,7 +33,7 @@
                                         @if($postulacion->trabajador->foto_perfil)
                                             <img src="{{ asset('img/profile_images/' . $postulacion->trabajador->foto_perfil) }}" alt="{{ $postulacion->trabajador->nombre }}" class="rounded-circle">
                                         @else
-                                            <img src="{{ asset('img/perfil_default.png') }}" alt="Avatar por defecto" class="rounded-circle">
+                                            <img src="{{ asset('img/profile_images/perfil_default.png') }}" alt="Avatar por defecto" class="rounded-circle">
                                         @endif
                                     </div>
                                 </div>

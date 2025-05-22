@@ -21,7 +21,7 @@
                     <div data-aos="fade-up" data-aos-duration="1000" style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; border: 3px solid #dc3545; box-shadow: 0 0 10px rgba(0,0,0,0.2); margin: 0 auto; position: relative;">
                         <img src="{{ $usuario->foto_perfil 
                             ? asset('img/profile_images/' . $usuario->foto_perfil) 
-                            : asset('img/perfil_default.png') }}" 
+                            : asset('img/profile_images/perfil_default.png') }}" 
                             alt="Foto de perfil"
                             style="width: 100%; height: 100%; object-fit: cover;">
                         @auth
