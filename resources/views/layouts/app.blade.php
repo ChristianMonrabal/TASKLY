@@ -90,17 +90,17 @@
                     </nav>
         
                     <div class="user-actions">
+                        <!-- Botón de cambio de tema (modo oscuro/claro) - visible para todos -->
+                        <button id="themeToggle" class="theme-toggle" title="Cambiar modo oscuro/claro">
+                            <i id="themeIcon" class="fas fa-moon"></i>
+                        </button>
+                        
                         @auth
                             <div class="trabajo-icon">
                                 <a href="/crear_trabajo" class="trabajo-btn" title="Añadir nuevo trabajo">
                                     <i class="fas fa-plus-circle"></i>
                                 </a>
                             </div>
-        
-                            <!-- Botón de cambio de tema (modo oscuro/claro) -->
-                            <button id="themeToggle" class="theme-toggle" title="Cambiar modo oscuro/claro">
-                                <i id="themeIcon" class="fas fa-moon"></i>
-                            </button>
 
                             @auth
                                 @include('partials.notifications')
