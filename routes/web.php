@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
     // Rutas de perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/datos-bancarios', [ProfileController::class, 'showDatosBancarios'])->name('profile.datos-bancarios');
+    Route::put('/profile/datos-bancarios', [ProfileController::class, 'updateDatosBancarios'])->name('profile.datos-bancarios.update');
     
     // Rutas para el sistema de pagos con Stripe
     Route::get('/payment/{trabajo}', [PaymentController::class, 'show'])->name('payment.show');

@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Categoria;
+use App\Models\DatosBancarios;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -16,6 +19,53 @@ class ProfileController extends Controller
         $user2 = User::with('habilidades')->find(Auth::id());
         $habilidades = Categoria::all();
         return view('profile.profile', compact('user', 'habilidades', 'user2'));
+    }
+    
+    public function showDatosBancarios()
+    {
+        $user = Auth::user();
+        $datosBancarios = DatosBancarios::where('usuario_id', Auth::id())->first();
+        return view('profile.datos_bancarios', compact('user', 'datosBancarios'));
+    }
+    
+    public function updateDatosBancarios(Request $request)
+    {
+        $data = $request->all();
+        $user = Auth::user();
+        
+        // Validar stripe_account_id si está presente
+        if (!empty($data['stripe_account_id']) && strlen($data['stripe_account_id']) < 18) {
+            return back()->withErrors(['general' => 'El Stripe Account ID debe tener al menos 18 caracteres'])->withInput();
+        }
+        
+        try {
+            // Iniciar transacción
+            DB::beginTransaction();
+            
+            // Guardar datos bancarios
+            DatosBancarios::updateOrCreate(
+                ['usuario_id' => $user->id],
+                [
+                    'titular' => $data['titular'] ?? null,
+                    'iban' => $data['iban'] ?? null,
+                    'nombre_banco' => $data['nombre_banco'] ?? null,
+                    'stripe_account_id' => $data['stripe_account_id'] ?? null
+                ]
+            );
+            
+            // Confirmar transacción
+            DB::commit();
+            
+            return redirect()->route('profile.datos-bancarios')->with('success', 'Datos bancarios actualizados correctamente');
+        } catch (\Exception $e) {
+            // Revertir transacción en caso de error
+            DB::rollBack();
+            
+            // Registrar el error para depuración
+            Log::error('Error al actualizar datos bancarios: ' . $e->getMessage());
+            
+            return back()->withErrors(['general' => 'Error al actualizar datos bancarios: ' . $e->getMessage()])->withInput();
+        }
     }
 
     public function update(Request $request)
@@ -76,6 +126,7 @@ class ProfileController extends Controller
         if (!empty($data['descripcion']) && strlen($data['descripcion']) > 500) {
             return back()->withErrors(['general' => 'La descripción no puede exceder los 500 caracteres'])->withInput();
         }
+        
 
         if (!empty($data['foto_perfil_camera'])) {
             $imageData = $data['foto_perfil_camera'];
