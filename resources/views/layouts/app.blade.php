@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/simple-dark.css') }}" />
 
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -97,6 +98,11 @@
                                 </a>
                             </div>
         
+                            <!-- Botón de cambio de tema (modo oscuro/claro) -->
+                            <button id="themeToggle" class="theme-toggle" title="Cambiar modo oscuro/claro">
+                                <i id="themeIcon" class="fas fa-moon"></i>
+                            </button>
+
                             @auth
                                 @include('partials.notifications')
                             @endauth
@@ -219,6 +225,7 @@
     </div>
 
     <script src="{{ asset('js/layout.js') }}"></script>
+    <script src="{{ asset('js/dark-mode.js') }}"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     

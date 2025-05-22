@@ -1,0 +1,652 @@
+/**
+ * TASKLY - Modo Oscuro Unificado
+ * 
+ * Este archivo contiene todos los estilos necesarios para el modo oscuro
+ * Unifica los estilos que antes estaban separados en dark-mode.css y simple-dark.css
+ * 
+ * El modo oscuro se activa cuando el body tiene la clase 'dark-mode'
+ * Esta clase es añadida/removida por el archivo dark-mode.js
+ */
+
+/**
+ * VARIABLES DEL TEMA
+ *
+ * Definimos variables CSS para mantener consistencia en los colores
+ * y facilitar los cambios entre modo claro y oscuro
+ */
+:root {
+    /* Variables tema claro (valores por defecto) */
+    --primary: #EC6A6A;
+    --primary-hover: #D85C5C;
+    --secondary: #6C757D;
+    --secondary-hover: #5A6268;
+    --background: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --text: #333333;
+    --text-muted: #6C757D;
+    /* --border: black; */
+    --border:white  ;
+    --input-bg: #FFFFFF;
+    --input-text: #333333;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --footer-bg: #F8F9FA;
+    --header-bg: #FFFFFF;
+    --hover-bg: #F8F9FA;
+    --danger: #dc3545;
+    --container-bg: #FFFFFF;
+    --border-color: #DEE2E6;
+    
+    /* Variables específicas para dark mode */
+    --dark-bg: #1A1A1A;
+    --dark-card: #232323;
+    --dark-text: #FFFFFF;
+    --dark-muted: #AAAAAA;
+    --dark-border: #232323;
+    --dark-input: #2A2A2A;
+}
+
+/**
+ * ACTIVACIÓN DEL MODO OSCURO
+ *
+ * Cuando el body tiene la clase 'dark-mode', redefinimos todas las variables
+ * para aplicar colores oscuros a toda la aplicación
+ */
+body.dark-mode {
+    --background: #1A1A1A;
+    --card-bg: #232323;
+    --text: #FFFFFF;
+    --text-muted: #AAAAAA;
+    --border: #333333;
+    --input-bg: #2A2A2A;
+    --input-text: #E0E0E0;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --footer-bg: #1A1A1A;
+    --header-bg: #1A1A1A;
+    --hover-bg: #2A2A2A;
+    --container-bg: #1E1E1E;
+    --border-color: #444444;
+    
+    /* Mantenemos el color primario igual para consistencia de marca */
+    --primary: #EC6A6A;
+    --primary-hover: #D85C5C;
+    
+    /* Color directo para el fondo - IMPORTANTE para sobrescribir todo */
+    background-color: var(--dark-bg) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/**
+ * APLICACIÓN DE VARIABLES AL TEMA GENERAL
+ *
+ * Estas reglas se aplican tanto en modo claro como oscuro,
+ * usando las variables que cambian según el modo
+ */
+body {
+    background-color: var(--background);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+/**
+ * ESTILO DEL CONTENEDOR PRINCIPAL (MAIN) - IMPORTANTE
+ *
+ * Esta es la regla que configura el fondo del contenido principal.
+ * Cuando se activa el modo oscuro, --background cambia a #1A1A1A (negro)
+ * Este es uno de los estilos más importantes para el modo oscuro
+ */
+.main-content {
+    background-color: var(--background); /* ← AQUÍ SE CONFIGURA EL FONDO DEL MAIN */
+    min-height: 100vh;
+}
+
+/**
+ * SELECTOR UNIFICADO PARA ELEMENTOS EN MODO OSCURO
+ *
+ * Este selector combinado aplica estilos a todos los elementos clave de la interfaz
+ * cuando el modo oscuro está activo. Unifica tanto elementos HTML estándar como
+ * componentes especiales de la interfaz de TASKLY.
+ */
+body.dark-mode div,
+body.dark-mode section,
+body.dark-mode main, /* ← AQUÍ ESTÁ EL SELECTOR PARA EL MAIN */
+body.dark-mode article,
+body.dark-mode aside,
+body.dark-mode nav,
+body.dark-mode header,
+body.dark-mode footer,
+body.dark-mode p,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode span,
+body.dark-mode a,
+body.dark-mode ul,
+body.dark-mode ol,
+body.dark-mode li,
+body.dark-mode table,
+body.dark-mode tr,
+body.dark-mode td,
+body.dark-mode .dropdown-content,
+body.dark-mode .mobile-dropdown-content,
+body.dark-mode .dropdown-btn,
+body.dark-mode .btn:not(.btn-primary),
+body.dark-mode .form-control,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .paginador-btn {
+    color: var(--dark-text);
+}
+
+/**
+ * CABECERA (NAVBAR)
+ *
+ * El navbar es un elemento destacado que requiere un tratamiento especial.
+ * En TASKLY, el navbar tiene un color característico en modo claro (#EC6A6A),
+ * pero en modo oscuro usamos un gris más claro para mantener la legibilidad.
+ */
+body.dark-mode .main-header {
+    background-color: var(--dark-card) !important; /* Gris más claro: #232323 */
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+/**
+ * PIE DE PÁGINA (FOOTER)
+ *
+ * El footer tiene el mismo tratamiento que el navbar para mantener consistencia visual.
+ * Ambos elementos "enmarcan" el contenido principal (main).
+ */
+body.dark-mode .main-footer {
+    background-color: var(--dark-card) !important; /* Mismo gris que el navbar */
+    border-top: 1px solid var(--dark-border) !important;
+}
+
+/* Textos */
+body.dark-mode p,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode span,
+/* body.dark-mode div, */
+body.dark-mode td,
+body.dark-mode th {
+    color: #FFFFFF !important;
+}
+
+/* Links */
+body.dark-mode a:not(.btn) {
+    color: white !important;
+}
+
+/* body.dark-mode a:hover:not(.btn) {
+    color: var(--primary-hover) !important;
+} */
+
+/* Botones primarios */
+body.dark-mode .btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* Botones secundarios */
+body.dark-mode .btn:not(.btn-primary) {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+/* Inputs */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-control {
+    background-color: var(--dark-input) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: var(--dark-muted) !important;
+}
+
+/* Sweet Alert */
+body.dark-mode .swal2-popup {
+    background-color: var(--dark-card) !important;
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .swal2-title,
+body.dark-mode .swal2-content,
+body.dark-mode .swal2-html-container {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .swal2-container {
+    background-color: rgba(0,0,0,0.4) !important;
+}
+
+/* Paginador */
+body.dark-mode .paginador {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .paginador-btn {
+    background-color: var(--dark-card) !important;
+    color: #FFFFFF !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .paginador-btn.active {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+}
+
+body.dark-mode .paginador-btn.disabled {
+    background-color: var(--dark-card) !important;
+    color: var(--dark-muted) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/* Dropdown menús */
+.dropdown-content a, .mobile-dropdown-content a {
+    color: var(--text);
+}
+
+.dropdown-content a:hover, .mobile-dropdown-content a:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Estilos específicos para el dropdown de usuario en modo oscuro */
+body.dark-mode .user-dropdown .dropdown-btn {
+    background-color: var(--dark-card) !important;
+    color: #FFFFFF !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .user-dropdown .dropdown-content,
+body.dark-mode .user-dropdown .dropdown-content a,
+body.dark-mode .user-dropdown .mobile-only a,
+body.dark-mode .user-dropdown .user-name,
+body.dark-mode .user-dropdown .icon {
+    background-color: var(--dark-card) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .user-dropdown .dropdown-content a:hover,
+body.dark-mode .user-dropdown .mobile-only a:hover {
+    background-color: var(--dark-bg) !important;
+}
+
+/* Estilos para el calendario en modo oscuro */
+body.dark-mode .calendar-container {
+    background-color: var(--dark-bg) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .day-names div {
+    color: #FFFFFF !important;
+    /* background-color: var(--dark-card) !important; */
+    border-radius: 5px;
+}
+
+body.dark-mode .days-grid div {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .day-number {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .days-grid div:hover {
+    box-shadow: 0 0 5px rgba(255,255,255,0.2);
+}
+
+body.dark-mode .calendar-btn {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .calendar-btn:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+body.dark-mode .empty-day {
+    background-color: var(--dark-bg) !important;
+    border-color: transparent !important;
+}
+
+body.dark-mode .work-event {
+    color: var(--primary) !important;
+}
+
+/* Botón de toggle para modo oscuro */
+.theme-toggle {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: var(--text);
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--hover-bg);
+}
+
+.theme-toggle i {
+    font-size: 1.2rem;
+}
+
+/* Bordes para todos los elementos con borde */
+body.dark-mode *[class*='border'] {
+    border-color: var(--border-color) !important;
+}
+
+/* Específicamente para los bordes de peligro (rojo) */
+body.dark-mode .border-danger {
+    border-color: var(--danger) !important;
+}
+
+/* Fix para elementos Bootstrap */
+body.dark-mode .bg-white,
+body.dark-mode .bg-light {
+    background-color: var(--dark-bg) !important;
+}
+
+/* Fix específico para cards */
+body.dark-mode .card,
+body.dark-mode .card-body,
+body.dark-mode .card-header,
+body.dark-mode .card-footer {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-text,
+body.dark-mode .card-header,
+body.dark-mode .card-footer,
+body.dark-mode .card * {
+    color: #FFFFFF !important;
+}
+
+/* Fix específico para página de detalle de trabajo */
+body.dark-mode .trabajo-detalle-container,
+body.dark-mode .info-container,
+body.dark-mode .seccion-detalle,
+body.dark-mode .meta-info,
+body.dark-mode .sidebar-card,
+body.dark-mode .galeria-miniaturas,
+body.dark-mode .botones-accion,
+body.dark-mode .usuario-info {
+    background-color: var(--dark-card) !important;
+    color: #FFFFFF !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .trabajo-titulo,
+body.dark-mode .seccion-titulo,
+body.dark-mode .descripcion,
+body.dark-mode .meta-item,
+body.dark-mode .card-titulo,
+body.dark-mode .precio {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .galeria-imagenes {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .miniatura {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .miniatura.active {
+    border-color: var(--primary) !important;
+}
+
+/* Estilos para el buscador y filtros en modo oscuro */
+body.dark-mode .buscador-container,
+body.dark-mode .simple-search,
+body.dark-mode .category-dropdown {
+    background-color: var(--dark-bg) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .search-box,
+body.dark-mode .postal-box,
+body.dark-mode .category-box,
+body.dark-mode #inputBusqueda,
+body.dark-mode #inputCodigoPostal,
+body.dark-mode .dropdown-header,
+body.dark-mode .estado-dropdown-header {
+    background-color: var(--dark-card) !important;
+    color: #FFFFFF !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .search-icon,
+body.dark-mode .postal-icon,
+body.dark-mode .estado-icon,
+body.dark-mode .dropdown-header i,
+body.dark-mode .category-box i {
+    color: var(--primary) !important;
+}
+
+body.dark-mode .dropdown-options,
+body.dark-mode #dropdownOptions {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    z-index: 1000 !important;
+    border: 1px solid var(--dark-border) !important;
+    border-radius: 4px !important;
+}
+
+body.dark-mode .dropdown-option,
+body.dark-mode #dropdownOptions label {
+    color: #FFFFFF !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+    display: flex !important;
+    align-items: center !important;
+    background-color: var(--dark-card) !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+body.dark-mode .dropdown-option:hover {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .dropdown-option input[type="checkbox"],
+body.dark-mode .categoria-checkbox {
+    margin-right: 8px !important;
+    accent-color: var(--primary) !important;
+    border: 1px solid var(--primary) !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+body.dark-mode .category-dropdown .dropdown-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+}
+
+body.dark-mode .dropdown-options .dropdown-option:last-child {
+    border-bottom: none !important;
+}
+
+body.dark-mode .clear-btn {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+}
+
+body.dark-mode .clear-btn:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+/* Icono de selección de estado */
+body.dark-mode .estado-selector i,
+body.dark-mode .estado-dropdown i,
+body.dark-mode .dropdown-icon,
+body.dark-mode .estado-icon {
+    color: var(--primary) !important;
+}
+
+/* Estilos para los tags/etiquetas en modo oscuro */
+body.dark-mode .tag-scroll-box {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px !important;
+    border-radius: 4px !important;
+}
+
+body.dark-mode .tag-option {
+    background-color: var(--dark-bg) !important;
+    color: #FFFFFF !important;
+    border: 1px solid var(--dark-border) !important;
+    margin: 5px !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+}
+
+body.dark-mode .tag-option:hover {
+    border-color: var(--primary) !important;
+}
+
+body.dark-mode .tag-option.selected {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+}
+
+body.dark-mode .form-text.text-muted {
+    color: var(--dark-muted) !important;
+}
+
+/* Estilos para la grid de candidatos */
+body.dark-mode .candidates-grid {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .candidate-card,
+body.dark-mode .candidate-item .card {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .candidate-card .card-body,
+body.dark-mode .candidate-item .card-body {
+    background-color: var(--dark-card) !important;
+}
+
+body.dark-mode .candidate-card .card-title,
+body.dark-mode .candidate-card .card-text,
+body.dark-mode .candidate-card small,
+body.dark-mode .candidate-item .card-title,
+body.dark-mode .candidate-item .card-text,
+body.dark-mode .candidate-item small {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .text-decoration-none.text-dark {
+    color: #FFFFFF !important;
+}
+
+/* Estados de candidatos */
+body.dark-mode .estado-aceptado {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+body.dark-mode .estado-rechazado {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+body.dark-mode .estado-pendiente {
+    background-color: #ffc107 !important;
+    color: black !important;
+}
+
+/* Iconos de acción */
+body.dark-mode .action-icons a {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .action-icon.accept {
+    color: #28a745 !important;
+}
+
+body.dark-mode .action-icon.reject {
+    color: #dc3545 !important;
+}
+
+body.dark-mode .action-icon.chat {
+    color: var(--primary) !important;
+}
+
+/* Estilos para garantizar consistencia visual en los espacios */
+body.dark-mode .py-5,
+body.dark-mode .py-4,
+body.dark-mode .py-3,
+body.dark-mode .px-4,
+body.dark-mode .px-3,
+body.dark-mode .p-4,
+body.dark-mode .p-3,
+body.dark-mode .p-2 {
+    background-color: var(--dark-bg) !important;
+}
+
+/* Imágenes y avatares */
+body.dark-mode .user-avatar img,
+body.dark-mode .profile-image img {
+    border-color: var(--primary) !important;
+}
+
+/* Botones de scroll */
+body.dark-mode .scroll-btn {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #CCCCCC !important;
+}
+
+body.dark-mode .scroll-btn i,
+body.dark-mode .scroll-btn .fa,
+body.dark-mode .scroll-btn .fas {
+    color: #000000 !important;
+}
