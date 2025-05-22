@@ -1,66 +1,50 @@
+// public/js/admin-logros.js
 
-// Mantener página actual
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 let currentPage = 1;
 
-// Validaciones
-function validateNonEmpty(fieldId, message) {
-  const f = document.getElementById(fieldId),
-        e = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-  if (f.value.trim() === "") {
-    e.textContent = message;
-    return false;
-  }
-  e.textContent = "";
-  return true;
+// Validación de texto
+function validateNonEmpty(id, msg) {
+  const f = document.getElementById(id),
+        e = document.getElementById('error' + id.charAt(0).toUpperCase() + id.slice(1));
+  if (!f.value.trim()) { e.textContent = msg; return false; }
+  e.textContent = ''; return true;
 }
-function validateNumeric(fieldId, message) {
-  const f = document.getElementById(fieldId),
-        e = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1)),
-        v = Number(f.value);
-  if (f.value === "" || isNaN(v) || v < 0) {
-    e.textContent = message;
-    return false;
-  }
-  e.textContent = "";
-  return true;
-}
-
-// Limpiar errores
-function clearCreateLogroErrors() {
-  const d = document.getElementById('createLogroErrors');
-  d.classList.add('d-none');
-  d.querySelector('ul').innerHTML = '';
-}
-function clearEditLogroErrors() {
-  const d = document.getElementById('editLogroErrors');
+function clearErrors(containerId) {
+  const d = document.getElementById(containerId);
   d.classList.add('d-none');
   d.querySelector('ul').innerHTML = '';
 }
 
 // Render tabla
-function renderLogros(data) {
-  const tbody = document.getElementById('logros-container');
-  tbody.innerHTML = '';
-  if (data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No se encontraron logros.</td></tr>';
-  } else {
-    data.forEach(l => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${l.nombre}</td>
-        <td>${l.descripcion || ''}</td>
-        <td>${l.descuento}</td>
-        <td>
-          <button class="btn btn-primary btn-sm" onclick="openEditModalLogro(${l.id})">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn btn-danger btn-sm" onclick="confirmDeleteLogro(${l.id})">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>`;
-      tbody.appendChild(tr);
-    });
+function renderLogros(rows) {
+  const tb = document.getElementById('logros-container');
+  tb.innerHTML = '';
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="4" class="text-center">No hay logros.</td></tr>';
+    return;
   }
+  rows.forEach(l => {
+    // Ahora usamos directamente foto_url (URL completa) si existe
+    const foto = l.foto_url
+      ? `<img src="${l.foto_url}" style="height:40px;border-radius:4px">`
+      : '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${l.nombre}</td>
+      <td>${l.descripcion||''}</td>
+      <td>${foto}</td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick="openEdit(${l.id})">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete(${l.id})">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>`;
+    tb.appendChild(tr);
+  });
 }
 
 // Render paginación
@@ -69,19 +53,19 @@ function renderPagination(meta) {
   ul.innerHTML = '';
   meta.links.forEach(link => {
     const li = document.createElement('li');
-    li.className = 'page-item'
-      + (link.active ? ' active' : '')
-      + (!link.url ? ' disabled' : '');
+    li.className = 'page-item' +
+      (link.active ? ' active' : '') +
+      (!link.url ? ' disabled' : '');
     const a = document.createElement('a');
     a.className = 'page-link';
     a.href = '#';
     a.innerHTML = link.label;
     if (link.url) {
-      const u = new URL(link.url);
-      a.dataset.page = u.searchParams.get('page');
+      a.dataset.page = new URL(link.url).searchParams.get('page');
       a.addEventListener('click', e => {
         e.preventDefault();
-        filterLogros(a.dataset.page);
+        currentPage = +a.dataset.page;
+        filterLogros(currentPage);
       });
     }
     li.appendChild(a);
@@ -89,13 +73,14 @@ function renderPagination(meta) {
   });
 }
 
-// Fetch + filtros + paginación
+// Fetch + filtros
 function filterLogros(page = 1) {
-  const q = document.getElementById('filterNombre').value.trim();
   const params = new URLSearchParams();
+  const q = document.getElementById('filterNombre').value.trim();
   if (q) params.append('nombre', q);
   params.append('page', page);
-  fetch(`/api/logros?${params.toString()}`, {
+
+  fetch(`/admin/logros/json?${params}`, {
     headers: { 'Accept': 'application/json' }
   })
     .then(r => r.json())
@@ -110,14 +95,14 @@ function filterLogros(page = 1) {
 }
 
 // Crear
-function openCreateModalLogro() {
-  clearCreateLogroErrors();
+function openCreateModal() {
+  clearErrors('createLogroErrors');
   document.getElementById('createLogroForm').reset();
+  document.getElementById('previewCreate').style.display = 'none';
   new bootstrap.Modal(document.getElementById('createModal')).show();
 }
-function submitCreateLogro() {
-  if (!validateNonEmpty('createNombre', 'Nombre obligatorio') ||
-      !validateNumeric('createDescuento', 'Descuento ≥ 0')) return;
+function submitCreate() {
+  if (!validateNonEmpty('createNombre', 'Nombre obligatorio')) return;
 
   const fd = new FormData(document.getElementById('createLogroForm'));
   fetch('/admin/logros', {
@@ -127,7 +112,7 @@ function submitCreateLogro() {
   })
   .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(e)))
   .then(() => {
-    new bootstrap.Modal(document.getElementById('createModal')).hide();
+    bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
     filterLogros(currentPage);
     Swal.fire('Éxito','Logro creado.','success');
   })
@@ -136,60 +121,69 @@ function submitCreateLogro() {
     c.classList.remove('d-none');
     c.querySelector('ul').innerHTML =
       Object.values(err.errors||{msg:[err.message]}).flat()
-        .map(msg=>`<li>${msg}</li>`).join('');
+        .map(m=>`<li>${m}</li>`).join('');
   });
 }
 
 // Editar
-function openEditModalLogro(id) {
-  clearEditLogroErrors();
-  fetch(`/api/logros/${id}`)
-    .then(r=>r.json())
-    .then(l=>{
-      document.getElementById('editLogroId').value        = l.id;
-      document.getElementById('editNombre').value         = l.nombre;
-      document.getElementById('editDescripcion').value    = l.descripcion||'';
-      document.getElementById('editDescuento').value      = l.descuento;
+function openEdit(id) {
+  clearErrors('editLogroErrors');
+  fetch(`/admin/logros/${id}`)
+    .then(r => r.json())
+    .then(l => {
+      document.getElementById('editLogroId').value      = l.id;
+      document.getElementById('editNombre').value       = l.nombre;
+      document.getElementById('editDescripcion').value  = l.descripcion || '';
+
+      // PREVIEW de la foto actual usando foto_url
+      const img = document.getElementById('previewEdit');
+      if (l.foto_url) {
+        img.src = l.foto_url;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
+
       new bootstrap.Modal(document.getElementById('editModal')).show();
     });
 }
-function submitEditLogro() {
-  if (!validateNonEmpty('editNombre','Nombre obligatorio') ||
-      !validateNumeric('editDescuento','Descuento ≥ 0')) return;
+function submitEdit() {
+  if (!validateNonEmpty('editNombre','Nombre obligatorio')) return;
 
   const id = document.getElementById('editLogroId').value;
   const fd = new FormData(document.getElementById('editLogroForm'));
+  fd.append('_method','PUT');   // ← así Laravel reconoce el PUT
   fetch(`/admin/logros/${id}`, {
     method:'POST',
     headers:{
       'X-CSRF-TOKEN': csrfToken,
-      'X-HTTP-Method-Override':'PUT'
+      'X-HTTP-Method-Override':'PUT',
+      'Accept': 'application/json'
     },
     body: fd
   })
   .then(r=>r.ok? r.json() : r.json().then(e=>Promise.reject(e)))
-  .then(()=>{
+  .then(()=> {
     bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
     filterLogros(currentPage);
     Swal.fire('Éxito','Logro actualizado.','success');
   })
-  .catch(err=>{
+  .catch(err=> {
     const c = document.getElementById('editLogroErrors');
     c.classList.remove('d-none');
     c.querySelector('ul').innerHTML =
       Object.values(err.errors||{msg:[err.message]}).flat()
-        .map(msg=>`<li>${msg}</li>`).join('');
+        .map(m=>`<li>${m}</li>`).join('');
   });
 }
 
 // Borrar
-function confirmDeleteLogro(id) {
+function confirmDelete(id) {
   Swal.fire({
     title:'¿Eliminar?',
     text:'No se puede deshacer',
     icon:'warning',
     showCancelButton:true,
-    confirmButtonColor:'#dc3545',
     confirmButtonText:'Sí, borrar'
   }).then(r=> r.isConfirmed && deleteLogro(id));
 }
@@ -199,18 +193,18 @@ function deleteLogro(id) {
     headers:{ 'X-CSRF-TOKEN': csrfToken }
   })
   .then(r=>r.ok? r.json() : r.json().then(e=>Promise.reject(e)))
-  .then(()=> {
+  .then(() => {
     filterLogros(currentPage);
     Swal.fire('Eliminado','Logro borrado.','success');
   })
-  .catch(err=>{
+  .catch(err => {
     Swal.fire('Error', err.message||'No se pudo eliminar.','error');
   });
 }
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('filterNombre').addEventListener('input', ()=> filterLogros(1));
+  document.getElementById('filterNombre')
+    .addEventListener('input', ()=> filterLogros(1));
   filterLogros(currentPage);
   setInterval(()=> filterLogros(currentPage), 10000);
 });

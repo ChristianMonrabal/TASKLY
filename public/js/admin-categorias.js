@@ -1,4 +1,4 @@
-// public/js/admin-categorias.js
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 // Variable para guardar la página actual
 let currentPage = 1;
