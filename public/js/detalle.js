@@ -177,14 +177,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.success) {
           Swal.fire({
             title: '¡Postulación enviada!',
-            text: data.message || 'Tu postulación ha sido enviada con éxito. El cliente se pondrá en contacto contigo si está interesado.',
+            text: data.message || 'Tu postulación ha sido enviada con éxito.',
             icon: 'success',
             confirmButtonColor: '#EC6A6A',
-            timer: 3000,
-            timerProgressBar: true,
-            willClose: () => {
-              window.location.reload();
+            timer: 2000,
+            timerProgressBar: true
+          }).then(() => {
+            // Refresca badge y dropdown de notificaciones
+            if (typeof fetchNotifications === 'function') {
+              fetchNotifications();
             }
+            // Deshabilita el botón y cambia texto
+            botonPostular.disabled = true;
+            botonPostular.innerHTML = '<i class="fas fa-check"></i> Postulado';
           });
         } else {
           Swal.fire({
