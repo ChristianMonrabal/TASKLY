@@ -1,4 +1,4 @@
-// public/js/admin-reportes.js
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 // Para no perder la página al refrescar
 let currentPage = 1;

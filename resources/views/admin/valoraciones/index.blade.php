@@ -57,7 +57,6 @@
                   </div>
                   <div class="mb-3">
                       <label for="editImgValoracion" class="form-label">Imagen de Valoración</label>
-                      <input type="file" name="img_valoracion" id="editImgValoracion" class="form-control">
                       <div id="errorEditImgValoracion" class="error-message"></div>
                       <!-- Contenedor para mostrar imagen actual -->
                       <div id="currentImgContainer" class="mt-2">
@@ -65,11 +64,10 @@
                       </div>
                       <!-- Checkbox para eliminar la imagen actual -->
                       <div class="form-check mt-2">
-                          <input class="form-check-input" type="checkbox" id="removeImgValoracion" name="remove_img_valoracion">
-                          <label class="form-check-label" for="removeImgValoracion">
-                              Eliminar foto actual
-                          </label>
-                      </div>
+                        <input type="hidden" name="remove_img_valoracion" value="0">
+                        <input class="form-check-input" type="checkbox" id="removeImgValoracion" name="remove_img_valoracion" value="1">
+                        <label class="form-check-label" for="removeImgValoracion">Eliminar foto actual</label>
+                    </div>
                   </div>
                </form>
                <div id="editValErrors" class="alert alert-danger d-none">

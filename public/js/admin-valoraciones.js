@@ -1,4 +1,4 @@
-// public/js/admin-valoraciones.js
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 // Estado global de paginación
 let currentPage = 1;
@@ -51,7 +51,7 @@ function renderPagination(meta) {
   ul.innerHTML = '';
   meta.links.forEach(link => {
     const li = document.createElement('li');
-    li.className = 'page-item' + (link.active ? ' active': '') + (!link.url ? ' disabled' :'');
+    li.className = 'page-item' + (link.active ? ' active': '') + (!link.url ? ' disabled' : '');
     const a = document.createElement('a');
     a.className = 'page-link';
     a.href = '#';
@@ -102,8 +102,8 @@ function openEditModal(id) {
       document.getElementById('editValoracionId').value = v.id;
       document.getElementById('editComentario').value    = v.comentario || '';
       const img = document.getElementById('currentImgValoracion');
-      if (v.img_valoracion) {
-        img.src = `/storage/${v.img_valoracion}`;
+      if (v.img_url) {
+        img.src = v.img_url;
         img.style.display = 'block';
       } else {
         img.style.display = 'none';
@@ -112,13 +112,13 @@ function openEditModal(id) {
     });
 }
 
-function submitEdit() {
+function submitEditValoracion() {
   if (!validateNonEmpty('editComentario','Comentario obligatorio')) return;
   const id = document.getElementById('editValoracionId').value;
   const fd = new FormData(document.getElementById('editValoracionForm'));
   fetch(`/admin/valoraciones/${id}`, {
     method:'POST',
-    headers:{ 
+    headers:{
       'X-CSRF-TOKEN': csrfToken,
       'X-HTTP-Method-Override':'PUT',
       'Accept':'application/json'
@@ -168,5 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
   filterValoraciones(1);
 
   // Recarga automática cada 10 segundos
-  setInterval(() => {filterValoraciones(currentPage);}, 10000);
+  setInterval(() => { filterValoraciones(currentPage); }, 10000);
 });
