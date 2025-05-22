@@ -22,23 +22,6 @@
                             <h2>{{ $trabajo->titulo }}</h2>
                             <p>{{ Str::limit($trabajo->descripcion, 100) }}</p>
                             <div class="precio">€{{ $trabajo->precio }}</div>
-                            <div class="valoracion">
-                                <div class="estrellas">
-                                    @php
-                                        $promedio = $trabajo->valoraciones->avg('puntuacion') ?? 0;
-                                    @endphp
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= floor($promedio))
-                                            <i class="fas fa-star"></i>
-                                        @elseif ($i - 0.5 <= $promedio)
-                                            <i class="fas fa-star-half-alt"></i>
-                                        @else
-                                            <i class="far fa-star"></i>
-                                        @endif
-                                    @endfor
-                                </div>
-                                <span class="num-valoraciones">({{ $trabajo->valoraciones->count() }})</span>
-                            </div>
                             <div class="categorias">
                                 @if ($trabajo->categoriastipotrabajo->isNotEmpty())
                                     <button class="categoria-btn">
