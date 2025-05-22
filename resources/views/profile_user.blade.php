@@ -75,8 +75,7 @@
                                 @endphp
                                 @if($logro)
                                     <div class="logro-card" style="--index: {{ $index }}" data-aos="flip-left" data-aos-delay="{{ 200 + ($index * 100) }}" data-aos-duration="800">
-                                       
-                                        <img src="{{ asset('img/insignias/' . ($logro->foto_logro ?? 'Insignia1.png')) }}" 
+                                        <img src="{{ asset('img/insignias/' . ($logro->foto_logro)) }}" 
                                             alt="{{ $logro->nombre }}" 
                                             class="logro-imagen">
                                         <h3 class="logro-titulo">{{ $logro->nombre }}</h3>

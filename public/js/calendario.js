@@ -58,7 +58,9 @@ function renderCalendar(date) {
             dayEvents = events.filter(event => event.date === dateClicked);
 
             if (dayEvents.length > 0) {
-                let eventList = `<ul style="text-align:left;">${dayEvents.map(e => `<li>${e.text}</li>`).join('')}</ul>`;
+                let eventList = `<ul style="text-align:left;">${
+                    dayEvents.map(e => `<li><a href="/trabajos/${e.trabajo_id}" target="_blank">${e.text}</a></li>`).join('')
+                }</ul>`;
 
                 Swal.fire({
                     title: `Eventos del ${formattedDate}`,

@@ -21,6 +21,7 @@ class CalendarioController extends Controller
                     'date' => $evento->fecha,
                     'text' => $evento->titulo . ': ' . $evento->descripcion,
                     'type' => 'work',
+                    'trabajo_id' => $evento->trabajo,
                 ];
             });
 
