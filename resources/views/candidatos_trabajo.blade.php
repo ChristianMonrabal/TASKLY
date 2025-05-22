@@ -56,12 +56,7 @@
                             
                             <!-- Acciones fuera del enlace para no interferir con el clic -->
                             <div class="action-icons text-center mt-2">
-                                @if($postulacion->estado_id === 10)
-                                    <!-- Mostramos un indicador de aceptado pero no el botón de pago -->
-                                    <span class="badge bg-success text-white p-2">
-                                        <i class="fas fa-check mr-1"></i> Aceptado
-                                    </span>
-                                @elseif(isset($trabajoCompletado) && $trabajoCompletado)
+                                @if(isset($trabajoCompletado) && $trabajoCompletado)
                                     <!-- Trabajo completado, mostramos botones deshabilitados con tooltip -->
                                     <span class="action-icon mx-1" style="opacity: 0.5; cursor: not-allowed;" title="No se pueden aceptar candidatos en un trabajo ya completado">
                                         <i class="fas fa-check" style="color: #ccc;"></i>
@@ -70,12 +65,22 @@
                                         <i class="fas fa-times" style="color: #ccc;"></i>
                                     </span>
                                 @else
-                                    <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
-                                        <i class="fas fa-check"></i>
-                                    </a>
-                                    <a href="#" class="action-icon reject mx-1" data-id="{{ $postulacion->id }}">
-                                        <i class="fas fa-times"></i>
-                                    </a>
+                                    @if($postulacion->estado_id === 10)
+                                        <!-- Si está aceptado, mostramos un indicador pero mantenemos el botón de rechazar -->
+                                        <span class="badge bg-success text-white p-2 mx-1">
+                                            <i class="fas fa-check mr-1"></i> Aceptado
+                                        </span>
+                                        <a href="#" class="action-icon reject mx-1" data-id="{{ $postulacion->id }}">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    @else
+                                        <a href="#" class="action-icon accept mx-1" data-id="{{ $postulacion->id }}">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="#" class="action-icon reject mx-1" data-id="{{ $postulacion->id }}">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    @endif
                                 @endif
                                 <a href="/chat?user_id={{ $postulacion->trabajador->id }}" class="action-icon chat mx-1">
                                     <i class="fas fa-comments"></i>
