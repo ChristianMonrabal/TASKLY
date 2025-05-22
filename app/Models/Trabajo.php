@@ -29,6 +29,7 @@ class Trabajo extends Model
     // Trabajo.php
     public function categorias()
     {
+
         return $this->belongsToMany(Categoria::class, 'categorias_tipo_trabajo', 'trabajo_id', 'categoria_id');
     }
 
@@ -60,5 +61,21 @@ class Trabajo extends Model
     public function chat()
     {
         return $this->hasMany(Chat::class);
+    }
+
+    /**
+     * Obtiene las direcciones asociadas a este trabajo
+     */
+    public function direcciones()
+    {
+        return $this->hasMany(Direccion::class, 'trabajo_id');
+    }
+
+    /**
+     * Obtiene la dirección principal del trabajo
+     */
+    public function direccion()
+    {
+        return $this->hasOne(Direccion::class, 'trabajo_id')->latest();
     }
 }

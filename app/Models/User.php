@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -50,6 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(LogroCompleto::class, 'usuario_id');
     }
+    
+    // La relación direccionPrincipal está definida más abajo en el archivo
 
     public function logrosCompletos()
     {
@@ -96,7 +100,20 @@ class User extends Authenticatable
     }
 
     public function logrosCompletados()
-{
-    return $this->hasMany(\App\Models\LogroCompleto::class, 'usuario_id');
-}
+    {
+        return $this->hasMany(\App\Models\LogroCompleto::class, 'usuario_id');
+    }
+
+    /**
+     * Obtiene las direcciones asociadas a este usuario
+     */
+    public function direcciones()
+    {
+        return $this->hasMany(Direccion::class, 'user_id');
+    }
+
+    /**
+     * Obtiene la dirección principal del usuario (no asociada a trabajos)
+     */
+   
 }

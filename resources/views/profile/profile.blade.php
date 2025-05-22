@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
     <link rel="stylesheet" href="{{ asset('css/datos_bancarios.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ubicaciones.css') }}">
+    
+    <!-- Leaflet para mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 </head>
 
 <body>
@@ -65,6 +69,28 @@
             <div class="form-group">
                 <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
                 <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento', $user->fecha_nacimiento) }}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group datos-bancarios-container configured {{ $user->direccionPrincipal ? 'configured' : '' }}">
+                <div>
+                    <h4 class="datos-bancarios-title"><i class="fas fa-map-marker-alt me-2"></i> Mi Ubicación</h4>
+                    <p class="datos-bancarios-text">
+                        @if($user->direccionPrincipal)
+                            Tu ubicación está configurada y visible para potenciales empleadores.
+                        @else
+                            Aún no has configurado tu ubicación. ¡Hazlo ahora para que puedan encontrarte!
+                        @endif
+                    </p>
+                </div>
+                <a href="{{ route('profile.ubicaciones') }}" class="btn btn-configurar {{ $user->direccionPrincipal ? 'configured' : '' }}" style="display: inline-block; padding: 8px 15px; border-radius: 4px; color: #fff; background-color: #EC6A6A; text-decoration: none; font-weight: bold; border: none; margin-left: 10px;">
+                    @if($user->direccionPrincipal)
+                        <i class="fas fa-circle-check me-1"></i> Configurado
+                    @else
+                        <i class="fas fa-gear me-1"></i> Configurar
+                    @endif
+                </a>
             </div>
         </div>
 
@@ -192,11 +218,91 @@
     <script src="{{ asset('js/camera.js') }}"></script>
     <script src="{{ asset('js/profile.js') }}"></script>
     <script src="{{ asset('js/profile_alerts.js') }}"></script>
+    
+    <!-- Scripts para mapas -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="{{ asset('js/ubicaciones.js') }}"></script>
+    <script src="{{ asset('js/buscador-direcciones.js') }}"></script>
     <script>
         window.profileFeedback = {
             success: {!! json_encode(session('success')) !!},
             error: {!! json_encode($errors->first()) !!}
         };
+        
+        // Script para la búsqueda manual de direcciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnBuscarManual = document.getElementById('btn-buscar-manual');
+            
+            if (btnBuscarManual) {
+                btnBuscarManual.addEventListener('click', function() {
+                    const direccion = document.getElementById('direccion').value || '';
+                    const codigoPostal = document.getElementById('codigo_postal').value || '';
+                    const ciudad = document.getElementById('ciudad').value || '';
+                    
+                    if (!direccion && !codigoPostal && !ciudad) {
+                        alert('Por favor, introduce al menos un dato de la dirección.');
+                        return;
+                    }
+                    
+                    // Construir consulta con los datos disponibles
+                    const query = `${direccion}, ${codigoPostal} ${ciudad}, España`;
+                    
+                    // Mostrar indicador de carga
+                    const iconoOriginal = btnBuscarManual.innerHTML;
+                    btnBuscarManual.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Buscando...';
+                    btnBuscarManual.disabled = true;
+                    
+                    // Hacer petición a Nominatim (respetando límite de uso)
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=es&limit=1&addressdetails=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                const resultado = data[0];
+                                
+                                // Actualizar campos ocultos
+                                document.getElementById('latitud').value = resultado.lat;
+                                document.getElementById('longitud').value = resultado.lon;
+                                
+                                // Actualizar mapa
+                                if (typeof mapaSelector !== 'undefined' && mapaSelector) {
+                                    mapaSelector.setView([resultado.lat, resultado.lon], 15);
+                                    marcadorSelector.setLatLng([resultado.lat, resultado.lon]);
+                                }
+                                
+                                // Mensaje de éxito
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Dirección encontrada!',
+                                    text: 'Se ha localizado la dirección en el mapa.',
+                                    confirmButtonColor: '#EC6A6A'
+                                });
+                            } else {
+                                // Mensaje de error
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Dirección no encontrada',
+                                    text: 'No se ha podido localizar la dirección. Intenta ser más específico o utiliza el buscador de direcciones.',
+                                    confirmButtonColor: '#EC6A6A'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al buscar dirección:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al buscar la dirección.',
+                                confirmButtonColor: '#EC6A6A'
+                            });
+                        })
+                        .finally(() => {
+                            // Restaurar botón
+                            btnBuscarManual.innerHTML = iconoOriginal;
+                            btnBuscarManual.disabled = false;
+                        });
+                });
+            }
+        });
     </script>
 </body>
 </html>

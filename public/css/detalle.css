@@ -149,12 +149,41 @@
 }
 
 .meta-item {
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
+  gap: 10px;
   color: var(--text);
   background-color: white;
   padding: 8px 12px;
   border: 1px solid #e9ecef;
+}
+
+/* Estilos para el mapa de ubicación */
+.mapa-trabajo {
+  height: 220px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(236, 106, 106, 0.2);
+  margin-top: 10px;
+}
+
+/* Estilos para marcadores personalizados */
+.custom-map-marker {
+  background: transparent;
+  position: relative;
+}
+
+.custom-map-marker i {
+  font-size: 2.5rem;
+  color: #EC6A6A;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -10px;
+  left: -9px;
+  transition: all 0.3s ease;
 }
 
 .meta-item i {

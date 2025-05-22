@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('css/detalle.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 @endsection
 
 @section('content')
@@ -60,6 +61,30 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span>{{ $trabajo->direccion}}</span>
                                 </div>
+                                
+                                @php
+                                    // Determinar si debemos mostrar el mapa
+                                    $esCreador = Auth::id() == $trabajo->cliente_id;
+                                    $esTrabajadorAceptado = $trabajo->trabajador_id == Auth::id();
+                                    $tieneDireccion = isset($trabajo->direcciones) && $trabajo->direcciones->count() > 0;
+                                @endphp
+                                
+                                @if($tieneDireccion && ($esCreador || $esTrabajadorAceptado))
+                                    @php
+                                        $direccion = $trabajo->direcciones->first();
+                                        // El creador siempre puede ver el mapa
+                                        $mostrarMapa = $esCreador || ($direccion && $direccion->es_visible_para_trabajador);
+                                    @endphp
+                                    
+                                    @if($mostrarMapa)
+                                    <div class="mt-3 mb-3">
+                                        <div id="mapa-trabajo" class="mapa-trabajo" 
+                                            data-lat="{{ $direccion->latitud }}" 
+                                            data-lng="{{ $direccion->longitud }}">
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endif
                             </div>
                         </div>
 
@@ -194,5 +219,6 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="{{ asset('js/detalle.js') }}"></script>
 @endsection

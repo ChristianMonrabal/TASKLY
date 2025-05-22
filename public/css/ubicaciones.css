@@ -1,0 +1,264 @@
+/* Estilos para mapas y ubicaciones en TASKLY */
+
+/* Contenedores de mapa */
+.mapa-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 1px solid rgba(236, 106, 106, 0.1);
+}
+
+.mapa-pequeno {
+    height: 220px;
+    width: 100%;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.mapa-completo {
+    height: 450px;
+    width: 100%;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.mapa-selector {
+    height: 350px;
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(236, 106, 106, 0.15);
+}
+
+/* Estilos para tarjeta de dirección */
+.direccion-card {
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.direccion-info {
+    margin-bottom: 15px;
+}
+
+.direccion-info p {
+    margin-bottom: 5px;
+}
+
+/* Botones relacionados con mapas */
+.btn-mapa {
+    background-color: #EC6A6A;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(236, 106, 106, 0.3);
+}
+
+.btn-mapa i {
+    margin-right: 8px;
+}
+
+.btn-mapa:hover {
+    background-color: #d85757;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(236, 106, 106, 0.4);
+}
+
+.btn-outline-mapa {
+    background-color: transparent;
+    color: #EC6A6A;
+    border: 2px solid #EC6A6A;
+    border-radius: 8px;
+    padding: 8px 18px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-mapa:hover {
+    background-color: rgba(236, 106, 106, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos para mapa bloqueado (cuando la dirección no es visible) */
+.mapa-bloqueado {
+    background-color: #f8f9fa;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #6c757d;
+}
+
+.mapa-bloqueado i {
+    font-size: 3rem;
+    opacity: 0.5;
+}
+
+/* Estilos para la ventana emergente de Leaflet */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(236, 106, 106, 0.2);
+}
+
+.leaflet-popup-content {
+    margin: 15px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* Estilos para marcadores personalizados */
+.custom-map-marker {
+    background: transparent;
+    position: relative;
+}
+
+.custom-map-marker i {
+    font-size: 2.5rem;
+    color: #EC6A6A;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: -10px;
+    left: -9px;
+    transition: all 0.3s ease;
+}
+
+.custom-map-marker i:hover {
+    transform: scale(1.2);
+    color: #d85757;
+}
+
+/* Animación de rebote para marcadores */
+.marker-bounce {
+    animation: bounce 0.5s ease infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+/* Estilos para el buscador de direcciones */
+.buscador-container {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.buscador-direcciones {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.buscador-direcciones:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(236, 106, 106, 0.2);
+}
+
+.resultados-direcciones {
+    position: absolute;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+    margin-top: 5px;
+}
+
+.resultado-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+.resultado-item:last-child {
+    border-bottom: none;
+}
+
+.resultado-item:hover {
+    background-color: #f8f9fa;
+}
+
+.no-resultados {
+    padding: 12px 15px;
+    color: #6c757d;
+    text-align: center;
+    font-style: italic;
+}
+
+.buscador-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}
+
+/* Estilos para tema oscuro */
+.dark-mode .direccion-card {
+    background-color: #2d2d2d;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .mapa-bloqueado {
+    background-color: #383838;
+    color: #adb5bd;
+}
+
+.dark-mode .leaflet-popup-content-wrapper {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.dark-mode .leaflet-popup-tip {
+    background-color: #343a40;
+}
+
+.dark-mode .buscador-direcciones {
+    background-color: #383838;
+    border-color: #444;
+    color: #f8f9fa;
+}
+
+.dark-mode .resultados-direcciones {
+    background-color: #2d2d2d;
+    border-color: #444;
+}
+
+.dark-mode .resultado-item {
+    border-bottom-color: #444;
+}
+
+.dark-mode .resultado-item:hover {
+    background-color: #383838;
+}

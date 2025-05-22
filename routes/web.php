@@ -25,6 +25,7 @@ use App\Http\Controllers\ValoracionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PaymentController;
+// Ubicaciones ahora están integradas en ProfileController
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -53,8 +54,14 @@ Route::middleware('auth')->group(function () {
     // Rutas de perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Rutas de datos bancarios
     Route::get('/profile/datos-bancarios', [ProfileController::class, 'showDatosBancarios'])->name('profile.datos-bancarios');
     Route::put('/profile/datos-bancarios', [ProfileController::class, 'updateDatosBancarios'])->name('profile.datos-bancarios.update');
+    
+    // Rutas de ubicaciones
+    Route::get('/profile/ubicaciones', [ProfileController::class, 'showUbicaciones'])->name('profile.ubicaciones');
+    Route::post('/profile/ubicacion', [ProfileController::class, 'guardarUbicacion'])->name('profile.ubicacion.guardar');
     
     // Rutas para el sistema de pagos con Stripe
     Route::get('/payment/{trabajo}', [PaymentController::class, 'show'])->name('payment.show');
@@ -69,6 +76,13 @@ Route::middleware('auth')->group(function () {
 
     // Ruta para la página de mensajes
     Route::get('/mensajes', function () {return view('mensajes.index');})->name('mensajes');
+    
+    // Rutas para ubicaciones y direcciones (integradas en ProfileController)
+    Route::post('/trabajos/{trabajo}/guardar-direccion', [ProfileController::class, 'guardarDireccionTrabajo'])->name('trabajos.guardar-direccion');
+    Route::get('/trabajos/{id}/mapa', [ProfileController::class, 'verMapa'])->name('trabajos.mapa')->where('id', '[0-9]+');
+    Route::get('/usuario/{id}/mapa', [ProfileController::class, 'verMapa'])->name('usuario.mapa')->where('id', '[0-9]+');
+    Route::get('/trabajos/{trabajo}/ubicacion', [ProfileController::class, 'formDireccionTrabajo'])->name('trabajos.ubicacion');
+    Route::post('/api/trabajos/cercanos', [ProfileController::class, 'buscarTrabajosCercanos'])->name('api.trabajos.cercanos');
 
     // Ruta para mostrar todos los usuarios
     Route::get('/usuarios', function () {$users = User::with('rol')->get();return view('usuarios.index', compact('users'));})->name('usuarios.index');
