@@ -10,6 +10,8 @@ class EstadoSeeder extends Seeder
     public function run(): void
     {
         // Insertar estados predefinidos en la tabla estados
+
+        // Estado de trabajos
         Estado::create([
             'nombre' => 'Pendiente',
             'tipo_estado' => 'trabajos',
@@ -30,6 +32,7 @@ class EstadoSeeder extends Seeder
             'tipo_estado' => 'trabajos',
         ]);
 
+        // Estado de pagos
         Estado::create([
             'nombre' => 'Pendiente',
             'tipo_estado' => 'pagos',
@@ -48,7 +51,7 @@ class EstadoSeeder extends Seeder
         ]);
 
 
-
+        // Estado de postulaciones
         Estado::create([
             'nombre' => 'Pendiente',
             'tipo_estado' => 'postulaciones',
@@ -63,7 +66,7 @@ class EstadoSeeder extends Seeder
         ]);
 
 
-
+        // Estado de gravedad de un reporte
         Estado::create([
             'nombre' => 'Baja',
             'tipo_estado' => 'reporte_gravedad',
@@ -78,7 +81,7 @@ class EstadoSeeder extends Seeder
         ]);
 
 
-
+        // Estado de la solicitud de reparto
         Estado::create([
             'nombre' => 'Espera',
             'tipo_estado' => 'reporte_estado',
