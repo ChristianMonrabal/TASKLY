@@ -13,6 +13,7 @@ class Notificacion extends Model
         'leido',
         'fecha_creacion',
         'trabajo_id',
+        'tipo',            // <— añadimos
     ];
 
     protected $casts = [

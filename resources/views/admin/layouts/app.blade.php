@@ -26,25 +26,29 @@
                     
                     <nav class="main-nav">
                         <ul>
+                            <li><a href="{{ route('admin.dashboard.index') }}" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                             <li><a href="{{ route('admin.usuarios.index') }}" class="nav-link"><i class="fas fa-users"></i> Usuarios</a></li>
                             <li><a href="{{ route('admin.trabajos.index') }}" class="nav-link"><i class="fas fa-briefcase"></i> Trabajos</a></li>
                             <li><a href="{{ route('admin.valoraciones.index') }}" class="nav-link"><i class="fas fa-star"></i> Valoraciones</a></li>
                             <li><a href="{{ route('admin.categorias.index') }}" class="nav-link"><i class="fas fa-layer-group"></i> Categorias</a></li>
                             <li><a href="{{ route('admin.logros.index') }}" class="nav-link"><i class="fas fa-medal"></i> Logros</a></li>
+                            <li><a href="{{ route('admin.reportes.index') }}" class="nav-link"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                         </ul>
                     </nav>
                     <div class="user-actions">
                         @auth
                         <div class="user-dropdown">
                             <button class="dropdown-btn">
-                                <div class="user-avatar">
+                                <div class="user-avatar" style="position: relative;">
                                     <img src="{{ asset('img/profile_images/' . (Auth::user()->foto_perfil ?? 'default.jpg')) }}" class="current-photo">
                                 </div>
                                 <span class="user-name">{{ Auth::user()->name }}</span>
                                 <span class="icon">▼</span>
                             </button>
                             <div class="dropdown-content">
-                                <a href="{{ route('profile') }}"><i class="fas fa-user"></i> Mi Perfil</a>
+                                <a href="{{ route('perfil.usuario', ['nombre' => str(Auth::user()->nombre . ' ' . Auth::user()->apellidos)->slug('-')]) }}">
+                                    <i class="fas fa-user"></i> Mi Perfil
+                                </a>
                                 <a href="{{ route('admin.usuarios.index') }}"><i class="fas fa-users"></i> Usuarios</a>
                                 <a href="{{ route('admin.trabajos.index') }}"><i class="fas fa-briefcase"></i> Trabajos</a>
                                 <a href="{{ route('admin.valoraciones.index') }}"><i class="fas fa-star"></i> Valoraciones</a>

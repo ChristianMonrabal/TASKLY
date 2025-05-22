@@ -265,3 +265,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicialmente, mostrar todos
     aplicarFiltros();
 });
+

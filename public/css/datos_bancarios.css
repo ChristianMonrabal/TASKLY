@@ -1,0 +1,114 @@
+/* Estilos para la sección de datos bancarios */
+.datos-bancarios-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.datos-bancarios-container.configured {
+    border: 2px solid #EC6A6A;
+    background-color: #fff9f9;
+}
+
+.datos-bancarios-container.not-configured {
+    border: 2px dashed #EC6A6A;
+    background-color: #fff5f5;
+}
+
+.datos-bancarios-title {
+    color: #EC6A6A;
+    margin-bottom: 5px;
+}
+
+.datos-bancarios-text {
+    margin-bottom: 0;
+}
+
+.btn-configurar {
+    color: white;
+}
+
+.btn-configurar.configured {
+    background-color: #4a5568;
+}
+
+.btn-configurar.configured:hover {
+    background-color: #5a657a;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-configurar.not-configured {
+    background-color: #EC6A6A;
+}
+
+.btn-configurar.not-configured:hover {
+    background-color: #d95454;
+    transition: background-color 0.3s ease;
+}
+
+/* Botón de guardar */
+.btn-guardar-datos {
+    background-color: #EC6A6A;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-guardar-datos:hover {
+    background-color: #d95454;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Mensajes de error y validación */
+.error-message {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+input.invalid {
+    border-color: #dc3545 !important;
+}
+
+button.disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Estilos para la página de configuración de datos bancarios */
+.info-card {
+    border-color: #EC6A6A;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.info-card .card-header {
+    background-color: #EC6A6A;
+    color: white;
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    color: #EC6A6A;
+}
+
+.stripe-section-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.stripe-card {
+    border-color: #eee;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.stripe-card-title {
+    color: #EC6A6A;
+}

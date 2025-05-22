@@ -14,10 +14,18 @@ class ValoracionesSeeder extends Seeder
     {
         Valoracion::create([
             'trabajo_id' => 1,
-            'trabajador_id' => 2,
+            'trabajador_id' => 6,
             'puntuacion' => rand(1, 5),
             'img_valoracion' => 'persiana.png',
-            'comentario' => 'Bien',
+            'comentario' => 'Llegó puntual y realizó el trabajo de forma correcta.',
+        ]);
+
+        Valoracion::create([
+            'trabajo_id' => 2,
+            'trabajador_id' => 6,
+            'puntuacion' => rand(1, 5),
+            'img_valoracion' => 'persiana.png',
+            'comentario' => 'Todo perfecto, muy contento con el resultado.',
         ]);
     }
 }

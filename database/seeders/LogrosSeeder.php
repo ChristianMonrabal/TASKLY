@@ -10,21 +10,33 @@ class LogrosSeeder extends Seeder
     public function run(): void
     {
         Logro::create([
-            'nombre' => 'Primer Trabajo',
+            'nombre' => 'Primer trabajo',
             'descripcion' => 'Has completado tu primer trabajo exitosamente.',
-            'descuento' => 5,
+            'foto_logro' => 'Insignia1.png',
         ]);
 
         Logro::create([
-            'nombre' => 'Cliente Estrella',
+            'nombre' => 'Valoración perfecta',
             'descripcion' => 'Recibiste 5 valoraciones con 5 estrellas.',
-            'descuento' => 10,
+            'foto_logro' => 'Insignia2.png',
         ]);
 
         Logro::create([
-            'nombre' => 'Trabajador del Mes',
-            'descripcion' => 'Fuiste elegido como el mejor trabajador del mes.',
-            'descuento' => 15,
+            'nombre' => '10 trabajos completados',
+            'descripcion' => 'Has completado 10 trabajos exitosamente.',
+            'foto_logro' => 'Insignia3.png',
+        ]);
+
+        Logro::create([
+            'nombre' => '50 trabajos completados',
+            'descripcion' => 'Has completado 50 trabajos exitosamente.',
+            'foto_logro' => 'Insignia4.png',
+        ]);
+
+        Logro::create([
+            'nombre' => '100 trabajos completados',
+            'descripcion' => 'Has completado 100 trabajos exitosamente.',
+            'foto_logro' => 'Insignia5.png',
         ]);
     }
 }

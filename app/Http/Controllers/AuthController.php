@@ -14,28 +14,51 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.signin');
+        if (Auth::check()) {
+                if (Auth::user()->rol_id == 1) {
+                    return redirect()->route('admin.dashboard.index');
+                } else {
+                    return redirect()->route('trabajos.index');
+                }
+            }
+            return view('auth.signin');
     }
 
     public function showSignupForm()
     {
+        if (Auth::check()) {
+            if (Auth::user()->rol_id == 1) {
+                return redirect()->route('admin.dashboard.index');
+            } else {
+                return redirect()->route('trabajos.index');
+            }
+        }
         return view('auth.signup');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-    
+
         if (Auth::attempt($credentials)) {
+            if (Auth::user()->activo === 'no') {
+                Auth::logout();
+                return redirect()->route('signin.auth')
+                    ->withErrors([
+                        'email' => 'Tu cuenta está inactiva. Por favor, contacta con el administrador.',
+                    ])
+                    ->withInput();
+            }
+
             $request->session()->regenerate();
-    
+
             if (Auth::user()->rol_id == 1) {
-                return redirect()->route('admin.usuarios.index');
+                return redirect()->route('admin.dashboard.index');
             } else {
                 return redirect()->route('trabajos.index');
             }
         }
-    
+
         return redirect()->route('signin.auth')
             ->withErrors([
                 'email' => 'Las credenciales no son válidas.',

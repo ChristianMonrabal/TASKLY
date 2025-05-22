@@ -9,7 +9,7 @@ class UsuarioSeeder extends Seeder
 {
     public function run(): void
     {
-        // admin
+        // Usuario administrador
         User::create([
             'nombre' => 'Administrador',
             'apellidos' => 'Administrador',
@@ -24,7 +24,7 @@ class UsuarioSeeder extends Seeder
             'rol_id' => 1,
         ]);
 
-        // cliente
+        // Clientes
 
         User::create([
             'nombre' => 'Christian',
@@ -35,7 +35,7 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Apasionado por la tecnología y siempre dispuesto a echar una mano.',
+            'descripcion' => 'Adicto al fentanilo.',
             'dni' => '25482103N',
             'rol_id' => 2,
         ]);
@@ -68,45 +68,61 @@ class UsuarioSeeder extends Seeder
             'rol_id' => 2,
         ]);
 
-        User::create([
-            'nombre' => 'Juan Carlos',
-            'apellidos' => 'Prado García',
-            'email' => 'Juan@taskly.com',
-            'telefono' => '724885636',
-            'codigo_postal' => '08810',
-            'password' => bcrypt('asdASD123'),
-            'fecha_nacimiento' => '2000-01-01',
-            'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Persona comprometida, puntual y con ganas de ayudarte con tus tareas.',
-            'dni' => '11201597E',
-            'rol_id' => 2,
-        ]);
+        // User::create([
+        //     'nombre' => 'Juan Carlos',
+        //     'apellidos' => 'Prado García',
+        //     'email' => 'Juan@taskly.com',
+        //     'telefono' => '724885636',
+        //     'codigo_postal' => '08810',
+        //     'password' => bcrypt('asdASD123'),
+        //     'fecha_nacimiento' => '2000-01-01',
+        //     'foto_perfil' => 'perfil_default.png',
+        //     'descripcion' => 'Persona comprometida, puntual y con ganas de ayudarte con tus tareas.',
+        //     'dni' => '11201597E',
+        //     'rol_id' => 2,
+        // ]);
 
-        User::create([
-            'nombre' => 'Julio César',
-            'apellidos' => 'Carrillo Rocha',
-            'email' => 'Julio@taskly.com',
-            'telefono' => '659933798',
-            'codigo_postal' => '08810',
-            'password' => bcrypt('asdASD123'),
-            'fecha_nacimiento' => '2000-01-01',
-            'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Con experiencia en múltiples áreas, siempre listo para trabajar.',
-            'dni' => '27394859L',
-            'rol_id' => 2,
-        ]);
+        // User::create([
+        //     'nombre' => 'Julio César',
+        //     'apellidos' => 'Carrillo Rocha',
+        //     'email' => 'Julio@taskly.com',
+        //     'telefono' => '659933798',
+        //     'codigo_postal' => '08810',
+        //     'password' => bcrypt('asdASD123'),
+        //     'fecha_nacimiento' => '2000-01-01',
+        //     'foto_perfil' => 'perfil_default.png',
+        //     'descripcion' => 'Con experiencia en múltiples áreas, siempre listo para trabajar.',
+        //     'dni' => '27394859L',
+        //     'rol_id' => 2,
+        // ]);
 
+        // Clientes con muchos datos
         User::create([
-            'nombre' => 'Pablo',
-            'apellidos' => 'González Márquez',
-            'email' => 'pablo@taskly.com',
-            'telefono' => '612345678',
+            'nombre' => 'Cliente',
+            'apellidos' => 'Cliente',
+            'email' => 'cliente@taskly.com',
+            'telefono' => '600000001',
             'codigo_postal' => '08001',
-            'password' => bcrypt('pablo1234'),
-            'fecha_nacimiento' => '1995-05-15',
+            'password' => bcrypt('asdASD123'),
+            'fecha_nacimiento' => '1990-05-20',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Hola, soy Pablo y me encanta ayudar con tareas del hogar.',
-            'dni' => '50133963N',
+            'descripcion' => 'Cliente habitual en busca de profesionales confiables.',
+            'dni' => 'X8017683K',
+            'rol_id' => 2,
+        ]);
+
+        // Trabajador con muchos datos
+        User::create([
+            'nombre' => 'Trabajador',
+            'apellidos' => 'Ejemplar',
+            'email' => 'trabajador@taskly.com',
+            'telefono' => '600000002',
+            'codigo_postal' => '08002',
+            'password' => bcrypt('asdASD123'),
+            'fecha_nacimiento' => '1985-10-10',
+            'foto_perfil' => 'perfil_default.png',
+            'descripcion' => 'Profesional con años de experiencia en distintos sectores.',
+            'dni' => 'Y1267159B',
             'rol_id' => 2,
         ]);
     }

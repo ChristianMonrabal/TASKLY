@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Notificacion;
+use App\Models\Valoracion;
+use App\Models\Pago;
+use App\Observers\ValoracionObserver;
+use App\Observers\PagoObserver;
 use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Registrar los observers para los diferentes modelos
+        Valoracion::observe(ValoracionObserver::class);
+        Pago::observe(PagoObserver::class);
+        
         View::composer('layouts.app', function($view) {
             if ($user = Auth::user()) {
                 // Obtener las notificaciones (leídas y no leídas)

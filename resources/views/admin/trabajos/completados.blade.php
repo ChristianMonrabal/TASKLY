@@ -33,6 +33,9 @@
         <!-- Se llenará dinámicamente mediante JS -->
     </tbody>
   </table>
+  <nav aria-label="Paginación">
+    <ul id="completados-pagination" class="pagination justify-content-center mt-3"></ul>
+  </nav>
 </div>
 @endsection
 

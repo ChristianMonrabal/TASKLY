@@ -211,22 +211,22 @@ async function updatePaymentStatus(trabajo_id, trabajador_id, client_secret) {
         Swal.fire({
             title: '¡Pago completado con éxito!',
             html: `
-              <div class="payment-success-container">
+                <div class="payment-success-container">
                 <div class="payment-success-icon">
-                  <i class="fas fa-check-circle"></i>
+                    <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="payment-details">
-                  <p>El pago de <strong>€${document.getElementById('amount').value}</strong> se ha procesado correctamente.</p>
-                  <p class="payment-small">El 90% ha sido transferido al trabajador y el 10% corresponde a la comisión de TASKLY.</p>
+                    <p>El pago de <strong>€${document.getElementById('amount').value}</strong> se ha procesado correctamente.</p>
+                    <p class="payment-small">El 90% ha sido transferido al trabajador y el 10% corresponde a la comisión de TASKLY.</p>
                 </div>
                 <div class="taskly-tagline">
-                  <p>¡Gracias por usar TASKLY!</p>
+                    <p>¡Gracias por usar TASKLY!</p>
                 </div>
-              </div>
+                </div>
             `,
             icon: 'success',
             confirmButtonColor: '#EC6A6A',
-            confirmButtonText: 'Continuar a valoraciones'
+            confirmButtonText: 'Valora a tu trabajador',
         }).then((result) => {
             if (result.isConfirmed) {
                 // La ruta de valoraciones es valoraciones.valoraciones (/valoraciones?...)

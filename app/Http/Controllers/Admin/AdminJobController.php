@@ -73,19 +73,20 @@ class AdminJobController extends Controller
                          ->with('success', 'Trabajo actualizado correctamente.');
     }
 
-    /**
-     * JSON de trabajos (filtros).
+     /**
+     * JSON paginado de trabajos (filtros + paginador).
      */
     public function apiIndex(Request $request)
     {
         $query = Trabajo::with(['cliente', 'estado'])
             ->whereHas('estado', function($q) {
-                $q->whereNotIn('nombre', ['Finalizado', 'Completado']);
+                $q->whereNotIn('nombre', ['Finalizado','Completado']);
             });
 
         if ($request->filled('cliente')) {
             $query->whereHas('cliente', fn($q) =>
                 $q->where('nombre', 'like', "%{$request->cliente}%")
+                  ->orWhere('apellidos', 'like', "%{$request->cliente}%")
             );
         }
         if ($request->filled('estado')) {
@@ -94,7 +95,8 @@ class AdminJobController extends Controller
             );
         }
 
-        return response()->json($query->get());
+        // Paginamos 10 por página
+        return $query->orderBy('updated_at','desc')->paginate(10);
     }
 
     /**
@@ -214,7 +216,6 @@ public function apiCompletados(Request $request)
         $query->whereDate('updated_at', $request->fecha);
     }
 
-    $completados = $query->orderBy('updated_at','desc')->get();
-    return response()->json($completados);
+    return $query->orderBy('updated_at','desc')->paginate(10);
 }
 }

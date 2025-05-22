@@ -397,7 +397,6 @@ body.dark-mode .trabajo-detalle-container,
 body.dark-mode .info-container,
 body.dark-mode .seccion-detalle,
 body.dark-mode .meta-info,
-body.dark-mode .sidebar-card,
 body.dark-mode .galeria-miniaturas,
 body.dark-mode .botones-accion,
 body.dark-mode .usuario-info {
@@ -406,13 +405,146 @@ body.dark-mode .usuario-info {
     border-color: var(--dark-border) !important;
 }
 
+/* Estilos para los botones de acción */
+body.dark-mode .btn-postular,
+body.dark-mode .btn-chat {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+    padding: 10px 20px !important;
+    border-radius: 6px !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .btn-postular:hover,
+body.dark-mode .btn-chat:hover {
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .btn-chat {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 10px 20px !important;
+    border-radius: 6px !important;
+}
+
+body.dark-mode .btn-postular i,
+body.dark-mode .btn-chat i {
+    color: white !important;
+    margin-right: 5px !important;
+}
+
+body.dark-mode .btn-chat i {
+    margin-right: 0 !important;
+    font-size: 1.2em !important;
+}
+
+body.dark-mode .botones-accion {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 15px !important;
+}
+
+body.dark-mode .boton-wrapper {
+    display: flex !important;
+}
+
+/* Estilos específicos para la tarjeta lateral del perfil */
+body.dark-mode .sidebar-card {
+    background-color: var(--dark-bg) !important;
+    color: #FFFFFF !important;
+    border: 2px solid var(--dark-border) !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .card-titulo,
+body.dark-mode .usuario-nombre,
+body.dark-mode .usuario-valoraciones {
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+}
+
+body.dark-mode .usuario-nombre {
+    font-size: 1.2rem !important;
+    margin-top: 10px !important;
+}
+
+body.dark-mode .usuario-valoraciones {
+    color: var(--dark-muted) !important;
+}
+
+body.dark-mode .usuario-valoraciones i {
+    color: var(--primary) !important;
+}
+
+/* body.dark-mode .usuario-avatar img {
+    border: 3px solid var(--primary) !important;
+    padding: 2px !important;
+    background-color: white !important;
+} */
+
 body.dark-mode .trabajo-titulo,
 body.dark-mode .seccion-titulo,
 body.dark-mode .descripcion,
+body.dark-mode .meta-item i,
+body.dark-mode .meta-item span,
 body.dark-mode .meta-item,
 body.dark-mode .card-titulo,
-body.dark-mode .precio {
-    color: #FFFFFF !important;
+body.dark-mode .precio,
+body.dark-mode .trabajo-titulo,
+body.dark-mode .seccion-titulo,
+body.dark-mode .descripcion {
+    color: white !important;
+}
+
+/* Estilos mejorados para meta-info en dark mode */
+body.dark-mode .meta-info {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    background-color: rgba(30, 30, 30, 0.4) !important;
+    border-radius: 8px !important;
+}
+
+body.dark-mode .meta-item {
+    padding: 8px 12px !important;
+    background-color: rgba(40, 40, 40, 0.8) !important;
+    border: 1px solid var(--dark-border) !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+body.dark-mode .meta-item i {
+    color: var(--primary) !important;
+    font-size: 1.2em !important;
+    min-width: 20px !important;
+    text-align: center !important;
+}
+
+body.dark-mode .meta-item span {
+    color: white !important;
+    font-weight: 500 !important;
+}
+
+body.dark-mode .meta-item.precio-destacado {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+body.dark-mode .meta-item.precio-destacado i,
+body.dark-mode .meta-item.precio-destacado span {
+    color: white !important;
+    font-weight: bold !important;
 }
 
 body.dark-mode .galeria-imagenes {
@@ -620,6 +752,118 @@ body.dark-mode .action-icon.chat {
     color: var(--primary) !important;
 }
 
+/* Estilos para el perfil de usuario en modo oscuro */
+body.dark-mode .container .card-body,
+body.dark-mode .card .card-body,
+body.dark-mode div[class*="card-body"] {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode .text-muted,
+body.dark-mode h2.text-danger,
+body.dark-mode h2.text-center.text-danger,
+body.dark-mode .text-center.text-danger {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .card.shadow.rounded-lg.border.border-danger.p-4 {
+    background-color: var(--dark-bg) !important;
+    border-color: var(--primary) !important;
+}
+
+body.dark-mode .card-body.text-center,
+body.dark-mode .card-body[data-aos="fade-up"] {
+    background-color: transparent !important;
+}
+
+/* Estilos para la sección de datos bancarios */
+body.dark-mode .datos-bancarios-container {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .datos-bancarios-title,
+body.dark-mode .datos-bancarios-text {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .btn-configurar.configured {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+}
+
+body.dark-mode .form-row,
+body.dark-mode .form-group {
+    background-color: transparent !important;
+}
+
+body.dark-mode svg path,
+body.dark-mode .fa-credit-card,
+body.dark-mode .fa-check-circle {
+    fill: currentColor !important;
+    color: inherit !important;
+}
+
+/* Estilos para logros/insignias en modo oscuro */
+body.dark-mode .logros-grid {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .logro-card {
+    background-color: var(--dark-card) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .logro-titulo {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .logro-meta,
+body.dark-mode .logro-tiempo {
+    color: var(--dark-muted) !important;
+}
+
+body.dark-mode .logro-imagen {
+    border: 3px solid var(--primary) !important;
+    padding: 5px !important;
+    background-color: #FFFFFF !important;
+    border-radius: 50% !important;
+}
+
+/* Estilos para los enlaces sociales */
+body.dark-mode .social-links {
+    background-color: transparent !important;
+}
+
+body.dark-mode .social-link {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin: 0 5px !important;
+    transition: all 0.3s ease !important;
+}
+
+body.dark-mode .social-link:hover {
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .social-link i {
+    color: white !important;
+    font-size: 18px !important;
+}
+
 /* Estilos para garantizar consistencia visual en los espacios */
 body.dark-mode .py-5,
 body.dark-mode .py-4,
@@ -636,6 +880,113 @@ body.dark-mode .p-2 {
 body.dark-mode .user-avatar img,
 body.dark-mode .profile-image img {
     border-color: var(--primary) !important;
+}
+
+/* Estilos para el chat de mensajes */
+body.dark-mode .mensajes-container {
+    background-color: var(--dark-bg) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .contactos-column {
+    background-color: var(--dark-card) !important;
+    border-right: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .contactos-header {
+    background-color: var(--dark-card) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .contactos-header h2,
+body.dark-mode .current-user-name,
+body.dark-mode .chat-header h3 {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .search-box {
+    background-color: var(--dark-bg) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .search-box input {
+    background-color: var(--dark-bg) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .search-box i {
+    color: var(--primary) !important;
+}
+
+body.dark-mode .contacto {
+    border-bottom: 1px solid var(--dark-border) !important;
+    background-color: var(--dark-card) !important;
+}
+
+body.dark-mode .contacto:hover,
+body.dark-mode .contacto.active {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .contacto-nombre,
+body.dark-mode .contacto-ultimo-mensaje,
+body.dark-mode .mensaje-tiempo {
+    color: #FFFFFF !important;
+}
+
+body.dark-mode .chat-column {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .chat-header {
+    background-color: var(--dark-card) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .messages-area {
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .message {
+    background-color: var(--dark-card) !important;
+    color: #FFFFFF !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .message.outgoing {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .message-input-area {
+    background-color: var(--dark-card) !important;
+    border-top: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .message-input {
+    background-color: var(--dark-bg) !important;
+    color: #FFFFFF !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .chat-input-btn,
+body.dark-mode .send-btn {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .chat-input-btn:hover,
+body.dark-mode .send-btn:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+body.dark-mode .unread-badge {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .current-user-avatar img {
+    border: 2px solid var(--primary) !important;
 }
 
 /* Botones de scroll */

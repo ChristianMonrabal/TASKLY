@@ -19,8 +19,9 @@ class CalendarioController extends Controller
             ->map(function ($evento) {
                 return [
                     'date' => $evento->fecha,
-                    'text' => $evento->titulo . ': ' . $evento->descripcion,
+                    'text' => $evento->titulo . $evento->descripcion,
                     'type' => 'work',
+                    'trabajo_id' => $evento->trabajo,
                 ];
             });
 

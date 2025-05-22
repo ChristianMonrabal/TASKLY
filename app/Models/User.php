@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -29,31 +27,19 @@ class User extends Authenticatable
         'foto_perfil',
         'descripcion',
         'dni',
-        'rol_id'
+        'rol_id',
+        'activo',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        // 'activo' lo dejamos como string “si”/“no”
+    ];
 
     public function rol()
     {
@@ -95,7 +81,8 @@ class User extends Authenticatable
         return $this->hasMany(Chat::class, 'trabajador_id');
     }
 
-    public function pagos() {
+    public function pagos()
+    {
         return $this->hasMany(Pago::class, 'trabajador_id');
     }
     
@@ -107,4 +94,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Valoracion::class, 'trabajador_id');
     }
+
+    public function logrosCompletados()
+{
+    return $this->hasMany(\App\Models\LogroCompleto::class, 'usuario_id');
+}
 }

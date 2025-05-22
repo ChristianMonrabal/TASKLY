@@ -1,236 +1,172 @@
-// public/js/admin-valoraciones.js
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// Validaciones onblur
+// Estado global de paginación
+let currentPage = 1;
 
-function validateNonEmpty(fieldId, message) {
-    let field = document.getElementById(fieldId);
-    let errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-    if (field.value.trim() === '') {
-        errorDiv.textContent = message;
-        return false;
-    } else {
-        errorDiv.textContent = '';
-        return true;
-    }
+// Validación onblur
+function validateNonEmpty(id, msg) {
+  const f = document.getElementById(id),
+        e = document.getElementById("error" + id.charAt(0).toUpperCase() + id.slice(1));
+  if (!f.value.trim()) { e.textContent = msg; return false; }
+  e.textContent = ''; return true;
 }
 
-// (Función validateEmail y validateOptionalPassword se mantienen para tener un formato homogéneo,
-// aunque en valoraciones probablemente no se usen, pues solo se edita el comentario e imagen)
-
-function validateEmail(fieldId) {
-    let field = document.getElementById(fieldId);
-    let errorDiv = document.getElementById("error" + fieldId.charAt(0).toUpperCase() + fieldId.slice(1));
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (field.value.trim() === '') {
-        errorDiv.textContent = "El campo Correo es obligatorio.";
-        return false;
-    } else if (!emailRegex.test(field.value.trim())) {
-        errorDiv.textContent = "El formato del Correo es inválido.";
-        return false;
-    } else {
-        errorDiv.textContent = "";
-        return true;
-    }
-}
-
-function validateOptionalPassword() {
-    let password = document.getElementById('editPassword').value;
-    let confirmation = document.getElementById('editPasswordConfirmation').value;
-    let errorPass = document.getElementById('errorEditPassword');
-    let errorConf = document.getElementById('errorEditPasswordConfirmation');
-
-    if (password === '' && confirmation === '') {
-        errorPass.textContent = "";
-        errorConf.textContent = "";
-        return true;
-    }
-
-    if (password.length < 6) {
-        errorPass.textContent = "La nueva contraseña debe tener al menos 6 caracteres.";
-        return false;
-    } else {
-        errorPass.textContent = "";
-    }
-
-    if (password !== confirmation) {
-        errorConf.textContent = "Las contraseñas no coinciden.";
-        return false;
-    } else {
-        errorConf.textContent = "";
-    }
-
-    return true;
-}
-
-// Función para limpiar el contenedor de errores del modal.
 function clearEditValoracionErrors() {
-    let errorsDiv = document.getElementById('editValErrors');
-    if (errorsDiv) {
-        errorsDiv.classList.add('d-none');
-        errorsDiv.innerHTML = '<ul></ul>';
-    }
+  const d = document.getElementById('editValErrors');
+  d.classList.add('d-none');
+  d.querySelector('ul').innerHTML = '';
 }
 
-// Función para renderizar la tabla de valoraciones.
-function renderValoraciones(data) {
-    const container = document.getElementById('valoraciones-container');
-    container.innerHTML = '';
-    data.forEach(valoracion => {
-        const clienteNombre = (valoracion.trabajo && valoracion.trabajo.cliente)
-            ? (valoracion.trabajo.cliente.nombre + ' ' + valoracion.trabajo.cliente.apellidos)
-            : '';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${valoracion.trabajo.titulo || ''}</td>
-            <td>${valoracion.trabajador ? valoracion.trabajador.nombre : ''}</td>
-            <td>${valoracion.puntuacion}</td>
-            <td>${valoracion.comentario || ''}</td>
-            <td>${clienteNombre}</td>
-            <td>
-                <button class="btn btn-primary btn-sm" onclick="openEditModalValoracion(${valoracion.id})">
-                    <i class="fa fa-edit"></i>
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="confirmDeleteValoracion(${valoracion.id})">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        `;
-        container.appendChild(tr);
+function renderValoraciones(rows) {
+  const c = document.getElementById('valoraciones-container');
+  c.innerHTML = '';
+  if (!rows.length) {
+    c.innerHTML = '<tr><td colspan="6" class="text-center">No hay valoraciones.</td></tr>';
+    return;
+  }
+  rows.forEach(v => {
+    const cliente = v.trabajo?.cliente;
+    const clienteNombre = cliente ? `${cliente.nombre} ${cliente.apellidos}` : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${v.trabajo?.titulo || ''}</td>
+      <td>${v.trabajador?.nombre || ''}</td>
+      <td>${v.puntuacion}</td>
+      <td>${v.comentario || ''}</td>
+      <td>${clienteNombre}</td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick="openEditModal(${v.id})">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete(${v.id})">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>`;
+    c.appendChild(tr);
+  });
+}
+
+function renderPagination(meta) {
+  const ul = document.getElementById('valoraciones-pagination');
+  ul.innerHTML = '';
+  meta.links.forEach(link => {
+    const li = document.createElement('li');
+    li.className = 'page-item' + (link.active ? ' active': '') + (!link.url ? ' disabled' : '');
+    const a = document.createElement('a');
+    a.className = 'page-link';
+    a.href = '#';
+    a.innerHTML = link.label;
+    if (link.url) {
+      const url = new URL(link.url);
+      a.dataset.page = url.searchParams.get('page');
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        currentPage = Number(a.dataset.page);
+        filterValoraciones(currentPage);
+      });
+    }
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+}
+
+function filterValoraciones(page = 1) {
+  currentPage = page;
+  const params = new URLSearchParams();
+  ['filterTrabajador','filterCliente'].forEach(id=>{
+    const v = document.getElementById(id).value.trim();
+    if (v) params.append(id.replace('filter','').toLowerCase(), v);
+  });
+  params.append('page', page);
+
+  fetch(`/admin/valoraciones/json?${params}`, {
+    headers: { 'Accept':'application/json' }
+  })
+    .then(r => r.json())
+    .then(json => {
+      renderValoraciones(json.data);
+      renderPagination(json);
+    })
+    .catch(err => {
+      console.error('Error cargando valoraciones:', err);
     });
 }
 
-// Función para obtener valoraciones filtradas y renderizarlas.
-function filterValoraciones() {
-    const filterTrabajador = document.getElementById('filterTrabajador').value.trim();
-    const filterCliente = document.getElementById('filterCliente').value.trim();
-
-    let params = new URLSearchParams();
-    if (filterTrabajador !== "") {
-        params.append('trabajador', filterTrabajador);
-    }
-    if (filterCliente !== "") {
-        params.append('cliente', filterCliente);
-    }
-    const queryString = params.toString() ? '?' + params.toString() : '';
-
-    fetch('/api/valoraciones' + queryString)
-        .then(response => response.json())
-        .then(data => {
-            renderValoraciones(data);
-        })
-        .catch(error => console.error('Error al filtrar valoraciones:', error));
+function openEditModal(id) {
+  clearEditValoracionErrors();
+  fetch(`/admin/valoraciones/${id}`, {
+    headers: { 'Accept':'application/json' }
+  })
+    .then(r => r.json())
+    .then(v => {
+      document.getElementById('editValoracionId').value = v.id;
+      document.getElementById('editComentario').value    = v.comentario || '';
+      const img = document.getElementById('currentImgValoracion');
+      if (v.img_url) {
+        img.src = v.img_url;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
+      new bootstrap.Modal(document.getElementById('editModal')).show();
+    });
 }
 
-// Función para abrir el modal de edición y cargar datos de una valoración.
-function openEditModalValoracion(valoracionId) {
-    clearEditValoracionErrors();
-    fetch('/api/valoraciones/' + valoracionId)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('editValoracionId').value = data.id;
-            document.getElementById('editComentario').value = data.comentario || '';
-
-            // Mostrar la imagen actual, si existe.
-            if (data.img_valoracion) {
-                let imgEl = document.getElementById('currentImgValoracion');
-                // Asegúrate de que la ruta sea correcta; se asume que la imagen se encuentra en "storage"
-                imgEl.src = '/storage/' + data.img_valoracion;
-                imgEl.style.display = 'block';
-            } else {
-                document.getElementById('currentImgValoracion').style.display = 'none';
-            }
-
-            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            editModal.show();
-        })
-        .catch(error => console.error('Error al cargar datos de la valoración:', error));
-}
-
-// Función para enviar el formulario de edición mediante fetch.
 function submitEditValoracion() {
-    if (!validateNonEmpty('editComentario', 'El campo Comentario es obligatorio')) {
-        return;
+  if (!validateNonEmpty('editComentario','Comentario obligatorio')) return;
+  const id = document.getElementById('editValoracionId').value;
+  const fd = new FormData(document.getElementById('editValoracionForm'));
+  fetch(`/admin/valoraciones/${id}`, {
+    method:'POST',
+    headers:{
+      'X-CSRF-TOKEN': csrfToken,
+      'X-HTTP-Method-Override':'PUT',
+      'Accept':'application/json'
+    },
+    body: fd
+  })
+  .then(r => r.ok ? r.json() : r.json().then(e=>{throw e;}))
+  .then(_ => {
+    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+    filterValoraciones(currentPage);
+    Swal.fire('¡Éxito!','Valoración actualizada.','success');
+  })
+  .catch(err => {
+    const d = document.getElementById('editValErrors');
+    d.classList.remove('d-none');
+    d.querySelector('ul').innerHTML = Object.values(err.errors||{})
+      .flat().map(m=>`<li>${m}</li>`).join('');
+  });
+}
+
+function confirmDelete(id) {
+  Swal.fire({
+    title:'¿Eliminar?', text:'No se podrá revertir.', icon:'warning',
+    showCancelButton:true, confirmButtonText:'Sí, eliminar'
+  }).then(r=>{ if(r.isConfirmed) deleteVal(id); });
+}
+
+function deleteVal(id) {
+  fetch(`/admin/valoraciones/${id}`, {
+    method:'DELETE',
+    headers:{
+      'X-CSRF-TOKEN': csrfToken,
+      'Accept':'application/json'
     }
-    let form = document.getElementById('editValoracionForm');
-    let valoracionId = document.getElementById('editValoracionId').value;
-    let formData = new FormData(form);
-    fetch('/admin/valoraciones/' + valoracionId, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'X-HTTP-Method-Override': 'PUT',
-            'Accept': 'application/json'
-        },
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.json().then(data => { throw data; });
-        }
-    })
-    .then(data => {
-        document.activeElement.blur();
-        clearEditValoracionErrors();
-        var editModalEl = document.getElementById('editModal');
-        var modal = bootstrap.Modal.getInstance(editModalEl);
-        modal.hide();
-        filterValoraciones(); // Actualiza la lista filtrada
-        Swal.fire('Éxito', data.message, 'success');
-    })
-    .catch(error => {
-        let errorsDiv = document.getElementById('editValErrors');
-        errorsDiv.classList.remove('d-none');
-        errorsDiv.innerHTML = '<ul>' + Object.values(error.errors || {}).map(err => `<li>${err}</li>`).join('') + '</ul>';
-    });
+  })
+  .then(r => r.json())
+  .then(_ => {
+    filterValoraciones(currentPage);
+    Swal.fire('Eliminado','Valoración eliminada.','success');
+  });
 }
 
-// Función para confirmar eliminación con SweetAlert.
-function confirmDeleteValoracion(valoracionId) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción no se podrá revertir",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sí, eliminar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteValoracion(valoracionId);
-        }
-    });
-}
+document.addEventListener('DOMContentLoaded', () => {
+  ['filterTrabajador','filterCliente'].forEach(id=>
+    document.getElementById(id).addEventListener('input',()=>filterValoraciones(1))
+  );
+  filterValoraciones(1);
 
-// Función para eliminar una valoración mediante fetch.
-function deleteValoracion(valoracionId) {
-    fetch('/admin/valoraciones/' + valoracionId, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Error al eliminar la valoración.');
-        }
-    })
-    .then(data => {
-        filterValoraciones();
-        Swal.fire('Eliminado', data.message, 'success');
-    })
-    .catch(error => console.error('Error en la petición DELETE:', error));
-}
-
-// Al cargar la página, obtener la lista filtrada de valoraciones.
-document.addEventListener('DOMContentLoaded', function() {
-    filterValoraciones();
+  // Recarga automática cada 10 segundos
+  setInterval(() => { filterValoraciones(currentPage); }, 10000);
 });
-
-// Actualizar la lista cada 1 segundo.
-setInterval(filterValoraciones, 1000);

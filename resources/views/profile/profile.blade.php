@@ -7,8 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Editar perfil de Taskly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datos_bancarios.css') }}">
 </head>
 
 <body>
@@ -69,12 +70,37 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label for="dni">DNI:</label>
-                <input type="text" name="dni" value="{{ old('dni', $user->dni) }}" readonly>
+                <label for="new-password">Contraseña:</label>
+                <div class="password-container">
+                    <input type="password" id="new-password" name="password" class="input-field">
+                    <i class="fas fa-eye password-toggle" id="toggle-password2" data-target="new-password"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label for="descripcion">Descripción:</label>
                 <textarea name="descripcion">{{ old('descripcion', $user->descripcion) }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group datos-bancarios-container {{ $user->datosBancarios && $user->datosBancarios->stripe_account_id ? 'configured' : 'not-configured' }}">
+                <div>
+                    <h4 class="datos-bancarios-title"><i class="fas fa-credit-card me-2"></i> Datos Bancarios</h4>
+                    <p class="datos-bancarios-text">
+                        @if($user->datosBancarios && $user->datosBancarios->stripe_account_id)
+                            Tus datos bancarios están configurados y listos para recibir pagos.
+                        @else
+                            Configura tus datos bancarios para recibir pagos por tus trabajos.
+                        @endif
+                    </p>
+                </div>
+                <a href="{{ route('profile.datos-bancarios') }}" class="btn btn-configurar {{ $user->datosBancarios && $user->datosBancarios->stripe_account_id ? 'configured' : 'not-configured' }}">
+                    @if($user->datosBancarios && $user->datosBancarios->stripe_account_id)
+                        <i class="fas fa-check-circle me-1"></i> Configurado
+                    @else
+                        <i class="fas fa-cog me-1"></i> Configurar
+                    @endif
+                </a>
             </div>
         </div>
 
@@ -119,7 +145,6 @@
             </script>
         @endif
 
-
         @if($errors->any())
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
@@ -132,7 +157,6 @@
                 });
             </script>
         @endif
-
 
         <div class="text-center mt-4">
             <button type="submit" class="btn color">Guardar cambios</button>
@@ -164,14 +188,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/toogle_password_profile.js') }}"></script>
     <script src="{{ asset('js/camera.js') }}"></script>
     <script src="{{ asset('js/profile.js') }}"></script>
     <script src="{{ asset('js/profile_alerts.js') }}"></script>
     <script>
-    window.profileFeedback = {
-        success: {!! json_encode(session('success')) !!},
-        error: {!! json_encode($errors->first()) !!}
-    };
+        window.profileFeedback = {
+            success: {!! json_encode(session('success')) !!},
+            error: {!! json_encode($errors->first()) !!}
+        };
     </script>
 </body>
 </html>

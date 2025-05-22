@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre', 100)->nullable();
             $table->text('descripcion')->nullable();
-            $table->decimal('descuento', 3, 0);
+            $table->string('foto_logro')->nullable();
             $table->timestamps();
         });
     }
