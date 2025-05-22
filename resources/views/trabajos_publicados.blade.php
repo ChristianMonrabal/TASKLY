@@ -165,8 +165,8 @@
                 @endif
             </div>
         @else
-            <div class="alert">
-                <p>No has publicado ningún trabajo.</p>
+            <div class="alert alert-info">
+                No has publicado ningún trabajo.
             </div>
         @endif
         
@@ -175,6 +175,9 @@
             <!-- Aquí se renderizará el paginador dinámicamente -->
         </div>
         
+        <div id="noResultados" class="alert alert-warning" style="display:none;">
+            No se han encontrado resultados
+        </div>
     </div>
 </div>
 @endsection
