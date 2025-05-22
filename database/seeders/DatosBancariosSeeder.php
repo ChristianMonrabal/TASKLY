@@ -17,7 +17,6 @@ class DatosBancariosSeeder extends Seeder
         // Limpiamos los datos bancarios anteriores
         DatosBancarios::truncate();
         
-       
         
         // Mapeamos los IDs de Stripe para los usuarios específicos
         // Mapeamos los IDs de Stripe para los usuarios específicos - cuentas reales

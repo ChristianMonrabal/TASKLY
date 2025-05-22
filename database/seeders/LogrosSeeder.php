@@ -38,6 +38,5 @@ class LogrosSeeder extends Seeder
             'descripcion' => 'Has completado 100 trabajos exitosamente.',
             'foto_logro' => 'Insignia5.png',
         ]);
-
     }
 }

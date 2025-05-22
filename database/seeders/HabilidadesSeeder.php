@@ -28,18 +28,13 @@ class HabilidadesSeeder extends Seeder
         ]);
 
         Habilidad::create([
-            'trabajador_id' => 5, // Juan Carlos
+            'trabajador_id' => 5, // Cliente 
             'categoria_id' => 4,  // Pintura
         ]);
 
         Habilidad::create([
-            'trabajador_id' => 6, // Julio César
+            'trabajador_id' => 6, // Trabajador
             'categoria_id' => 5,  // Mantenimiento
-        ]);
-
-        Habilidad::create([
-            'trabajador_id' => 7, // Pablo
-            'categoria_id' => 7,  // Cerrajería
         ]);
     }
 }

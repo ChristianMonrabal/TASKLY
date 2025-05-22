@@ -17,7 +17,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'Ayer empezo a perderme agua el grifo de la cocina, necesito que venga un fontanero a repararlo.',
             'precio' => 10,
             'direccion' => '08905',
-            'cliente_id' => 3,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
@@ -27,7 +27,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'Necesito un electricista para instalar 3 enchufes en mi casa.',
             'precio' => 10,
             'direccion' => '08905',
-            'cliente_id' => 3,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
@@ -37,7 +37,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'La puerta de la habitación no cierra bien, necesito un carpintero para repararla.',
             'precio' => 10,
             'direccion' => '08906',
-            'cliente_id' => 3,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
@@ -47,7 +47,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'Necesito un fontanero para instalar un grifo en la cocina.',
             'precio' => 10,
             'direccion' => '08906',
-            'cliente_id' => 4,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
@@ -57,7 +57,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'Necesito un electricista para instalar una lámpara en el salón.',
             'precio' => 10,
             'direccion' => '08904',
-            'cliente_id' => 4,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
@@ -67,7 +67,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'La ventana del salón no cierra bien, necesito un carpintero para repararla.',
             'precio' => 10,
             'direccion' => '08904',
-            'cliente_id' => 4,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
@@ -76,7 +76,7 @@ class TrabajoSeeder extends Seeder
             'descripcion' => 'Necesito ayuda para instalar cortinas en el salón y dormitorio.',
             'precio' => 18,
             'direccion' => '08903',
-            'cliente_id' => 4,
+            'cliente_id' => 5,
             'estado_id' => 1,
             'fecha_limite' => now()->addDays(rand(1, 30)),
         ]);
