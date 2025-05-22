@@ -35,7 +35,7 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('asdASD123'),
             'fecha_nacimiento' => '2000-01-01',
             'foto_perfil' => 'perfil_default.png',
-            'descripcion' => 'Apasionado por la tecnología y siempre dispuesto a echar una mano.',
+            'descripcion' => 'Adicto al fentanilo.',
             'dni' => '25482103N',
             'rol_id' => 2,
         ]);
