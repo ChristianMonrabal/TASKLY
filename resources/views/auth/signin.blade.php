@@ -38,10 +38,15 @@
 
                 <button type="submit" class="login-btn">Iniciar Sesión</button>
             </form>
+            <br>
+            <div class="social-login my-4 text-center">
+                <a href="{{ route('login.google') }}"
+                   class="btn btn-google btn-lg w-100 d-flex align-items-center justify-content-center no-link">
+                  <i class="fab fa-google me-2"></i>
+                  Iniciar sesión con Google
+                </a>
+              </div>
 
-            {{-- <a href="{{ route('login.google') }}" class="btn btn-danger">
-                Login with Google
-            </a> --}}
             <p class="signup-text">
                 ¿Aún no tienes cuenta?
                 <a href="{{ route('signup.auth') }}" class="signup-link">Regístrate</a>
