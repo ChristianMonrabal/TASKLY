@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('cliente')->constrained('users');
             $table->foreignId('trabajador')->constrained('users');
             $table->date('fecha');
+            $table->time('hora');
             $table->timestamps();
         });
     }

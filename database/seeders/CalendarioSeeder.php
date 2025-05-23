@@ -14,21 +14,23 @@ class CalendarioSeeder extends Seeder
     public function run(): void
     {
         Calendario::create([
-            'titulo' => 'Acudir a:',
+            'titulo' => 'El grifo pierde agua',
             'descripcion' => 'El grifo pierde agua',
             'trabajo' => 1,
             'cliente' => 5,
             'trabajador' => 6,
             'fecha' => now()->addDays(1),
+            'hora' => '09:30', 
         ]);
 
         Calendario::create([
-            'titulo' => 'Acudir a:',
+            'titulo' => 'Instalación de enchufes',
             'descripcion' => 'Instalación de enchufes',
             'trabajo' => 2,
             'cliente' => 5,
             'trabajador' => 6,
             'fecha' => now()->addDays(3),
+            'hora' => '15:00', 
         ]);
     }
 }
