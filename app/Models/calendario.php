@@ -15,6 +15,7 @@ class calendario extends Model
         'cliente',
         'trabajador',
         'fecha',
+        'hora',
     ];
 
     public function trabajo()
