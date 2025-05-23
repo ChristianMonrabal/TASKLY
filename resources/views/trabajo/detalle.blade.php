@@ -189,9 +189,11 @@
                                 </div>
                                 <div class="card-footer bg-light">
                                     <small class="text-muted">{{ $trabajo->direccion }} {{ $trabajo->codigo_postal ? ', ' . $trabajo->codigo_postal : '' }} {{ $trabajo->ciudad ? ', ' . $trabajo->ciudad : '' }}</small>
-                                    <button type="button" id="btn-como-llegar" class="btn btn-danger btn-sm mt-2 w-100">
-                                        <i class="fas fa-directions"></i> Cómo llegar
-                                    </button>
+                                    <a href="{{ route('trabajo.mapa', $trabajo->id) }}"
+                                        class="btn btn-danger btn-sm mt-2 w-100">
+                                       <i class="fas fa-directions"></i> Cómo llegar
+                                     </a>
+                                     
                                 </div>
                             
                         </div>

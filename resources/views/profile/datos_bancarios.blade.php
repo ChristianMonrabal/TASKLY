@@ -47,6 +47,32 @@
                        placeholder="acct_1XXXXXXXXX">
             </div>
         </div>
+        
+        <h3 class="mt-5 mb-3 text-center" data-aos="fade-up" data-aos-duration="1000">
+            Datos Fiscales <i class="fas fa-file-invoice ms-2" style="color: #EC6A6A;"></i>
+        </h3>
+        
+        <div class="form-row" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
+            <div class="form-group">
+                <label for="nif_fiscal">NIF/CIF para facturas:</label>
+                <input type="text" name="nif_fiscal" id="nif_fiscal" value="{{ old('nif_fiscal', $datosBancarios->nif_fiscal ?? '') }}">
+            </div>
+            <div class="form-group">
+                <label for="direccion_fiscal">Dirección Fiscal:</label>
+                <input type="text" name="direccion_fiscal" id="direccion_fiscal" value="{{ old('direccion_fiscal', $datosBancarios->direccion_fiscal ?? '') }}">
+            </div>
+        </div>
+        
+        <div class="form-row" data-aos="fade-up" data-aos-delay="800" data-aos-duration="800">
+            <div class="form-group">
+                <label for="codigo_postal_fiscal">Código Postal:</label>
+                <input type="text" name="codigo_postal_fiscal" id="codigo_postal_fiscal" value="{{ old('codigo_postal_fiscal', $datosBancarios->codigo_postal_fiscal ?? '') }}">
+            </div>
+            <div class="form-group">
+                <label for="ciudad_fiscal">Ciudad:</label>
+                <input type="text" name="ciudad_fiscal" id="ciudad_fiscal" value="{{ old('ciudad_fiscal', $datosBancarios->ciudad_fiscal ?? '') }}">
+            </div>
+        </div>
 
         <div class="d-flex justify-content-center mt-5 mb-3 text-center">
             <button type="submit" class="btn btn-lg btn-guardar-datos" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="800">

@@ -17,6 +17,13 @@ return new class extends Migration
             $table->string('titular', 100)->nullable();
             $table->string('iban', 34)->unique()->nullable();
             $table->string('nombre_banco', 100)->nullable();
+            
+            // Campos para información fiscal
+            $table->string('nif_fiscal', 20)->nullable();
+            $table->string('direccion_fiscal', 255)->nullable();
+            $table->string('codigo_postal_fiscal', 10)->nullable();
+            $table->string('ciudad_fiscal', 100)->nullable();
+            
             $table->timestamps();
         });
     }

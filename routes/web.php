@@ -134,6 +134,7 @@ Route::prefix('admin/dashboard')->name('admin.dashboard.')->middleware('auth')->
     Route::get('reportsBySeverity', [DashboardController::class, 'reportsBySeverity'])->name('reportsBySeverity');
 });
 
+Route::get('/trabajo/mapa/{id}', [JobController::class, 'mapa'])->name('trabajo.mapa');
 
     // Calendario
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');

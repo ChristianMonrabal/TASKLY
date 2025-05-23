@@ -282,4 +282,13 @@ public function eliminar($id)
         return redirect()->route('trabajos.publicados')->with('error', 'Error al eliminar el trabajo: '.$e);
     }
 }
+
+public function mapa($id)
+{
+    // Obtener el trabajo con su ubicación
+    $trabajo = Trabajo::findOrFail($id);
+    
+    // Pasar los datos de ubicación a la vista existente
+    return view('mapa.direccion', compact('trabajo'));
+}
 }

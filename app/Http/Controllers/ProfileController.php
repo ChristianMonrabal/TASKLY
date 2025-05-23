@@ -42,14 +42,21 @@ class ProfileController extends Controller
             // Iniciar transacción
             DB::beginTransaction();
             
-            // Guardar datos bancarios
+            // Guardar datos bancarios y fiscales
             DatosBancarios::updateOrCreate(
                 ['usuario_id' => $user->id],
                 [
+                    // Datos bancarios
                     'titular' => $data['titular'] ?? null,
                     'iban' => $data['iban'] ?? null,
                     'nombre_banco' => $data['nombre_banco'] ?? null,
-                    'stripe_account_id' => $data['stripe_account_id'] ?? null
+                    'stripe_account_id' => $data['stripe_account_id'] ?? null,
+                    
+                    // Datos fiscales
+                    'nif_fiscal' => $data['nif_fiscal'] ?? null,
+                    'direccion_fiscal' => $data['direccion_fiscal'] ?? null,
+                    'codigo_postal_fiscal' => $data['codigo_postal_fiscal'] ?? null,
+                    'ciudad_fiscal' => $data['ciudad_fiscal'] ?? null
                 ]
             );
             

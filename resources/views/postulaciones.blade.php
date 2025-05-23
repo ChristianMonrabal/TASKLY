@@ -99,6 +99,17 @@
                         <div class="card-actions">
                             <div class="action-buttons">
                                 <a href="{{ route('trabajos.detalle', $postulacion->trabajo->id) }}" class="action-btn">Ver detalles</a>
+                                
+                                @php
+                                    // Verificamos si hay un pago asociado a esta postulación (trabajo completado y pagado)
+                                    $pagado = \App\Models\Pago::where('postulacion_id', $postulacion->id)->exists();
+                                @endphp
+                                
+                                @if($estado == 10 && $pagado)
+                                    <a href="{{ route('payment.factura', $postulacion->trabajo->id) }}" class="action-btn" style="background-color: #EC6A6A; margin-top: 5px;">
+                                        <i class="fas fa-file-invoice"></i> Ver factura
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>

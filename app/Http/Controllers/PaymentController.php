@@ -245,13 +245,67 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'No se encontró un pago para este trabajo');
         }
         
-        // Datos para la factura
+        // Verificamos que el usuario autenticado sea el cliente o el trabajador
+        $usuarioActual = Auth::id();
+        $esCliente = ($trabajo->cliente_id == $usuarioActual);
+        $esTrabajador = ($pago->postulacion->trabajador_id == $usuarioActual);
+        
+        if (!$esCliente && !$esTrabajador) {
+            return redirect()->back()->with('error', 'No tienes permiso para ver esta factura');
+        }
+        
+        // Obtenemos los datos del cliente y trabajador
+        $cliente = $trabajo->cliente;
+        $trabajador = $pago->postulacion->trabajador;
+        
+        // Obtenemos datos fiscales del cliente y trabajador
+        $datosBancariosCliente = DatosBancarios::where('usuario_id', $cliente->id)->first();
+        $datosBancariosTrabajador = DatosBancarios::where('usuario_id', $trabajador->id)->first();
+        
+        // Direcciones y datos fiscales para el cliente
+        $direccionCliente = $datosBancariosCliente->direccion_fiscal ?? $cliente->direccion ?? $trabajo->direccion ?? 'No disponible';
+        $nifCliente = $datosBancariosCliente->nif_fiscal ?? $cliente->nif ?? $cliente->dni ?? 'No disponible';
+        $cpCliente = $datosBancariosCliente->codigo_postal_fiscal ?? $cliente->codigo_postal ?? '28001';
+        $ciudadCliente = $datosBancariosCliente->ciudad_fiscal ?? $cliente->ciudad ?? 'Madrid';
+        
+        // Direcciones y datos fiscales para el trabajador
+        $direccionTrabajador = $datosBancariosTrabajador->direccion_fiscal ?? $trabajador->direccion ?? 'No disponible';
+        $nifTrabajador = $datosBancariosTrabajador->nif_fiscal ?? $trabajador->nif ?? $trabajador->dni ?? 'No disponible';
+        $cpTrabajador = $datosBancariosTrabajador->codigo_postal_fiscal ?? $trabajador->codigo_postal ?? '08001';
+        $ciudadTrabajador = $datosBancariosTrabajador->ciudad_fiscal ?? $trabajador->ciudad ?? 'Barcelona';
+        
+        // Si trabajador no tiene dirección, asignamos una diferente a la del cliente
+        if (empty($direccionTrabajador) || $direccionTrabajador == $direccionCliente) {
+            $direccionTrabajador = 'Avenida de los trabajadores, 123';
+        }
+        
+        // Datos para la factura con información fiscal completa
         $datos = [
+            // Datos básicos de la factura
             'numero_factura' => 'TASKLY-' . str_pad($pago->id, 6, '0', STR_PAD_LEFT),
             'fecha' => is_string($pago->fecha_pago) ? $pago->fecha_pago : $pago->fecha_pago->format('d/m/Y'),
-            'cliente' => $trabajo->cliente->nombre,
-            'trabajador' => $pago->postulacion->trabajador->nombre,
+            'transaccion_id' => $pago->stripe_id ?? 'N/A',
+            
+            // Datos del cliente (pagador) con información fiscal
+            'cliente' => $cliente->nombre . ' ' . ($cliente->apellidos ?? ''),
+            'cliente_nif' => $nifCliente,
+            'cliente_direccion' => $direccionCliente,
+            'cliente_cp' => $cpCliente,
+            'cliente_ciudad' => $ciudadCliente,
+            'cliente_email' => $cliente->email ?? '',
+            
+            // Datos del trabajador con información fiscal
+            'trabajador' => $trabajador->nombre . ' ' . ($trabajador->apellidos ?? ''),
+            'trabajador_nif' => $nifTrabajador,
+            'trabajador_direccion' => $direccionTrabajador,
+            'trabajador_cp' => $cpTrabajador,
+            'trabajador_ciudad' => $ciudadTrabajador,
+            'trabajador_email' => $trabajador->email ?? '',
+            
+            // Datos del trabajo y pagos
             'concepto' => $trabajo->titulo,
+            'titulo_trabajo' => $trabajo->titulo,
+            'fecha_realizacion' => $pago->fecha_pago,
             'subtotal' => $pago->cantidad,
             'comision' => $pago->cantidad * 0.1, // 10% de comisión
             'total' => $pago->cantidad,
