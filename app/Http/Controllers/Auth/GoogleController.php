@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -16,29 +17,48 @@ class GoogleController extends Controller
 
     public function handleGoogleCallback()
     {
-        try {
-            $user = Socialite::driver('google')->user();
-            $finduser = User::where('google_id', $user->id)->first();
+        $gUser = Socialite::driver('google')->user();
 
-            if ($finduser) {
-                Auth::login($finduser);
-                return redirect()->intended('welcome');
-            } else {
-                $newUser = User::create([
-                    'nombre' => $user->user['given_name'],
-                    'apellidos' => $user->user['family_name'],
-                    'email' => $user->email,
-                    'google_id' => $user->id,
-                    'password' => encrypt('123456dummy'),
-                    'dni' => 'null',
-                    'rol_id' => 2,
-                ]);
+        // Intentamos cargar por google_id o email
+        $user = User::where('google_id', $gUser->getId())
+                    ->orWhere('email', $gUser->getEmail())
+                    ->first();
 
-                Auth::login($newUser);
-                return redirect()->intended('profile');
+        $isNew = false;
+        if ($user) {
+            if (! $user->google_id) {
+                $user->google_id = $gUser->getId();
+                $user->save();
             }
-        } catch (\Exception $e) {
-            dd($e->getMessage());
+        } else {
+            // Creamos uno nuevo
+            $user = User::create([
+                'nombre'       => $gUser->getName(),
+                'apellidos'    => '',
+                'email'        => $gUser->getEmail(),
+                'google_id'    => $gUser->getId(),
+                'password'     => bcrypt(Str::random(16)),
+                'rol_id'       => 2,
+                'activo'       => 'si',
+                'dni'          => '',   // evita el error de campo no nulo
+            ]);
+            $isNew = true;
         }
+
+        Auth::login($user, true);
+
+        // Si acaban de registrarse con Google, que vayan a completar su perfil
+        if ($isNew) {
+            return redirect()->route('profile');
+        }
+
+        // Si ya existía:
+        // - si es admin, al dashboard
+        if ($user->rol_id === 1) {
+            return redirect()->route('admin.dashboard.index');
+        }
+
+        // si no, al listado de trabajos
+        return redirect()->route('trabajos.index');
     }
 }
