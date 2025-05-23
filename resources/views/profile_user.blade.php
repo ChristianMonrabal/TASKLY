@@ -5,6 +5,8 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/perfil_resenas.css') }}">
     <link rel="stylesheet" href="{{ asset('css/logros.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/maps.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/trabajos-aceptados.css') }}">
 @endsection
 
 @section('content')
@@ -100,6 +102,22 @@
                 {{-- Línea de separación entre los logros y las valoraciones --}}
                 <hr class="my-4">
                 
+                {{-- Trabajos aceptados con mapas --}}
+                @php
+                    // Obtener las postulaciones aceptadas del usuario
+                    $postulacionesAceptadas = App\Models\Postulacion::where('trabajador_id', $usuario->id)
+                        ->where('estado_id', 10) // Estado "Aceptada"
+                        ->with(['trabajo' => function($query) {
+                            $query->whereNotNull('latitud')->whereNotNull('longitud');
+                        }])
+                        ->get()
+                        ->filter(function($postulacion) {
+                            return $postulacion->trabajo !== null;
+                        });
+                @endphp
+                
+               
+                
                 {{-- Valoraciones recibidas --}}
                 <div class="card-body" data-aos="fade-up" data-aos-duration="800">
                     {{-- Título "Valoraciones recibidas" centrado y en color rojo --}}
@@ -166,4 +184,33 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/taskly-maps.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar los mini mapas para los trabajos aceptados
+            @php
+                $postulacionesAceptadas = App\Models\Postulacion::where('trabajador_id', $usuario->id)
+                    ->where('estado_id', 10) // Estado "Aceptada"
+                    ->with(['trabajo' => function($query) {
+                        $query->whereNotNull('latitud')->whereNotNull('longitud');
+                    }])
+                    ->get()
+                    ->filter(function($postulacion) {
+                        return $postulacion->trabajo !== null;
+                    });
+            @endphp
+            
+            @foreach($postulacionesAceptadas as $postulacion)
+                // Crear mini mapa para cada trabajo aceptado
+                createMiniMap(
+                    'mini-mapa-{{ $postulacion->id }}', 
+                    {{ $postulacion->trabajo->latitud }}, 
+                    {{ $postulacion->trabajo->longitud }}
+                );
+            @endforeach
+        });
+    </script>
 @endsection

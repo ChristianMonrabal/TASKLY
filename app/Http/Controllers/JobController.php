@@ -38,7 +38,11 @@ public function store(Request $request)
         'titulo' => 'required|string|max:255',
         'descripcion' => 'required|string',
         'precio' => 'required|numeric|min:1|max:1000',
-        'direccion' => 'required|digits:5', // Código postal: solo 5 dígitos exactos
+        'direccion' => 'required|string|max:255',
+        'codigo_postal' => 'required|digits:5', // Código postal: 5 dígitos exactos
+        'ciudad' => 'required|string|max:100',
+        'latitud' => 'required|numeric',
+        'longitud' => 'required|numeric',
         'categorias' => 'required|array',
         'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'alta_responsabilidad' => 'required|in:Sí,No',
@@ -48,8 +52,12 @@ public function store(Request $request)
         'precio.required' => 'Este campo es obligatorio',
         'precio.min' => 'El precio mínimo permitido es 1€',
         'precio.max' => 'El precio máximo permitido es de 1000€',
-        'direccion.required' => 'Este campo es obligatorio',
-        'direccion.digits' => 'El código postal debe contener 5 dígitos',
+        'direccion.required' => 'La dirección es obligatoria',
+        'codigo_postal.required' => 'El código postal es obligatorio',
+        'codigo_postal.digits' => 'El código postal debe contener 5 dígitos',
+        'ciudad.required' => 'La ciudad es obligatoria',
+        'latitud.required' => 'Debes seleccionar una ubicación en el mapa',
+        'longitud.required' => 'Debes seleccionar una ubicación en el mapa',
         'categorias.required' => 'Este campo es obligatorio',
         'alta_responsabilidad.required' => 'Este campo es obligatorio',
     ]);
@@ -68,6 +76,10 @@ public function store(Request $request)
     $trabajo->descripcion = $request->descripcion;
     $trabajo->precio = $request->precio;
     $trabajo->direccion = $request->direccion;
+    $trabajo->codigo_postal = $request->codigo_postal;
+    $trabajo->ciudad = $request->ciudad;
+    $trabajo->latitud = $request->latitud;
+    $trabajo->longitud = $request->longitud;
     $trabajo->estado_id = Estado::first()->id;
     $trabajo->fecha_limite = now()->addDays(7);
     $trabajo->alta_responsabilidad = $request->input('alta_responsabilidad', 'No');
@@ -166,7 +178,11 @@ public function store(Request $request)
         'titulo' => 'required|string|max:255',
         'descripcion' => 'required|string',
         'precio' => 'required|numeric|min:1|max:1000',
-        'direccion' => 'required|string|max:255|digits:5',
+        'direccion' => 'required|string|max:255',
+        'codigo_postal' => 'required|digits:5',
+        'ciudad' => 'required|string|max:100',
+        'latitud' => 'required|numeric',
+        'longitud' => 'required|numeric',
         'alta_responsabilidad' => 'required|in:Sí,No',
         'categorias' => 'required|array',
         'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -177,8 +193,12 @@ public function store(Request $request)
         'precio.required' => 'Este campo es obligatorio',
         'precio.min' => 'El precio mínimo permitido es 1€',
         'precio.max' => 'El precio máximo permitido es de 1000€',
-        'direccion.required' => 'Este campo es obligatorio',
-        'direccion.digits' => 'El código postal debe contener 5 dígitos',
+        'direccion.required' => 'La dirección es obligatoria',
+        'codigo_postal.required' => 'El código postal es obligatorio',
+        'codigo_postal.digits' => 'El código postal debe contener 5 dígitos',
+        'ciudad.required' => 'La ciudad es obligatoria',
+        'latitud.required' => 'Debes seleccionar una ubicación en el mapa',
+        'longitud.required' => 'Debes seleccionar una ubicación en el mapa',
         'alta_responsabilidad.required' => 'Este campo es obligatorio',
         'categorias.required' => 'Este campo es obligatorio',
     ]);
@@ -190,6 +210,10 @@ public function store(Request $request)
         'descripcion' => $request->descripcion,
         'precio' => $request->precio,
         'direccion' => $request->direccion,
+        'codigo_postal' => $request->codigo_postal,
+        'ciudad' => $request->ciudad,
+        'latitud' => $request->latitud,
+        'longitud' => $request->longitud,
         'alta_responsabilidad' => $request->alta_responsabilidad,
     ]);
 

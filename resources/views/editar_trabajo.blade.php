@@ -4,6 +4,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/editar_trabajo.css') }}"/>
+<link rel="stylesheet" href="{{ asset('css/maps.css') }}"/>
 @endsection
 
 @section('script')
@@ -66,10 +67,42 @@
             <div class="error-message">{{ $errors->first('categorias') }}</div>
         </div>
 
-        <div class="mb-3">
-            <label for="direccion" class="form-label">Código Postal del trabajo</label>
-            <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $trabajo->direccion) }}">
-            <div class="error-message" id="error-direccion">{{ $errors->first('direccion') }}</div>
+        <div class="form-group mb-3">
+            <label><i class="fas fa-map-marker-alt"></i> Ubicación del trabajo</label>
+            <div class="map-instructions">
+                Usa el mapa para ubicar el trabajo. Puedes buscar una dirección, hacer clic en el mapa, arrastrar el marcador o usar tu ubicación actual.
+            </div>
+            
+            <!-- Contenedor del mapa -->
+            <div id="trabajo-mapa" class="map-container"></div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $trabajo->direccion) }}" placeholder="Calle y número">
+                        <div class="error-message" id="error-direccion">{{ $errors->first('direccion') }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group mb-3">
+                        <label for="codigo_postal" class="form-label">Código postal</label>
+                        <input type="text" name="codigo_postal" id="codigo_postal" class="form-control" value="{{ old('codigo_postal', $trabajo->codigo_postal) }}" placeholder="Código postal">
+                        <div class="error-message" id="error-codigo_postal">{{ $errors->first('codigo_postal') }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group mb-3">
+                        <label for="ciudad" class="form-label">Ciudad</label>
+                        <input type="text" name="ciudad" id="ciudad" class="form-control" value="{{ old('ciudad', $trabajo->ciudad) }}" placeholder="Ciudad">
+                        <div class="error-message" id="error-ciudad">{{ $errors->first('ciudad') }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Campos ocultos para latitud y longitud -->
+            <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud', $trabajo->latitud) }}">
+            <input type="hidden" name="longitud" id="longitud" value="{{ old('longitud', $trabajo->longitud) }}">
         </div>
 
         <div class="mb-3">
@@ -109,6 +142,36 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/taskly-maps.js') }}"></script>
 <script src="{{ asset('js/editar_trabajo.js') }}"></script>
 <script src="{{ asset('js/modal.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el mapa con las coordenadas existentes o centrado en Madrid si no hay
+        let lat = {{ $trabajo->latitud ?? 40.4167 }};
+        let lng = {{ $trabajo->longitud ?? -3.7033 }};
+        let hasCoordinates = {{ ($trabajo->latitud && $trabajo->longitud) ? 'true' : 'false' }};
+        
+        // Crear el mapa para editar trabajo
+        let trabajoMap = new TasklyMap('trabajo-mapa', {
+            zoom: 15,
+            center: [lat, lng],
+            marker: hasCoordinates ? { lat: lat, lng: lng } : null,
+            formFields: {
+                direccion: 'direccion',
+                codigo_postal: 'codigo_postal',
+                ciudad: 'ciudad',
+                latitud: 'latitud',
+                longitud: 'longitud'
+            }
+        });
+        
+        // Si no hay coordenadas guardadas, intentar obtener la ubicación actual
+        if (!hasCoordinates) {
+            setTimeout(() => {
+                trabajoMap.getCurrentLocation();
+            }, 1000);
+        }
+    });
+</script>
 @endsection

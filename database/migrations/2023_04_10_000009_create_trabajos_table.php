@@ -17,6 +17,10 @@ return new class extends Migration
             $table->text('descripcion')->nullable();
             $table->decimal('precio', 10);
             $table->string('direccion', 255)->nullable();
+            $table->string('codigo_postal', 10)->nullable();
+            $table->string('ciudad', 100)->nullable();
+            $table->decimal('latitud', 10, 7)->nullable();
+            $table->decimal('longitud', 10, 7)->nullable();
             $table->foreignId('cliente_id')->constrained('users');
             $table->foreignId('estado_id')->constrained('estados');
             $table->date('fecha_limite')->nullable();

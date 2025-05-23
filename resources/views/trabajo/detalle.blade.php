@@ -5,6 +5,7 @@
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('css/detalle.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/maps.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
 @endsection
 
@@ -51,14 +52,20 @@
                                     </span>
                                 </div>
 
+                                {{-- <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ $trabajo->direccion }} {{ $trabajo->codigo_postal ? ', ' . $trabajo->codigo_postal : '' }} {{ $trabajo->ciudad ? ', ' . $trabajo->ciudad : '' }}</span>
+                                </div> --}}
+                                
+                                @php
+                                    // Verificar si hay un trabajador aceptado para este trabajo
+                                    $postulacionAceptada = $trabajo->postulaciones->where('estado_id', 10)->first();
+                                    $mostrarMapa = $postulacionAceptada && $trabajo->latitud && $trabajo->longitud;
+                                @endphp
+
                                 <div class="meta-item precio-destacado">
                                     <i class="fas fa-euro-sign"></i>
                                     <span>{{ $trabajo->precio }}</span>
-                                </div>
-
-                                <div class="meta-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>{{ $trabajo->direccion}}</span>
                                 </div>
                             </div>
                         </div>
@@ -170,6 +177,25 @@
                                 </div>
                             @endif
                         </div>
+                        
+                        @if($mostrarMapa)
+                        <div class="mapa-container mt-4">
+                            
+                                {{-- <div class="card-header bg-light">
+                                    <h5 class="mb-0"><i class="fas fa-map-marker-alt text-danger"></i> Ubicación del trabajo</h5>
+                                </div> --}}
+                                <div class="card-body p-0">
+                                    <div id="trabajo-mini-mapa" class="mini-map-container" data-lat="{{ $trabajo->latitud }}" data-lng="{{ $trabajo->longitud }}"></div>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <small class="text-muted">{{ $trabajo->direccion }} {{ $trabajo->codigo_postal ? ', ' . $trabajo->codigo_postal : '' }} {{ $trabajo->ciudad ? ', ' . $trabajo->ciudad : '' }}</small>
+                                    <button type="button" id="btn-como-llegar" class="btn btn-danger btn-sm mt-2 w-100">
+                                        <i class="fas fa-directions"></i> Cómo llegar
+                                    </button>
+                                </div>
+                            
+                        </div>
+                        @endif
 
                         @if ($trabajo->postulantes_count)
                             <li class="meta-item">
@@ -194,5 +220,26 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('js/taskly-maps.js') }}"></script>
     <script src="{{ asset('js/detalle.js') }}"></script>
+    
+    @php
+        // Verificar si hay un trabajador aceptado para este trabajo
+        $postulacionAceptada = $trabajo->postulaciones->where('estado_id', 10)->first();
+        $mostrarMapa = $postulacionAceptada && $trabajo->latitud && $trabajo->longitud;
+    @endphp
+    
+    @if($mostrarMapa)
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener las coordenadas del trabajo
+            const mapContainer = document.getElementById('trabajo-mini-mapa');
+            const lat = parseFloat(mapContainer.dataset.lat);
+            const lng = parseFloat(mapContainer.dataset.lng);
+            
+            // Crear un mini mapa de solo lectura
+            createMiniMap('trabajo-mini-mapa', lat, lng);
+        });
+    </script>
+    @endif
 @endsection
