@@ -52,6 +52,14 @@ function renderUsuarios(items) {
   items.forEach(u => {
     const rol = u.rol?.nombre || '',
           activoLabel = u.activo === 'si' ? 'Activo' : 'Inactivo';
+    const canDelete = (() => {
+      // No borrar super-admin
+      if (u.id === 1) return false;
+      // Si el usuario es admin y quien borra no es super-admin
+      if (u.rol_id === 1 && window.currentUser.id !== 1) return false;
+      // Cualquier otro caso (no admin o super-admin borrando)
+      return true;
+    })();
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${u.nombre}</td>
@@ -67,9 +75,12 @@ function renderUsuarios(items) {
         <button class="btn btn-primary btn-sm" onclick="openEditModal(${u.id})">
           <i class="fa fa-edit"></i>
         </button>
-        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUsuario(${u.id})">
-          <i class="fa fa-trash"></i>
-        </button>
+        ${canDelete
+          ? `<button class="btn btn-danger btn-sm" onclick="confirmDeleteUsuario(${u.id})">
+               <i class="fa fa-trash"></i>
+             </button>`
+          : ''
+        }
       </td>`;
     tbody.appendChild(tr);
   });
@@ -109,7 +120,7 @@ function renderPagination(paginated) {
 function filterUsuarios(page = currentPage) {
   currentPage = page;
   const params = new URLSearchParams();
-  ['filterNombre','filterApellidos','filterCorreo','filterDni','filterCodigoPostal']
+  ['filterNombre','filterApellidos','filterCorreo','filterDni']
     .forEach(id => {
       const v = document.getElementById(id).value.trim();
       if (v) params.append(id.replace('filter','').toLowerCase(), v);
@@ -143,7 +154,6 @@ function openEditModal(usuarioId) {
       document.getElementById('editApellidos').value = u.apellidos;
       document.getElementById('editEmail').value     = u.email;
       document.getElementById('editTelefono').value  = u.telefono || '';
-      document.getElementById('editCodigoPostal').value = u.codigo_postal || '';
       document.getElementById('editFechaNacimiento').value = u.fecha_nacimiento || '';
       document.getElementById('editDni').value       = u.dni || '';
       document.getElementById('editDescripcion').value = u.descripcion || '';
@@ -205,12 +215,42 @@ function deleteUsuario(id) {
   })
   .catch(err => Swal.fire('Error', err.message||'No se pudo eliminar','error'));
 }
+// — Crear Usuario —
+function openCreateModal() {
+  document.getElementById('createUsuarioForm').reset();
+  document.getElementById('createErrors').classList.add('d-none');
+  new bootstrap.Modal(document.getElementById('createModal')).show();
+}
 
+function submitCreateUsuario() {
+  const fd = new FormData(document.getElementById('createUsuarioForm'));
+  fetch('/admin/usuarios', {
+    method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      'Accept': 'application/json'
+    },
+    body: fd
+  })
+  .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(e)))
+  .then(json => {
+    bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
+    filterUsuarios(1);
+    Swal.fire('¡Éxito!','Usuario creado correctamente.','success');
+  })
+  .catch(err => {
+    const c = document.getElementById('createErrors');
+    c.classList.remove('d-none');
+    c.querySelector('ul').innerHTML =
+      Object.values(err.errors||{msg:[err.message]}).flat()
+        .map(m=>`<li>${m}</li>`).join('');
+  });
+}
 // ————————————————————————————————
 // Inicialización y refresco automático
 // ————————————————————————————————
 document.addEventListener('DOMContentLoaded', () => {
-  ['filterNombre','filterApellidos','filterCorreo','filterDni','filterCodigoPostal']
+  ['filterNombre','filterApellidos','filterCorreo','filterDni']
     .forEach(id => document.getElementById(id)
       .addEventListener('input', () => filterUsuarios(1))
     );

@@ -5,6 +5,14 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/admin-usuarios.css') }}">
 @endsection
+@auth
+  <script>
+    window.currentUser = {
+      id: {{ Auth::id() }},
+      rol_id: {{ Auth::user()->rol_id }}
+    };
+  </script>
+@endauth
 
 @section('content')
 
@@ -18,9 +26,12 @@
             <input type="text" id="filterNombre" placeholder="Nombre" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
             <input type="text" id="filterApellidos" placeholder="Apellidos" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
             <input type="text" id="filterCorreo" placeholder="Correo" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
-            <input type="number" id="filterCodigoPostal" placeholder="Código Postal" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
             <input type="text" id="filterDni" placeholder="DNI" class="form-control d-inline-block" style="width: 18%;" oninput="filterUsuarios()">
         </div>
+          {{-- Botón Crear Usuario --}}
+        <button class="btn btn-success mb-3" onclick="openCreateModal()">
+            <i class="fa fa-plus"></i> Crear Usuario
+        </button>
         <table id="tablaUsuarios" class="table table-bordered table-usuarios">
             <thead>
                 <tr>
@@ -44,6 +55,94 @@
             <ul id="usuarios-pagination" class="pagination justify-content-center"></ul>
         </nav>
     </div>
+
+    {{-- Modal CREAR Usuario --}}
+{{-- Modal CREAR Usuario --}}
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <form id="createUsuarioForm" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Crear Usuario</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="createErrors" class="alert alert-danger d-none"><ul></ul></div>
+  
+            <div class="mb-3">
+              <label for="createNombre" class="form-label">Nombre</label>
+              <input type="text" name="nombre" id="createNombre" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createApellidos" class="form-label">Apellidos</label>
+              <input type="text" name="apellidos" id="createApellidos" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createEmail" class="form-label">Correo</label>
+              <input type="email" name="email" id="createEmail" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createTelefono" class="form-label">Teléfono</label>
+              <input type="text" name="telefono" id="createTelefono" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createCodigoPostal" class="form-label">Código Postal</label>
+              <input type="text" name="codigo_postal" id="createCodigoPostal" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+              <input type="date" name="fecha_nacimiento" id="createFechaNacimiento" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createDni" class="form-label">DNI</label>
+              <input type="text" name="dni" id="createDni" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createDescripcion" class="form-label">Descripción</label>
+              <textarea name="descripcion" id="createDescripcion" class="form-control" rows="3"></textarea>
+            </div>
+  
+            <div class="mb-3">
+              <label for="createFotoPerfil" class="form-label">Foto de Perfil</label>
+              <input type="file" name="foto_perfil" id="createFotoPerfil" class="form-control" accept="image/*">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createRol" class="form-label">Rol</label>
+              <select name="rol_id" id="createRol" class="form-control">
+                @foreach($roles as $rol)
+                  <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
+                @endforeach
+              </select>
+            </div>
+  
+            <div class="mb-3">
+              <label for="createPassword" class="form-label">Contraseña</label>
+              <input type="password" name="password" id="createPassword" class="form-control">
+            </div>
+  
+            <div class="mb-3">
+              <label for="createPasswordConfirmation" class="form-label">Confirmar Contraseña</label>
+              <input type="password" name="password_confirmation" id="createPasswordConfirmation" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="submitCreateUsuario()">Crear</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
 
     <!-- Modal: Editar Usuario -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
