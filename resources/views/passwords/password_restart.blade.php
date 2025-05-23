@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 <link href="{{ asset('css/password_restart.css') }}" rel="stylesheet">
 @section('style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -14,7 +15,7 @@
 
         <div style="margin-bottom: 15px;">
             <label for="email">Correo electrónico:</label>
-            <input type="email" name="email" id="email" value="{{ old('email') }}">
+            <input type="email" name="email" id="email" value="{{ request('email') }}" readonly>
         </div>
 
         <div style="margin-bottom: 15px; position: relative;">

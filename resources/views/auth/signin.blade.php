@@ -48,7 +48,7 @@
             </p>
             <p class="forgot-password-text">
                 ¿Olvidaste tu contraseña?
-                <a href="{{ route('password.restart') }}" class="signup-link">Restablecela aquí</a>
+                <a href="{{ route('forgot-password.auth') }}" class="signup-link">Restablecela aquí</a>
             </p>
         </div>
     </div>
