@@ -34,16 +34,17 @@ document.addEventListener('DOMContentLoaded', function () {
             case 'email':
                 return validateRequired(field) && validateEmail(field);
             case 'telefono':
-                if (field.value) return validatePhone(field);
-                return true;
+                return validateRequired(field) && validatePhone(field);
             case 'codigo_postal':
-                if (field.value) return validatePostalCode(field);
-                return true;
+                return validateRequired(field) && validatePostalCode(field);
             case 'fecha_nacimiento':
-                if (field.value) return validateBirthDate(field);
-                return true;
+                return validateRequired(field) && validateBirthDate(field);
             case 'descripcion':
-                return true;
+                return validateRequired(field);
+            case 'dni':
+                return validateRequired(field) && validateDniNie(field);
+            case 'password':
+                return field.value ? validatePassword(field) : true;
             default:
                 return true;
         }
@@ -106,6 +107,46 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
         return true;
+    }
+
+    function validatePassword(field) {
+        if (field.value.length < 8) {
+            showError(field, 'La contraseña debe tener al menos 8 caracteres');
+            return false;
+        }
+        return true;
+    }
+
+    function validateDniNie(field) {
+        let value = field.value.toUpperCase().trim();
+        let dniRegex = /^\d{8}[A-Z]$/;
+        let nieRegex = /^[XYZ]\d{7}[A-Z]$/;
+
+        const letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
+
+        if (dniRegex.test(value)) {
+            let number = parseInt(value.substring(0, 8));
+            let letter = value.charAt(8);
+            if (letras[number % 23] !== letter) {
+                showError(field, 'DNI inválido');
+                return false;
+            }
+            return true;
+        } else if (nieRegex.test(value)) {
+            let prefix = value.charAt(0);
+            let numberPart = value.substring(1, 8);
+            let letter = value.charAt(8);
+            let prefixNumber = { X: 0, Y: 1, Z: 2 }[prefix];
+            let fullNumber = parseInt(prefixNumber + numberPart);
+            if (letras[fullNumber % 23] !== letter) {
+                showError(field, 'NIE inválido');
+                return false;
+            }
+            return true;
+        } else {
+            showError(field, 'Formato de DNI/NIE inválido');
+            return false;
+        }
     }
 
     function showError(field, message) {

@@ -81,7 +81,7 @@ class ProfileController extends Controller
             
             DB::commit();
             return redirect()->route('profile.datos-bancarios')
-                             ->with('success', 'Datos bancarios actualizados correctamente');
+                            ->with('success', 'Datos bancarios actualizados correctamente');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al actualizar datos bancarios: ' . $e->getMessage());
@@ -91,82 +91,106 @@ class ProfileController extends Controller
         }
     }
 
-    public function update(Request $request)
-    {
-        $data = $request->all();
-        /** @var User $user */
-        $user = Auth::user();
+public function update(Request $request)
+{
+    $data = $request->all();
+    /** @var User $user */
+    $user = Auth::user();
 
-        // Validaciones básicas
-        if (empty($data['nombre']) || empty($data['apellidos']) || empty($data['email'])) {
-            return back()->withErrors(['general' => 'Todos los campos obligatorios deben estar completos'])->withInput();
+    // Validaciones
+    $errors = [];
+
+    if (empty($data['nombre'])) {
+        $errors['nombre'] = 'El nombre es obligatorio';
+    }
+
+    if (empty($data['apellidos'])) {
+        $errors['apellidos'] = 'Los apellidos son obligatorios';
+    }
+
+    if (empty($data['email'])) {
+        $errors['email'] = 'El email es obligatorio';
+    } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'El formato del email no es válido';
+    } elseif (User::where('email', $data['email'])->where('id', '!=', $user->id)->exists()) {
+        $errors['email'] = 'El email ya está en uso por otro usuario';
+    }
+
+    if (!empty($data['telefono'])) {
+        if (!preg_match('/^\d{9}$/', $data['telefono'])) {
+            $errors['telefono'] = 'El teléfono debe tener exactamente 9 dígitos';
+        } elseif (User::where('telefono', $data['telefono'])->where('id', '!=', $user->id)->exists()) {
+            $errors['telefono'] = 'El número de teléfono ya está en uso';
         }
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return back()->withErrors(['general' => 'El formato del email no es válido'])->withInput();
+    }
+
+    if (!empty($data['codigo_postal']) && !preg_match('/^\d{5}$/', $data['codigo_postal'])) {
+        $errors['codigo_postal'] = 'El código postal debe tener 5 dígitos';
+    }
+
+    if (!empty($data['fecha_nacimiento'])) {
+        $birthDate = new \DateTime($data['fecha_nacimiento']);
+        $age = (new \DateTime())->diff($birthDate)->y;
+        if ($age < 18) {
+            $errors['fecha_nacimiento'] = 'Debes tener al menos 18 años';
         }
-        if (User::where('email', $data['email'])->where('id', '!=', $user->id)->exists()) {
-            return back()->withErrors(['general' => 'El email ya está en uso por otro usuario'])->withInput();
-        }
-        if (!empty($data['telefono'])) {
-            if (!preg_match('/^\d{9}$/', $data['telefono'])) {
-                return back()->withErrors(['general' => 'El teléfono debe tener exactamente 9 dígitos'])->withInput();
-            }
-            if (User::where('telefono', $data['telefono'])->where('id', '!=', $user->id)->exists()) {
-                return back()->withErrors(['general' => 'El número de teléfono ya está en uso'])->withInput();
-            }
-        }
-        if (!empty($data['codigo_postal']) && !preg_match('/^\d{5}$/', $data['codigo_postal'])) {
-            return back()->withErrors(['general' => 'El código postal debe tener 5 dígitos'])->withInput();
-        }
-        if (!empty($data['fecha_nacimiento'])) {
-            $birthDate = new \DateTime($data['fecha_nacimiento']);
-            $age       = (new \DateTime())->diff($birthDate)->y;
-            if ($age < 18) {
-                return back()->withErrors(['general' => 'Debes tener al menos 18 años'])->withInput();
-            }
-        }
-        if (!empty($data['password'])) {
-            if (strlen($data['password']) < 8) {
-                return back()->withErrors(['general' => 'La nueva contraseña debe tener al menos 8 caracteres'])->withInput();
-            }
+    }
+
+    if (!empty($data['password'])) {
+        if (strlen($data['password']) < 8) {
+            $errors['password'] = 'La nueva contraseña debe tener al menos 8 caracteres';
+        } else {
             $user->password = Hash::make($data['password']);
         }
-        if (!empty($data['descripcion']) && strlen($data['descripcion']) > 500) {
-            return back()->withErrors(['general' => 'La descripción no puede exceder los 500 caracteres'])->withInput();
-        }
-
-        // Procesar foto subida desde cámara
-        if (!empty($data['foto_perfil_camera']) && preg_match('/^data:image\/(\w+);base64,/', $data['foto_perfil_camera'], $m)) {
-            $ext    = $m[1];
-            $blob   = substr($data['foto_perfil_camera'], strpos($data['foto_perfil_camera'], ',') + 1);
-            $bytes  = base64_decode($blob);
-            $fname  = 'profile_' . $user->id . '_' . time() . '.' . $ext;
-            $dir    = public_path('img/profile_images');
-            if (!file_exists($dir)) mkdir($dir, 0755, true);
-            file_put_contents("$dir/$fname", $bytes);
-            // borrar anterior (opcional)
-            if ($user->foto_perfil && $user->foto_perfil !== 'perfil_default.png') {
-                @unlink("$dir/{$user->foto_perfil}");
-            }
-            $data['foto_perfil'] = $fname;
-        }
-
-        // Actualizar campos del usuario
-        $user->nombre          = $data['nombre'];
-        $user->apellidos       = $data['apellidos'];
-        $user->email           = $data['email'];
-        $user->telefono        = $data['telefono'] ?? null;
-        $user->codigo_postal   = $data['codigo_postal'] ?? null;
-        $user->fecha_nacimiento= $data['fecha_nacimiento'] ?? null;
-        $user->dni               = $data['dni'] ?? null;
-        $user->descripcion     = $data['descripcion'] ?? null;
-        $user->foto_perfil     = $data['foto_perfil'] ?? $user->foto_perfil;
-        $user->habilidades()->sync($data['habilidades'] ?? []);
-
-        if ($user->save()) {
-            return redirect()->route('profile')->with('success', 'Perfil actualizado correctamente');
-        }
-
-        return back()->withErrors(['general' => 'Error al actualizar el perfil'])->withInput();
     }
+
+    if (!empty($data['descripcion']) && strlen($data['descripcion']) > 500) {
+        $errors['descripcion'] = 'La descripción no puede exceder los 500 caracteres';
+    }
+
+    if (!empty($errors)) {
+        return back()->withErrors($errors)->withInput();
+    }
+
+    // Procesar foto subida desde cámara
+    if (!empty($data['foto_perfil_camera']) && preg_match('/^data:image\/(\w+);base64,/', $data['foto_perfil_camera'], $m)) {
+        $ext = $m[1];
+        $blob = substr($data['foto_perfil_camera'], strpos($data['foto_perfil_camera'], ',') + 1);
+        $bytes = base64_decode($blob);
+        $fname = 'profile_' . $user->id . '_' . time() . '.' . $ext;
+        $dir = public_path('img/profile_images');
+        if (!file_exists($dir)) mkdir($dir, 0755, true);
+        file_put_contents("$dir/$fname", $bytes);
+
+        if ($user->foto_perfil && $user->foto_perfil !== 'perfil_default.png') {
+            @unlink("$dir/{$user->foto_perfil}");
+        }
+
+        $data['foto_perfil'] = $fname;
+    }
+
+    // Actualizar datos del usuario
+    $user->nombre = $data['nombre'];
+    $user->apellidos = $data['apellidos'];
+    $user->email = $data['email'];
+    $user->telefono = $data['telefono'] ?? null;
+    $user->codigo_postal = $data['codigo_postal'] ?? null;
+    $user->fecha_nacimiento = $data['fecha_nacimiento'] ?? null;
+    $user->descripcion = $data['descripcion'] ?? null;
+    $user->foto_perfil = $data['foto_perfil'] ?? $user->foto_perfil;
+
+    // Solo guardar el DNI si aún está vacío
+    if (empty($user->dni) && !empty($data['dni'])) {
+        $user->dni = $data['dni'];
+    }
+
+    $user->habilidades()->sync($data['habilidades'] ?? []);
+
+    if ($user->save()) {
+        return redirect()->route('profile')->with('success', 'Perfil actualizado correctamente');
+    }
+
+    return back()->withErrors(['general' => 'Error al actualizar el perfil'])->withInput();
+}
+
 }
