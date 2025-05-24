@@ -141,3 +141,36 @@ p {
     text-align: center;
     width: 100%;
 }
+
+.btn-google {
+    background-color: #ffffff;
+    color: #444444;
+    border: 1px solid #dddddd;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .btn-google .fab {
+    color: #db4437;
+    font-size: 1.2rem;
+  }
+  
+  .btn-google:hover,
+  .btn-google:focus {
+    background-color: #f7f7f7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    color: #444444;
+  }
+  
+  .social-login {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .no-link,
+  .no-link:hover,
+  .no-link:focus {
+    text-decoration: none !important;
+    cursor: pointer;
+  }

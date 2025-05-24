@@ -35,8 +35,8 @@ Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.a
 Route::post('/signup', [AuthController::class, 'register'])->name('signup.store');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/login', function () {return redirect('/signin');})->name('login');
-Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
-Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('auth/google',           [GoogleController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('auth/google/callback',  [GoogleController::class, 'handleGoogleCallback']);
 
 // Rutas para ver trabajos sin autenticación
 Route::get('/trabajos/todos', [TrabajoController::class, 'todos'])->name('trabajos.todos');
@@ -170,9 +170,6 @@ Route::get('/trabajo/mapa/{id}', [JobController::class, 'mapa'])->name('trabajo.
     // Logros:
     Route::get('api/logros',      [LogroController::class, 'apiIndex']);
     Route::get('api/logros/{logro}', [LogroController::class, 'show']);
-
-    Route::get('/auth/redirect', [GoogleController::class, 'redirectToGoogle'])->name('login.google');
-    Route::get('/google-callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])->name('admin.categorias.toggleVisible');
