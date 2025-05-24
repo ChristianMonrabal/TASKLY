@@ -94,5 +94,11 @@ class EstadoSeeder extends Seeder
             'nombre' => 'Cerrado',
             'tipo_estado' => 'reporte_estado',
         ]);
+
+
+        Estado::create([
+            'nombre' => 'finalizado',
+            'tipo_estado' => 'postulaciones',
+        ]);
     }
 }

@@ -170,7 +170,7 @@ class PaymentController extends Controller
                 return response()->json(['error' => 'No se encontró la postulación'], 404);
             }
 
-            $post->estado_id = 11; // pagado
+            $post->estado_id = 18; // finalizado
             $post->save();
             
             // Obtener datos del trabajo y del trabajador para la valoración
@@ -189,7 +189,7 @@ class PaymentController extends Controller
                 Pago::create([
                     'postulacion_id' => $post->id, // Aquí está la relación clave
                     'cantidad' => $intent->amount / 100, // Convertimos de centavos a euros
-                    'estado_id' => 11, // Pagado, ID coincide con el estado de la postulación
+                    'estado_id' => 18, // Finalizado, ID coincide con el estado de la postulación
                     'metodo_id' => 1, // Stripe
                     'fecha_pago' => now()
                 ]);

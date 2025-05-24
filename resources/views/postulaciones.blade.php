@@ -31,6 +31,7 @@
                         <option value="pendiente">Pendiente</option>
                         <option value="aceptada">Aceptada</option>
                         <option value="rechazada">Rechazada</option>
+                        <option value="finalizado">Finalizado</option>
                     </select>
                 </div>
 
@@ -73,13 +74,16 @@
                 @foreach ($postulaciones as $postulacion)
                 @php
                     $estado = $postulacion->estado_id;
-                    $estadoTexto = $estado == 9 ? 'pendiente' : ($estado == 10 ? 'aceptada' : ($estado == 11 ? 'rechazada' : 'otros'));
+                    $estadoTexto = $estado == 9 ? 'pendiente' : 
+                                  ($estado == 10 ? 'aceptada' : 
+                                  ($estado == 11 ? 'rechazada' : 
+                                  ($estado == 18 ? 'finalizado' : 'otros')));
                 @endphp
                 <div class="trabajo-item" 
                     data-estado="{{ $estadoTexto }}"
                     data-categorias="{{ $postulacion->trabajo->categoriastipotrabajo->pluck('id')->implode(',') }}"
                     data-aos="fade-up">
-                    <div class="card">
+                    <div class="card" style="cursor: pointer;" onclick="window.location='{{ route('trabajos.detalle', $postulacion->trabajo->id) }}';">
                         <div class="card-img-container">
                             <div class="image-wrapper">
                                 @if($postulacion->trabajo->imagenes->isNotEmpty())
@@ -105,10 +109,11 @@
                                     $pagado = \App\Models\Pago::where('postulacion_id', $postulacion->id)->exists();
                                 @endphp
                                 
-                                @if($estado == 10 && $pagado)
+                                @if(($estado == 10 || $estado == 18) && $pagado)
                                     <a href="{{ route('payment.factura', $postulacion->trabajo->id) }}" class="action-btn" style="background-color: #EC6A6A; margin-top: 5px;">
                                         <i class="fas fa-file-invoice"></i> Ver factura
                                     </a>
+                                  
                                 @endif
                             </div>
                         </div>
