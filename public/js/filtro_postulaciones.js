@@ -158,6 +158,22 @@ document.addEventListener('DOMContentLoaded', function() {
             itemsFiltrados[i].style.display = '';
         }
         
+        // Mostrar/ocultar mensaje de "No se han encontrado resultados"
+        const noResultados = document.getElementById('noResultados');
+        if (noResultados) {
+            // Comprobar si hay algún filtro activo
+            const hayFiltros = (
+                (filtrosActivos.estado && filtrosActivos.estado !== 'todos') ||
+                (filtrosActivos.busqueda && filtrosActivos.busqueda.length > 0) ||
+                (filtrosActivos.categorias && filtrosActivos.categorias.length > 0)
+            );
+            if (itemsFiltrados.length === 0 && hayFiltros) {
+                noResultados.style.display = 'block';
+            } else {
+                noResultados.style.display = 'none';
+            }
+        }
+        
         // Renderizar paginador
         renderizarPaginador({
             total: itemsFiltrados.length,

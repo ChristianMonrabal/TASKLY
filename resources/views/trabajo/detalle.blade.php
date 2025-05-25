@@ -133,7 +133,9 @@
 
                                         @if ($postulacion)
                                             @if ($postulacion->estado_id == 11) {{-- Estado "rechazado" --}}
-                                                <button class="btn btn-danger" disabled>No has sido seleccionado</button>
+                                                <button class="btn btn-danger" disabled>Has sido rechazado</button>
+                                            @elseif ($postulacion->estado_id == 10) {{-- Estado "aceptada" --}}
+                                                <button class="btn btn-danger" disabled>Has sido seleccionado!</button>
                                             @else
                                                 <form id="cancelar-postulacion-form" action="{{ route('trabajos.cancelarPostulacion', $trabajo->id) }}" method="POST" style="display: none;">
                                                     @csrf

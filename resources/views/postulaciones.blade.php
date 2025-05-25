@@ -132,6 +132,10 @@
             <!-- Aquí se renderizará el paginador dinámicamente -->
         </div>
         
+        <div id="noResultados" class="alert alert-warning" style="display:none;">
+            No se han encontrado resultados
+        </div>
+
     </div>
 @endsection
 
