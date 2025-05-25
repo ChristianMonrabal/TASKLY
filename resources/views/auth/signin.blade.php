@@ -51,11 +51,14 @@
                 ¿Aún no tienes cuenta?
                 <a href="{{ route('signup.auth') }}" class="signup-link">Regístrate</a>
             </p>
+            <p class="forgot-password-text">
+                ¿Olvidaste tu contraseña?
+                <a href="{{ route('forgot-password.auth') }}" class="signup-link">Restablecela aquí</a>
+            </p>
         </div>
     </div>
 
     <script src="{{ asset('js/toogle_password.js') }}"></script>
     <script src="{{ asset('js/login.js') }}"></script>
 </body>
-
 </html>

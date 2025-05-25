@@ -25,6 +25,8 @@ use App\Http\Controllers\ValoracionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PasswordRestartController;
+
 
 // Ruta principal (index) - Accesible sin autenticación
 Route::get('/', [TrabajoController::class, 'index'])->name('trabajos.index');
@@ -202,3 +204,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/notificaciones/new', [NotificacionController::class, 'getNewNotifications']);
 });
 
+Route::get('/restart-password', [PasswordRestartController::class, 'showForm'])->name('password.restart')->middleware('signed');
+Route::post('/restart-password', [PasswordRestartController::class, 'handleForm'])->name('password.restart.submit')->middleware('signed');
+
+
+Route::get('/forgot-password', [PasswordRestartController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordRestartController::class, 'sendResetLink'])->name('password.email');
+Route::get('/forgot-password', [PasswordRestartController::class, 'showForgotForm'])->name('forgot-password.auth');
