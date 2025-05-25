@@ -136,6 +136,15 @@ public function update(Request $request)
         }
     }
 
+    if (empty($user->dni) && !empty($data['dni'])) {
+        if (User::where('dni', $data['dni'])->exists()) {
+            $errors['dni'] = 'El DNI ya está en uso por otro usuario';
+        } else {
+            $user->dni = $data['dni'];
+        }
+    }
+
+
     if (!empty($data['password'])) {
         if (strlen($data['password']) < 8) {
             $errors['password'] = 'La nueva contraseña debe tener al menos 8 caracteres';
