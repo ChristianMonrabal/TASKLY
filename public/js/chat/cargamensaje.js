@@ -38,7 +38,7 @@ function cargamensaje(postulacionId) {
             data.user.forEach((dato) => {
                 contenidouser += '<div class="chat-user">';
                 contenidouser += '  <div class="chat-user-avatar">';
-                contenidouser += '   <img src="' + dato.foto_perfil + '" alt="foto de ' + dato.nombre + '">';
+                contenidouser += '   <img src="/img/profile_images/' + dato.foto_perfil + '" alt="foto de ' + dato.nombre + '">';
                 contenidouser += "  </div>";
                 contenidouser += '  <div class="chat-user-info">';
                 contenidouser += "     <h3>" + dato.nombre + " " + dato.apellidos + ' <span class="chat-indicator"></span></h3>';
@@ -108,7 +108,7 @@ function cargachat(postulacionId) {
                 if (mensaje.emisor.id == trabajador_id) {
                     contenido += '<div class="message">';
                     contenido += '  <div class="message-avatar">';
-                    contenido += '   <img src="" alt="foto de ' + mensaje.emisor.nombre + '">';
+                    contenido += '   <img src="/img/profile_images/' + mensaje.emisor.foto_perfil + '" alt="foto de ' + mensaje.emisor.nombre + '">';
                     contenido += "  </div>";
                     contenido += '  <div class="message-content">';
                     contenido += '      <div class="message-bubble">';
@@ -121,7 +121,7 @@ function cargachat(postulacionId) {
                 } else {
                     contenido += '<div class="message outgoing">';
                     contenido += '  <div class="message-avatar">';
-                    contenido += '   <img src="" alt="foto de ' + mensaje.emisor.nombre + '">';
+                    contenido += '   <img src="/img/profile_images/' + mensaje.emisor.foto_perfil + '" alt="foto de ' + mensaje.emisor.nombre + '">';
                     contenido += "  </div>";
                     contenido += '  <div class="message-content">';
                     contenido += '      <div class="message-bubble">';
