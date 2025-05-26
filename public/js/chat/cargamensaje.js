@@ -10,10 +10,30 @@ function cargamensaje(postulacionId) {
     if (chatactivo) {
         chatactivo.classList.add("active");
     }
+    
     // donde se imprimiran los chats y la informacion del usuario
     var seccionchat = document.getElementById("seccionchat");
-    seccionchat.style.display = "";
+    seccionchat.style.display = "flex";
     var frmenviomensaje = document.getElementById("frmenviomensaje");
+    
+    // Para móvil: oculta la lista de contactos y muestra el chat
+    if (window.innerWidth <= 768) {
+        // Ocultar la lista de contactos
+        const contactsColumn = document.getElementById('contactosColumn');
+        if (contactsColumn) {
+            contactsColumn.classList.add('hidden-mobile');
+            contactsColumn.style.display = 'none';
+        }
+        
+        // Mostrar el chat
+        seccionchat.classList.add('visible-mobile');
+        
+        // Mostrar el botón de retorno
+        const backButton = document.getElementById('backToContacts');
+        if (backButton) {
+            backButton.style.display = 'flex';
+        }
+    }
 
     // envio de formulario adjuntando la id de usuario y la del trabajo
     var form = document.getElementById("chat" + postulacionId);
@@ -35,28 +55,38 @@ function cargamensaje(postulacionId) {
             infotrabajo = document.getElementById("infotrabajo" + postulacionId).textContent;
             let contenidouser = "";
             infouser.innerHTML = "";
+            // El botón de retorno está en el HTML y se muestra/oculta según sea necesario
+            
             data.user.forEach((dato) => {
-                contenidouser += '<div class="chat-user">';
-                contenidouser += '  <div class="chat-user-avatar">';
-                contenidouser += '   <img src="/img/profile_images/' + dato.foto_perfil + '" alt="foto de ' + dato.nombre + '">';
-                contenidouser += "  </div>";
-                contenidouser += '  <div class="chat-user-info">';
-                contenidouser += "     <h3>" + dato.nombre + " " + dato.apellidos + ' <span class="chat-indicator"></span></h3>';
-                contenidouser += "     <p>" + dato.descripcion + "</p>";
-                contenidouser += '     <div class="chat-context">Proyecto: ' + infotrabajo + "</div>";
-                contenidouser += "  </div>";
-                contenidouser += "</div>";
-                contenidouser += '<div class="chat-actions">';
-                contenidouser += '<button class="chat-action-btn" title="Llamar">';
-                contenidouser += '    <i class="fas fa-phone"></i>';
-                contenidouser += "</button>";
-                contenidouser += '<button class="chat-action-btn" title="Videollamada">';
-                contenidouser += '    <i class="fas fa-video"></i>';
-                contenidouser += "</button>";
-                contenidouser += '<button class="chat-action-btn" title="Más opciones">';
-                contenidouser += '    <i class="fas fa-ellipsis-v"></i>';
-                contenidouser += "</button>";
-                contenidouser += "</div>";
+                // Estructura limpia del header del chat
+                contenidouser += '<div class="chat-header-content">';
+                
+                // Información del usuario
+                contenidouser += '  <div class="chat-user">';
+                contenidouser += '    <div class="chat-user-avatar">';
+                contenidouser += '      <img src="/img/profile_images/' + dato.foto_perfil + '" alt="foto de ' + dato.nombre + '">';
+                contenidouser += '    </div>';
+                contenidouser += '    <div class="chat-user-info">';
+                contenidouser += '      <h3>' + dato.nombre + ' ' + dato.apellidos + ' <span class="chat-indicator"></span></h3>';
+                contenidouser += '      <p class="user-description">' + dato.descripcion + '</p>';
+                contenidouser += '      <div class="chat-context"><span class="project-label">Proyecto:</span> <span class="project-name">' + infotrabajo + '</span></div>';
+                contenidouser += '    </div>';
+                contenidouser += '  </div>';
+                
+                // Botones de acción
+                contenidouser += '  <div class="chat-actions">';
+                contenidouser += '    <button class="chat-action-btn" title="Llamar">';
+                contenidouser += '      <i class="fas fa-phone"></i>';
+                contenidouser += '    </button>';
+                contenidouser += '    <button class="chat-action-btn" title="Videollamada">';
+                contenidouser += '      <i class="fas fa-video"></i>';
+                contenidouser += '    </button>';
+                contenidouser += '    <button class="chat-action-btn" title="Más opciones">';
+                contenidouser += '      <i class="fas fa-ellipsis-v"></i>';
+                contenidouser += '    </button>';
+                contenidouser += '  </div>';
+                
+                contenidouser += '</div>';
             });
             infouser.innerHTML = contenidouser;
             let frmenvio = "";
@@ -108,7 +138,6 @@ function cargachat(postulacionId) {
                 if (mensaje.emisor.id == trabajador_id) {
                     contenido += '<div class="message">';
                     contenido += '  <div class="message-avatar">';
-                    contenido += '   <img src="/img/profile_images/' + mensaje.emisor.foto_perfil + '" alt="foto de ' + mensaje.emisor.nombre + '">';
                     contenido += "  </div>";
                     contenido += '  <div class="message-content">';
                     contenido += '      <div class="message-bubble">';
@@ -121,7 +150,7 @@ function cargachat(postulacionId) {
                 } else {
                     contenido += '<div class="message outgoing">';
                     contenido += '  <div class="message-avatar">';
-                    contenido += '   <img src="/img/profile_images/' + mensaje.emisor.foto_perfil + '" alt="foto de ' + mensaje.emisor.nombre + '">';
+                    // contenido += '   <img src="/img/profile_images/' + mensaje.emisor.foto_perfil + '" alt="foto de ' + mensaje.emisor.nombre + '">';
                     contenido += "  </div>";
                     contenido += '  <div class="message-content">';
                     contenido += '      <div class="message-bubble">';
@@ -163,3 +192,47 @@ function mandarmensaje(postulacionId) {
             cargachat(postulacionId)
         });
 }
+
+// Inicializar la funcionalidad del botón de volver (mobile)
+document.addEventListener('DOMContentLoaded', function() {
+    const backButton = document.getElementById('backToContacts');
+    
+    if (backButton) {
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Botón de retorno presionado');
+            
+            // Ocultar la sección de chat y mostrar la lista de contactos en móvil
+            const chatSection = document.getElementById('seccionchat');
+            const contactsColumn = document.getElementById('contactosColumn');
+            
+            if (chatSection) {
+                chatSection.classList.remove('visible-mobile');
+                chatSection.style.display = 'none';
+            }
+            
+            if (contactsColumn) {
+                contactsColumn.classList.remove('hidden-mobile');
+                contactsColumn.style.display = 'flex';
+            }
+            
+            // Ocultar el botón de retorno
+            backButton.style.display = 'none';
+        });
+    }
+    
+    // Manejar cambio de tamaño de ventana
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            // Resetear clases para pantallas grandes
+            const chatSection = document.getElementById('seccionchat');
+            const contactsColumn = document.getElementById('contactosColumn');
+            const backButton = document.getElementById('backToContacts');
+            
+            if (chatSection) chatSection.classList.remove('visible-mobile');
+            if (contactsColumn) contactsColumn.classList.remove('hidden-mobile');
+            if (backButton) backButton.style.display = 'none';
+        }
+    });
+});
