@@ -205,7 +205,7 @@
                             <ul>
                                 <li><a href="/footer/sobre_nosotros">Sobre Nosotros</a></li>
                                 <li><a href="#">Cómo Funciona</a></li>
-                                <li><a href="#">Contacto</a></li>
+                                <li><a href="{{ route('contacto.formulario') }}">Contacto</a></li>
                             </ul>
                         </div>
 

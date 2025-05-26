@@ -26,6 +26,7 @@ use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PasswordRestartController;
+use App\Http\Controllers\ContactoController;
 
 
 // Ruta principal (index) - Accesible sin autenticación
@@ -49,6 +50,10 @@ Route::get('/trabajos/filtrar-simple', [TrabajoController::class, 'filtrarSimple
 Route::get('/trabajos/categoria/{categoria_id}', [TrabajoController::class, 'filtrarPorCategoria'])->name('trabajos.categoria');
 Route::get('/trabajos/buscar', [TrabajoController::class, 'buscar'])->name('trabajos.buscar');
 Route::get('/trabajos/{id}', [TrabajoController::class, 'mostrarDetalle'])->name('trabajos.detalle');
+
+// Rutas para el formulario de contacto - Accesibles sin estar logueado
+Route::get('/contacto', [ContactoController::class, 'mostrarFormulario'])->name('contacto.formulario');
+Route::post('/contacto', [ContactoController::class, 'enviarContacto'])->name('contacto.enviar');
 
 // Todas las demás rutas requieren autenticación
 Route::middleware('auth')->group(function () {
