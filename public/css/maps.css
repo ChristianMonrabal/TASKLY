@@ -161,3 +161,11 @@
         padding: 6px 12px;
     }
 }
+
+/* Evita que el mapa sobrepase la navbar */
+#mapa-container,
+.map-container,
+.leaflet-container {
+    position: relative;
+    z-index: 1;
+}

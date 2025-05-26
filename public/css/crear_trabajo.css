@@ -252,3 +252,8 @@ h1 {
     }
 }
 
+.map-container, #trabajo-mapa {
+    position: relative;   /* o absolute si ya lo tienes así */
+    z-index: 1;           /* Menor que el de la navbar */
+}
+
