@@ -195,7 +195,7 @@
                             <h3>Explorar</h3>
                             <ul>
                                 <li><a href="{{ route('trabajos.index') }}">Trabajos</a></li>
-                                <li><a href="#">Freelancers</a></li>
+                                <li><a href="{{ route('footer.freelancers') }}">Freelancers</a></li>
                                 <li><a href="#">Categorías</a></li>
                             </ul>
                         </div>
@@ -203,8 +203,8 @@
                         <div class="footer-column">
                             <h3>Acerca de</h3>
                             <ul>
-                                <li><a href="/footer/sobre_nosotros">Sobre Nosotros</a></li>
-                                <li><a href="#">Cómo Funciona</a></li>
+                                <li><a href="{{ route('footer.sobre_nosotros') }}">Sobre Nosotros</a></li>
+                                <li><a href="{{ route('footer.como_funciona') }}">Cómo Funciona</a></li>
                                 <li><a href="{{ route('contacto.formulario') }}">Contacto</a></li>
                             </ul>
                         </div>
@@ -212,9 +212,9 @@
                         <div class="footer-column">
                             <h3>Legal</h3>
                             <ul>
-                                <li><a href="#">Términos de Servicio</a></li>
-                                <li><a href="#">Política de Privacidad</a></li>
-                                <li><a href="#">Cookies</a></li>
+                                <li><a href="{{ route('footer.terminos') }}">Términos de Servicio</a></li>
+                                <li><a href="{{ route('footer.privacidad') }}">Política de Privacidad</a></li>
+                                <li><a href="{{ route('footer.cookies') }}">Cookies</a></li>
                             </ul>
                         </div>
                     </div>

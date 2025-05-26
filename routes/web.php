@@ -27,6 +27,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PasswordRestartController;
 use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\FooterController;
 
 
 // Ruta principal (index) - Accesible sin autenticación
@@ -54,6 +55,14 @@ Route::get('/trabajos/{id}', [TrabajoController::class, 'mostrarDetalle'])->name
 // Rutas para el formulario de contacto - Accesibles sin estar logueado
 Route::get('/contacto', [ContactoController::class, 'mostrarFormulario'])->name('contacto.formulario');
 Route::post('/contacto', [ContactoController::class, 'enviarContacto'])->name('contacto.enviar');
+
+// Rutas para páginas del footer
+Route::get('/footer/terminos-servicio', [FooterController::class, 'terminosServicio'])->name('footer.terminos');
+Route::get('/footer/politica-privacidad', [FooterController::class, 'politicaPrivacidad'])->name('footer.privacidad');
+Route::get('/footer/cookies', [FooterController::class, 'cookies'])->name('footer.cookies');
+Route::get('/footer/sobre_nosotros', [FooterController::class, 'sobreNosotros'])->name('footer.sobre_nosotros');
+Route::get('/footer/como-funciona', [FooterController::class, 'comoFunciona'])->name('footer.como_funciona');
+Route::get('/footer/freelancers', [FooterController::class, 'freelancers'])->name('footer.freelancers');
 
 // Todas las demás rutas requieren autenticación
 Route::middleware('auth')->group(function () {
@@ -182,7 +191,7 @@ Route::get('/trabajo/mapa/{id}', [JobController::class, 'mapa'])->name('trabajo.
 
 Route::patch('admin/categorias/{categoria}/toggle-visible', [CategoriaController::class, 'toggleVisible'])->name('admin.categorias.toggleVisible');
 
-Route::get('/footer/sobre_nosotros', function () {return view('/footer/sobre_nosotros');});
+// Ruta movida a las rutas del footer con nombre 'footer.sobre_nosotros'
 
 // Route::get('/perfil/{id}', [PerfilUsuarioController::class, 'perfil'])->name('perfil.usuario');
 Route::get('/perfil/{nombre}', [PerfilUsuarioController::class, 'perfilPorNombre'])->name('perfil.usuario');
