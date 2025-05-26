@@ -14,6 +14,37 @@ use App\Events\NewNotificacion;
 class ChatController extends Controller
 {
     /**
+     * Cuenta los mensajes no leídos para cada conversación
+     */
+    public function contarMensajesNoLeidos(Request $request)
+    {
+        $usuario_id = Auth::id();
+        
+        // Obtener todas las conversaciones del usuario
+        $conversaciones = Chat::select('trabajo_id', 'emisor')
+            ->where('receptor', $usuario_id)
+            ->where('leido', 0)
+            ->groupBy('trabajo_id', 'emisor')
+            ->get();
+        
+        // Contar mensajes no leídos por cada conversación
+        $contadores = [];
+        
+        foreach ($conversaciones as $conv) {
+            $count = Chat::where('trabajo_id', $conv->trabajo_id)
+                ->where('emisor', $conv->emisor)
+                ->where('receptor', $usuario_id)
+                ->where('leido', 0)
+                ->count();
+            
+            // Usar un identificador único para cada conversación
+            $key = $conv->trabajo_id . '_' . $conv->emisor;
+            $contadores[$key] = $count;
+        }
+        
+        return response()->json($contadores);
+    }
+    /**
      * Muestra la vista de chats. Si llega ?trabajador=ID, calcula selectedChatId
      */
     public function Vistachat(Request $request, $id = null)
@@ -74,6 +105,7 @@ class ChatController extends Controller
 
     /**
      * Devuelve JSON con mensajes y user (colección).
+     * Marca los mensajes como leídos cuando el usuario los ve.
      */
     public function cargamensajes(Request $request)
     {
@@ -81,6 +113,7 @@ class ChatController extends Controller
         $trabajador_id = $request->input('trabajador_id');
         $usuario_id    = Auth::id();
 
+        // Obtener los chats
         $chats = Chat::with('emisor:id,nombre,apellidos,foto_perfil')
             ->with('receptor:id,nombre,apellidos,foto_perfil')
             ->with('trabajo:id,titulo,descripcion')
@@ -90,6 +123,13 @@ class ChatController extends Controller
             ->where(fn($q) => $q->where('emisor', $usuario_id)
                                  ->orWhere('receptor', $usuario_id))
             ->get();
+
+        // Marcar como leídos los mensajes donde el usuario autenticado es el receptor
+        Chat::where('trabajo_id', $trabajo_id)
+            ->where('emisor', $trabajador_id)
+            ->where('receptor', $usuario_id)
+            ->where('leido', 0)
+            ->update(['leido' => 1]);
 
         $user = User::where('id', $trabajador_id)->get();
 

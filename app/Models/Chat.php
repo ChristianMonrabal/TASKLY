@@ -11,6 +11,7 @@ class Chat extends Model
         'emisor',
         'receptor',
         'contenido',
+        'leido',
     ];
 
     public function trabajo()

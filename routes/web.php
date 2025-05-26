@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/chat/{id?}', [ChatController::class, 'Vistachat'])->name('vista.chat');
         Route::post('/cargamensajes', 'cargamensajes');
         Route::post('/enviomensaje', 'enviomensaje');
+        Route::get('/mensajes-no-leidos', 'contarMensajesNoLeidos');
     });
 
     // Logout
