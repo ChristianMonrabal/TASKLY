@@ -219,8 +219,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/notificaciones/new', [NotificacionController::class, 'getNewNotifications']);
 });
 
-Route::get('/restart-password', [PasswordRestartController::class, 'showForm'])->name('password.restart')->middleware('signed');
-Route::post('/restart-password', [PasswordRestartController::class, 'handleForm'])->name('password.restart.submit')->middleware('signed');
+Route::get('/restart-password', [PasswordRestartController::class, 'showForm'])->name('password.restart');
+Route::post('/restart-password', [PasswordRestartController::class, 'handleForm'])->name('password.restart.submit');
 
 
 Route::get('/forgot-password', [PasswordRestartController::class, 'showForgotForm'])->name('password.request');

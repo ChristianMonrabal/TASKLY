@@ -43,7 +43,7 @@ class PasswordRestartController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return redirect()->route('login')->with('status', 'Contraseña actualizada correctamente.');
+        return back()->with('status', 'Contraseña actualizada correctamente.');
     }
 
     public function showForgotForm()
