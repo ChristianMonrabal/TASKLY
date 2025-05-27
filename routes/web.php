@@ -226,3 +226,8 @@ Route::post('/restart-password', [PasswordRestartController::class, 'handleForm'
 Route::get('/forgot-password', [PasswordRestartController::class, 'showForgotForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordRestartController::class, 'sendResetLink'])->name('password.email');
 Route::get('/forgot-password', [PasswordRestartController::class, 'showForgotForm'])->name('forgot-password.auth');
+
+// Rutas páginas estáticas del footer
+Route::get('/equipo', function() {
+    return view('footer.equipo');
+})->name('footer.equipo');

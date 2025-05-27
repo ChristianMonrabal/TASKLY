@@ -1,0 +1,55 @@
+/* Estilos exclusivamente para las burbujas animadas */
+
+/* Burbujas animadas de fondo */
+.bubbles {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.bubble {
+    position: absolute;
+    bottom: -100px;
+    border-radius: 50%;
+    animation: rise linear forwards;
+    /* border: 1px solid rgba(236, 106, 106, 0.15);
+    box-shadow: 0 0 10px rgba(236, 106, 106, 0.1); */
+    border: 2px solid rgba(236, 106, 106, 0.3);
+    box-shadow: 0 0 15px rgba(236, 106, 106, 0.3);
+}
+
+.bubble--white {
+    background: rgba(236, 106, 106, 0.03);
+    /* background: rgba(236, 106, 106, 0.1); */
+}
+
+.bubble--light {
+    background: rgba(236, 106, 106, 0.05);
+    /* background: rgba(236, 106, 106, 0.2); */
+}
+
+.bubble--accent {
+    background: rgba(236, 106, 106, 0.08);
+    /* background: rgba(236, 106, 106, 0.3); */
+}
+
+@keyframes rise {
+    0% {
+        bottom: -100px;
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(100px);
+    }
+    100% {
+        bottom: 120vh;
+        transform: translateX(-100px);
+    }
+}
+
+

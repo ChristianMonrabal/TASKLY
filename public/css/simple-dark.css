@@ -46,6 +46,18 @@
 }
 
 /**
+ * TRANSICIÓN MODO OSCURO/CLARO
+ *
+ * Añadimos transición para todos los elementos que cambian con el modo oscuro
+ */
+body,
+body *,
+body.dark-mode,
+body.dark-mode * {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease !important;
+}
+
+/**
  * ACTIVACIÓN DEL MODO OSCURO
  *
  * Cuando el body tiene la clase 'dark-mode', redefinimos todas las variables
@@ -227,6 +239,60 @@ body.dark-mode textarea::placeholder {
 body.dark-mode .swal2-popup {
     background-color: var(--dark-card) !important;
     color: var(--dark-text) !important;
+}
+
+/* Sistema de Notificaciones */
+body.dark-mode .notification-btn {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .notification-dropdown {
+    background-color: var(--dark-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-mode .notification-header,
+body.dark-mode .notification-footer {
+    border-color: var(--dark-border) !important;
+    background-color: var(--dark-background) !important;
+}
+
+body.dark-mode .notification-header h3 {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .notification-list {
+    background-color: var(--dark-card) !important;
+}
+
+body.dark-mode .notification-item {
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode .notification-content p {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .notification-time {
+    color: var(--dark-muted) !important;
+}
+
+body.dark-mode .notification-item:hover {
+    background-color: rgba(236, 106, 106, 0.1) !important;
+}
+
+body.dark-mode .notification-item.unread {
+    background-color: rgba(236, 106, 106, 0.08) !important;
+}
+
+body.dark-mode .notification-icon {
+    background-color: rgba(236, 106, 106, 0.15) !important;
+}
+
+body.dark-mode .mark-all-read,
+body.dark-mode .view-all {
+    color: var(--primary) !important;
 }
 
 body.dark-mode .swal2-title,
@@ -857,6 +923,310 @@ body.dark-mode .social-link:hover {
     background-color: var(--primary-hover) !important;
     transform: translateY(-3px) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Estilos para la sección de logros en modo oscuro */
+body.dark-mode .logros-seccion {
+    background-color: var(--dark-card) !important;
+    color: var(--dark-text) !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .logros-seccion h2 {
+    color: var(--primary) !important;
+}
+
+body.dark-mode .logros-seccion h2 i {
+    color: var(--primary) !important;
+}
+
+body.dark-mode .sin-logros {
+    background-color: var(--dark-bg) !important;
+    border: 1px solid var(--dark-border) !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    text-align: center !important;
+    margin-top: 15px !important;
+}
+
+body.dark-mode .sin-logros i {
+    color: var(--primary) !important;
+    opacity: 0.8 !important;
+}
+
+body.dark-mode .sin-logros p {
+    color: #e0e0e0 !important;
+    margin-bottom: 10px !important;
+    font-weight: 500 !important;
+}
+
+body.dark-mode .sin-logros p.small {
+    color: rgba(236, 106, 106, 0.7) !important;
+    font-size: 0.85rem !important;
+    font-style: italic !important;
+}
+
+/* Estilos para datos bancarios en modo oscuro */
+body.dark-mode .datos-bancarios-container {
+    border-color: var(--primary) !important;
+    background-color: var(--dark-card) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .datos-bancarios-container.configured {
+    border: 2px solid var(--primary) !important;
+    background-color: rgba(236, 106, 106, 0.1) !important;
+}
+
+body.dark-mode .datos-bancarios-container.not-configured {
+    border: 2px dashed var(--primary) !important;
+    background-color: var(--dark-bg) !important;
+}
+
+body.dark-mode .datos-bancarios-title {
+    color: var(--primary) !important;
+}
+
+body.dark-mode .datos-bancarios-text {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .btn-configurar.configured {
+    background-color: #4a5568 !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-configurar.configured:hover {
+    background-color: #5a657a !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .btn-configurar.not-configured {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-configurar.not-configured:hover {
+    background-color: var(--primary-hover) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Estilos para inputs y labels de perfil en modo oscuro */
+body.dark-mode form label {
+    color: #e0e0e0 !important;
+    font-weight: 600 !important;
+}
+
+body.dark-mode form input,
+body.dark-mode form textarea,
+body.dark-mode form select {
+    background-color: var(--dark-card) !important;
+    color: var(--dark-text) !important;
+    border: 2px solid var(--dark-border) !important;
+    transition: all 0.3s ease !important;
+}
+
+body.dark-mode form input:focus,
+body.dark-mode form textarea:focus,
+body.dark-mode form select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(236, 106, 106, 0.2) !important;
+    outline: none !important;
+}
+
+body.dark-mode form input:disabled,
+body.dark-mode form textarea:disabled,
+body.dark-mode form select:disabled {
+    background-color: var(--dark-bg) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+body.dark-mode form textarea {
+    resize: vertical !important;
+}
+
+body.dark-mode form .custom-multiselect {
+    background-color: var(--dark-card) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-mode form .custom-multiselect option {
+    background-color: var(--dark-card) !important;
+    color: var(--dark-text) !important;
+    padding: 8px !important;
+}
+
+body.dark-mode form .custom-multiselect option:checked {
+    background-color: rgba(236, 106, 106, 0.2) !important;
+}
+
+body.dark-mode form .btn.color {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600 !important;
+    padding: 10px 25px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+body.dark-mode form .btn.color:hover {
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Estilos para el chat en modo oscuro */
+body.dark-mode .whatsapp-container {
+    background-color: #1a1a1a !important; /* Fondo oscuro elegante */
+    background-image: linear-gradient(to bottom, #1a1a1a, #232323) !important;
+}
+
+body.dark-mode .contactos-column {
+    background-color: #252525 !important; /* Tono gris oscuro para la columna de contactos */
+    border-right: 2px solid var(--primary) !important;
+}
+
+body.dark-mode .contactos-header {
+    background-color: rgba(236, 106, 106, 0.1) !important;
+    border-bottom: 1px solid rgba(236, 106, 106, 0.3) !important;
+}
+
+body.dark-mode .current-user-name {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+body.dark-mode .header-action-btn {
+    color: var(--dark-muted) !important;
+}
+
+body.dark-mode .header-action-btn:hover {
+    background-color: rgba(236, 106, 106, 0.1) !important;
+    color: var(--primary) !important;
+}
+
+body.dark-mode .search-container {
+    background-color: var(--dark-bg) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .search-input {
+    background-color: transparent !important;
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .search-input::placeholder {
+    color: var(--dark-muted) !important;
+}
+
+body.dark-mode .contacto {
+    background-color: var(--dark-card) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .contacto:hover,
+body.dark-mode .contacto.active {
+    background-color: rgba(236, 106, 106, 0.1) !important;
+}
+
+body.dark-mode .contacto-name {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+body.dark-mode .last-message,
+body.dark-mode .message-time {
+    color: #cccccc !important; /* Gris claro más legible */
+}
+
+body.dark-mode .chat-column {
+    background-color: #1e1e1e !important; /* Tono oscuro para el área de chat */
+    background-image: linear-gradient(to bottom right, #1e1e1e, #262626) !important; /* Gradiente sutil */
+}
+
+body.dark-mode .chat-bg {
+    opacity: 0.04 !important;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNFQzZBNkEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMiAyMnM4LTEwIDgtMTZhOCA4IDAgMSAwLTE2IDBjMCA2IDggMTYgOCAxNnoiPjwvcGF0aD48Y2lyY2xlIGN4PSIxMiIgY3k9IjExIiByPSIzIj48L2NpcmNsZT48L3N2Zz4=') !important;
+}
+
+body.dark-mode .chat-header {
+    background-color: rgba(236, 106, 106, 0.1) !important;
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+body.dark-mode .chat-user-info h3 {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .user-description,
+body.dark-mode .chat-context {
+    color: var(--dark-muted) !important;
+}
+
+/* Arreglo para los mensajes de la otra persona */
+body.dark-mode .message .message-bubble {
+    background-color: #2c2c2c !important; /* Tono gris oscuro para mensajes entrantes */
+    border-color: rgba(236, 106, 106, 0.3) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.dark-mode .message .message-bubble:before {
+    background-color: #2c2c2c !important; /* Mismo color que la burbuja */
+}
+
+body.dark-mode .message .message-bubble:after {
+    background-color: #232323 !important; /* Tono oscuro para el borde */
+}
+
+body.dark-mode .message-text {
+    color: #ffffff !important; /* Texto blanco para máxima legibilidad */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .message.outgoing .message-bubble {
+    background-color: var(--primary) !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .message.outgoing .message-bubble:before {
+    background-color: var(--primary) !important;
+}
+
+body.dark-mode .message.outgoing .message-text {
+    color: white !important;
+}
+
+body.dark-mode .message-time-outgoing,
+body.dark-mode .message-time-incoming {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+body.dark-mode .message-input-container {
+    background-color: #252525 !important; /* Tono gris oscuro que combina con la columna de contactos */
+    border-top: 1px solid rgba(236, 106, 106, 0.2) !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.dark-mode .message-input {
+    background-color: #2a2a2a !important; /* Tono más claro para el input */
+    color: #ffffff !important; /* Texto blanco para máxima legibilidad */
+    border: 1px solid rgba(236, 106, 106, 0.5) !important; /* Borde más visible */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .send-button {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .empty-chat {
+    background-color: var(--dark-bg) !important;
+    color: var(--dark-muted) !important;
 }
 
 body.dark-mode .social-link i {

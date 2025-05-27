@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/simple-dark.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/taskly-theme.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -43,6 +45,9 @@
 </head>
 
 <body>
+    <!-- Contenedor para las burbujas animadas -->
+    <div class="bubbles"></div>
+    
     <div class="app-container">
         <!-- Cabecera principal -->
         <header class="main-header">
@@ -205,6 +210,7 @@
                             <ul>
                                 <li><a href="{{ route('footer.sobre_nosotros') }}">Sobre Nosotros</a></li>
                                 <li><a href="{{ route('footer.como_funciona') }}">Cómo Funciona</a></li>
+                                <li><a href="{{ route('footer.equipo') }}">Nuestro Equipo</a></li>
                                 <li><a href="{{ route('contacto.formulario') }}">Contacto</a></li>
                             </ul>
                         </div>
@@ -237,6 +243,7 @@
 
     <script src="{{ asset('js/layout.js') }}"></script>
     <script src="{{ asset('js/dark-mode.js') }}"></script>
+    <script src="{{ asset('js/bubbles-animation.js') }}"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     

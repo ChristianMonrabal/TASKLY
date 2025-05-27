@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('fecha_nacimiento')->nullable();
             $table->string('foto_perfil', 255)->nullable();
             $table->text('descripcion')->nullable();
-            $table->string('dni', 9)->unique();
+            $table->string('dni', 9)->nullable();
             $table->foreignId('rol_id')->constrained('roles');
             $table->rememberToken();
             $table->timestamps();
