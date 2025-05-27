@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/simple-dark.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/taskly-theme.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- FontAwesome para iconos -->
@@ -250,6 +251,9 @@
     <!-- AOS - Animate On Scroll Library -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
+    
+    <!-- Chatbot Asistente TASKLY -->
+    <script src="{{ asset('js/chatbot.js') }}"></script>
     
     @yield('scripts')
     @vite(['resources/js/app.js'])
