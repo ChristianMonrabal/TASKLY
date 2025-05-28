@@ -55,51 +55,64 @@
             <div class="container">
                 <div class="header-content">
                     <div class="logo">
-                        <a href="{{ route('trabajos.index') }}">
-                            <img src="{{ asset('img/icon.png') }}" alt="TASKLY Logo" class="logo-img">
-                        </a>
+                        @auth
+                            <!-- Logo enlaza a inicio si está autenticado -->
+                            <a href="{{ route('trabajos.index') }}">
+                                <img src="{{ asset('img/icon.png') }}" alt="TASKLY Logo" class="logo-img">
+                            </a>
+                        @else
+                            <!-- Logo enlaza a inicio de sesión si no está autenticado -->
+                            <a href="{{ route('signin.auth') }}">
+                                <img src="{{ asset('img/icon.png') }}" alt="TASKLY Logo" class="logo-img">
+                            </a>
+                        @endauth
                     </div>
         
                     <nav class="main-nav">
                         <ul>
-                            <li>
-                                <a href="{{ route('trabajos.index') }}"
-                                    class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}">
-                                    <i class="fas fa-briefcase"></i> Inicio
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('trabajos_publicados') }}"
-                                    class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}">
-                                    <i class="fas fa-project-diagram"></i> Mis trabajos
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/postulaciones') }}"
-                                    class="nav-link {{ request()->is('postulaciones') ? 'active' : '' }}">
-                                    <i class="fas fa-file-alt"></i> Mis postulaciones
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('vista.chat') }}"
-                                    class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}">
-                                    <i class="fas fa-envelope"></i> Mensajes
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('calendario.index') }}"
-                                    class="nav-link {{ request()->is('calendario*') ? 'active' : '' }}">
-                                    <i class="fas fa-calendar-alt"></i> Calendario
-                                </a>
-                            </li>
-                            @if(Auth::check() && Auth::user()->rol_id == 1)
+                            @auth
+                                <!-- Menú de navegación solo visible para usuarios autenticados -->
                                 <li>
-                                    <a href="{{ url('/admin/usuarios') }}"
-                                        class="nav-link {{ request()->is('admin/usuarios*') ? 'active' : '' }}">
-                                        <i class="fas fa-user-shield"></i> Administración
+                                    <a href="{{ route('trabajos.index') }}"
+                                        class="nav-link {{ request()->routeIs('trabajos.index') ? 'active' : '' }}">
+                                        <i class="fas fa-briefcase"></i> Inicio
                                     </a>
                                 </li>
-                            @endif  
+                                <li>
+                                    <a href="{{ url('trabajos_publicados') }}"
+                                        class="nav-link {{ request()->is('trabajos_publicados') ? 'active' : '' }}">
+                                        <i class="fas fa-project-diagram"></i> Mis trabajos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/postulaciones') }}"
+                                        class="nav-link {{ request()->is('postulaciones') ? 'active' : '' }}">
+                                        <i class="fas fa-file-alt"></i> Mis postulaciones
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('vista.chat') }}"
+                                        class="nav-link {{ request()->is('mensajes*') ? 'active' : '' }}">
+                                        <i class="fas fa-envelope"></i> Mensajes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('calendario.index') }}"
+                                        class="nav-link {{ request()->is('calendario*') ? 'active' : '' }}">
+                                        <i class="fas fa-calendar-alt"></i> Calendario
+                                    </a>
+                                </li>
+                                @if(Auth::user()->rol_id == 1)
+                                    <li>
+                                        <a href="{{ url('/admin/usuarios') }}"
+                                            class="nav-link {{ request()->is('admin/usuarios*') ? 'active' : '' }}">
+                                            <i class="fas fa-user-shield"></i> Administración
+                                        </a>
+                                    </li>
+                                @endif
+                            @else
+                                <!-- No mostrar ningún menú para usuarios no autenticados -->
+                            @endauth
                         </ul>
                     </nav>
         

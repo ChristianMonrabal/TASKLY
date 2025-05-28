@@ -27,9 +27,16 @@
     
     .team-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(2, 1fr); /* Cambiado a exactamente 2 columnas */
         gap: 30px;
         margin-top: 40px;
+    }
+    
+    /* Asegurar que en móvil se vea una columna */
+    @media (max-width: 768px) {
+        .team-grid {
+            grid-template-columns: 1fr;
+        }
     }
     
     .team-member {
@@ -198,9 +205,9 @@
         </div>
         
         <div class="team-grid">
-            <div class="team-member" data-aos="fade-up" data-aos-delay="100">
+            <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ asset('img/team/christian.jpg') }}" alt="Christian Monrabal" onerror="this.src='{{ asset('img/user-default.png') }}'">
+                    <img src="{{ asset('img/team/christian.jpg') }}" alt="Christian Monrabal">
                 </div>
                 <div class="member-info">
                     <h3 class="member-name">Christian Monrabal</h3>
@@ -214,25 +221,9 @@
                 </div>
             </div>
             
-            <div class="team-member" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member">
                 <div class="member-photo">
-                    <img src="{{ asset('img/team/alex.jpg') }}" alt="Alex" onerror="this.src='{{ asset('img/user-default.png') }}'">
-                </div>
-                <div class="member-info">
-                    <h3 class="member-name">Alex</h3>
-                    <span class="member-role">CTO & Desarrollador Principal</span>
-                    <p class="member-bio">Ingeniero de software especializado en arquitecturas escalables. Alex ha sido fundamental en la implementación técnica de TASKLY.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="team-member" data-aos="fade-up" data-aos-delay="300">
-                <div class="member-photo">
-                    <img src="{{ asset('img/team/daniel.jpg') }}" alt="Daniel" onerror="this.src='{{ asset('img/user-default.png') }}'">
+                    <img src="{{ asset('img/profile_images/perfil_default.png') }}" alt="Daniel" >
                 </div>
                 <div class="member-info">
                     <h3 class="member-name">Daniel</h3>
@@ -245,17 +236,49 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{{ asset('img/team/user-default.png') }}" alt="Juan">
+                </div>
+                <div class="member-info">
+                    <h3 class="member-name">Juan</h3>
+                    <span class="member-role">Director de Marketing</span>
+                    <p class="member-bio">Estratega creativo con amplia experiencia en marketing digital. Juan lidera las estrategias de crecimiento y posicionamiento de TASKLY en el mercado español.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{{ asset('img/team/alex.jpg') }}" alt="Alex">
+                </div>
+                <div class="member-info">
+                    <h3 class="member-name">Alex</h3>
+                    <span class="member-role">CTO & Desarrollador Principal</span>
+                    <p class="member-bio">Ingeniero de software especializado en arquitecturas escalables. Alex ha sido fundamental en la implementación técnica de TASKLY.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
     
-    <section class="mission-section" data-aos="fade-up">
+    <section class="mission-section">
         <div class="mission-content">
             <h2>Nuestra Misión</h2>
             <p>En TASKLY, creemos en conectar talento con oportunidades. Nuestra misión es crear un ecosistema donde profesionales freelance puedan encontrar proyectos relevantes y donde empresas y particulares puedan encontrar el talento adecuado para sus necesidades.</p>
             <p>Nos esforzamos por ofrecer una plataforma segura, transparente y eficiente que beneficie a todas las partes involucradas.</p>
             
             <div class="values">
-                <div class="value-item" data-aos="zoom-in" data-aos-delay="100">
+                <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
@@ -263,7 +286,7 @@
                     <p>Protegemos a usuarios y pagos</p>
                 </div>
                 
-                <div class="value-item" data-aos="zoom-in" data-aos-delay="200">
+                <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
@@ -271,7 +294,7 @@
                     <p>Transparencia en cada interacción</p>
                 </div>
                 
-                <div class="value-item" data-aos="zoom-in" data-aos-delay="300">
+                <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-rocket"></i>
                     </div>
@@ -279,7 +302,7 @@
                     <p>Mejoramos constantemente</p>
                 </div>
                 
-                <div class="value-item" data-aos="zoom-in" data-aos-delay="400">
+                <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-users"></i>
                     </div>

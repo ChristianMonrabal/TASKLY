@@ -539,9 +539,11 @@
 
 /* Contenido principal */
 .main-content {
-  /* flex: 1; */
+  flex: 1;
   padding: 30px 0;
   margin-top: var(--header-height);
+  position: relative;
+  z-index: 1;
 }
 
 /* Pie de página */

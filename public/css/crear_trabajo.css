@@ -234,9 +234,9 @@ h1 {
 
 /* Responsividad */
 @media (max-width: 768px) {
-    .container {
+    /* .container {
         padding: 20px;
-    }
+    } */
 
     h1 {
         font-size: 1.5rem;

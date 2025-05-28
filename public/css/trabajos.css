@@ -535,6 +535,53 @@ select option[disabled]:first-child {
   margin-bottom: 40px;
 }
 
+/* Reposicionar botones de navegación en dispositivos móviles */
+@media (max-width: 768px) {
+  .scroll-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    padding-bottom: 60px; /* Espacio para los botones */
+  }
+  
+  .scroll-container {
+    width: 100%;
+    order: 1;
+  }
+  
+  /* Contenedor para los botones juntos y centrados */
+  .scroll-wrapper::after {
+    content: "";
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    height: 40px;
+    width: 100%;
+    position: absolute;
+    bottom: 15px;
+  }
+  
+  /* Botones centrados y juntos */
+  .scroll-wrapper .scroll-btn {
+    position: absolute;
+    bottom: 15px;
+    z-index: 5;
+  }
+  
+  /* Botón izquierdo */
+  .scroll-wrapper #btn-left-nuevos {
+    right: 51%;
+    margin-right: 5px;
+  }
+  
+  /* Botón derecho */
+  .scroll-wrapper #btn-right-nuevos {
+    left: 51%;
+    margin-left: 5px;
+  }
+}
+
 .scroll-container {
   display: grid;
   grid-auto-flow: column;
