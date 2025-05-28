@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __construct()
-    {
-        if (Auth::user()->rol_id != 1) {
-            abort(403, 'Unauthorized');
-        }
-    }
 
     public function index()
     {
